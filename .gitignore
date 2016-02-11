@@ -1,4 +1,14 @@
+# Directory names
+bin
+out
+
+# Files from IDEs/etc.
 *.class
+*.classpath
+*.project
+*.xml
+*.settings
+*.idea
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
