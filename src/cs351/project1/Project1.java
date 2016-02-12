@@ -10,6 +10,7 @@ public class Project1
   int main()
   {
     System.out.println("I love Java 8");
+    System.out.println("Alright, let's turn this thing in");
     return 0;
   }
 }
