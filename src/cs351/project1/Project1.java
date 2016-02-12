@@ -9,6 +9,11 @@ public class Project1
     System.out.println("Please work");
   }
 
+  public void testMergeWithScott()
+  {
+    // test
+  }
+
  /*
   * test of git
   */
