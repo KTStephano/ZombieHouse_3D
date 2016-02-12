@@ -8,14 +8,4 @@ public class Project1
   {
     System.out.println("Please work");
   }
-
-  public void testMergeWithScott()
-  {
-    // test
-  }
-
-  int main()
-  {
-
-  }
 }
