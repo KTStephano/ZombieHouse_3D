@@ -7,5 +7,10 @@ public class Project1
   public void testMerge()
   {
     System.out.println("Please work");
+    System.out.println("Please work and work well");
+    System.out.println("Worked");
+    
+    System.out.println("test");
+    
   }
 }
