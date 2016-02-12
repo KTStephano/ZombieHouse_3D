@@ -12,4 +12,9 @@ public class Project1
     System.out.println("I love Java 8");
     return 0;
   }
+  
+  int ScottTest()
+  {
+    //fill in later
+  }
 }
