@@ -23,4 +23,10 @@ public class Project1
     System.out.println("Alright, let's turn this thing in");
     return 0;
   }
+
+  int what()
+  {
+    // did i do
+    return -1231232;
+  }
 }
