@@ -13,24 +13,4 @@ public class Project1
   {
     // test
   }
-
-  public void wat()
-  {
-    // did i do
-  }
-
- /*
-  * test of git
-  */
-  int main()
-  {
-    System.out.println("I love Java 8");
-    System.out.println("Alright, let's turn this thing in");
-    return 0;
-  }
-
-  public void test2()
-  {
-    
-  }
 }
