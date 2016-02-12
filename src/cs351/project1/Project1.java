@@ -8,24 +8,4 @@ public class Project1
   {
     System.out.println("Please work");
   }
-
-  public void testMergeWithScott()
-  {
-    // test
-  }
-
-  public void wat()
-  {
-    // did i do
-  }
-
- /*
-  * test of git
-  */
-  int main()
-  {
-    System.out.println("I love Java 8");
-    System.out.println("Alright, let's turn this thing in");
-    return 0;
-  }
 }
