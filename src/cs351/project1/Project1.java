@@ -8,5 +8,6 @@ public class Project1
   {
     System.out.println("Please work");
     System.out.println("Please work and work well");
+    System.out.println("Worked");
   }
 }
