@@ -4,4 +4,11 @@ package cs351.project1;
 // Once we start adding project files here we can delete this class.
 public class Project1
 {
+ /*
+  * test of git
+  */
+  int main()
+  {
+    return 0;
+  }
 }
