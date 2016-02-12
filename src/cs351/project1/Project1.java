@@ -14,6 +14,11 @@ public class Project1
     // test
   }
 
+  public void wat()
+  {
+    // did i do
+  }
+
  /*
   * test of git
   */
