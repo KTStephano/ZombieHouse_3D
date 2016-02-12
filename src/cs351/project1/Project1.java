@@ -13,4 +13,9 @@ public class Project1
   {
     // test
   }
+
+  int main()
+  {
+
+  }
 }
