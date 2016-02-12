@@ -28,4 +28,9 @@ public class Project1
     System.out.println("Alright, let's turn this thing in");
     return 0;
   }
+
+  public void test2()
+  {
+    
+  }
 }
