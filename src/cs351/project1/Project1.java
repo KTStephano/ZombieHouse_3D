@@ -14,6 +14,11 @@ public class Project1
     // test
   }
 
+  public void wat()
+  {
+    // did i do
+  }
+
  /*
   * test of git
   */
@@ -22,10 +27,5 @@ public class Project1
     System.out.println("I love Java 8");
     System.out.println("Alright, let's turn this thing in");
     return 0;
-  }
-  
-  int ScottTest()
-  {
-    //fill in later
   }
 }
