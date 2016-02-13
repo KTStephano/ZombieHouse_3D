@@ -1,5 +1,7 @@
 package cs351.core;
 
+import java.util.Collection;
+
 /**
  * A World object maintains the current state of all active
  * objects that an Engine is working with. It does not need to
@@ -118,6 +120,27 @@ public interface World
    * @throws RuntimeException if the given Actor does not exist in the World
    */
   void setPlayer(Actor player) throws RuntimeException;
+
+  /**
+   * Returns a list of all actors in the world that are not static.
+   *
+   * @return collection of actors
+   */
+  Collection<Actor> getActors();
+
+  /**
+   * Returns a list of all blocks in the world which are static but need to be updated.
+   *
+   * @return collection of blocks
+   */
+  Collection<Block> getBlocks();
+
+  /**
+   * Returns a list of all tiles which make up the floors and ceilings of the environment.
+   *
+   * @return collection of tiles
+   */
+  Collection<Tile> getTiles();
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine
