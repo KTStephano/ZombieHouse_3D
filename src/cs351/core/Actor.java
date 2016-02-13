@@ -8,7 +8,7 @@ import javafx.geometry.Point2D;
  * and non-moving objects.
  *
  * The Engine will guarantee that the update function for each Actor will
- * be called at most once for frame unless the shouldUpdate boolean is
+ * be called at most once per frame unless the shouldUpdate boolean is
  * set to false (this can be done for something like a wall that never
  * needs to move/be updated but still needs to be drawn).
  *
