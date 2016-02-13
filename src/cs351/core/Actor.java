@@ -2,6 +2,8 @@ package cs351.core;
 
 import javafx.geometry.Point2D;
 
+import java.util.LinkedList;
+
 /**
  * The Actor class represents any object that can be added to the game
  * and updated each frame. It can be used to represent both moving
@@ -18,6 +20,7 @@ public abstract class Actor
   protected int width, height; // width and height are measured in terms of tiles, not pixels
   protected Point2D location = new Point2D(0.0, 0.0); // location of the object in 2D space
   protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn, though)
+  protected boolean isStatic = false; // if true, collision events won't cause the Actor to move at all
   protected boolean noClip = false; // if true the object will not collide with anything (phase through walls, zombies, etc.)
 
   /**
@@ -53,6 +56,21 @@ public abstract class Actor
    * @return result of the update - tells the Engine if it needs to do anything special (end the game, etc.)
    */
   public abstract UpdateResult update(Engine engine, double deltaSeconds);
+
+  /**
+   * When the Engine detects a collision between two actors (player and wall,
+   * wall and zombie, etc.) it will generate collision events for all Actors
+   * involved. For example, if a wall and a zombie collided, the wall object
+   * would get a list with the zombie, and the zombie would get a list with the
+   * wall.
+   *
+   * The only thing that Actors don't have to deal with is offsetting themselves
+   * because of a collision. If two objects collide the Engine will push each of
+   * them (unless one of the Actors is static) away from each other.
+   * @param engine
+   * @param actors
+   */
+  public abstract void collided(Engine engine, LinkedList<Actor> actors);
 
   /**
    * Allows for the Actor's width and height to be set.
@@ -112,6 +130,19 @@ public abstract class Actor
   public boolean shouldUpdate()
   {
     return shouldUpdate;
+  }
+
+  /**
+   * The Engine uses this to figure out how to offset objects when they
+   * collide with each other. If one of the objects returns true
+   * when isStatic() is called, that object won't be pushed away from the other
+   * object at all.
+   *
+   * @return true if the object should not move and false if it should
+   */
+  public boolean isStatic()
+  {
+    return isStatic;
   }
 
   /**
