@@ -18,6 +18,7 @@ public abstract class Actor
   protected int width, height; // width and height are measured in terms of tiles, not pixels
   protected Point2D location = new Point2D(0.0, 0.0); // location of the object in 2D space
   protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn, though)
+  protected boolean noClip = false; // if true the object will not collide with anything (phase through walls, zombies, etc.)
 
   /**
    * UpdateResult contains a few different enum values that each Actor can use
@@ -102,8 +103,26 @@ public abstract class Actor
     return location;
   }
 
+  /**
+   * Checks to see if the given Actor needs to be updated every
+   * frame.
+   *
+   * @return true if it should update every frame and false if not
+   */
   public boolean shouldUpdate()
   {
     return shouldUpdate;
+  }
+
+  /**
+   * This is used as a flag during the Engine's collision detection routine.
+   *
+   * If no-clip is active it will let the Actor walk through anything but the floor.
+   *
+   * @return true if no-clip is active and false if not
+   */
+  public boolean noClipActive()
+  {
+    return noClip;
   }
 }

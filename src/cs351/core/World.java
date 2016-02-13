@@ -1,19 +1,20 @@
 package cs351.core;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * A World object maintains the current state of all active
  * objects that an Engine is working with. It does not need to
- * deal with collision detection and the Engine will let it know
- * when an object has moved from one location to another.
+ * deal with things like collision detection as that will
+ * be handled at the Engine level.
  */
 public interface World
 {
   /**
    * Checks to see if the World currently has the given Actor object.
    *
-   * @param actor Actor object to check for
+   * @param actor object to check for
    * @return true if it exists in the World and false if not
    */
   boolean contains(Actor actor);
@@ -22,7 +23,7 @@ public interface World
    * Takes a reference to an Actor object and tries to remove it from
    * the World.
    *
-   * @param actor Actor object to remove
+   * @param actor object to remove
    * @throws RuntimeException if the given Actor does not exist in the World
    */
   void remove(Actor actor) throws RuntimeException;
@@ -126,21 +127,21 @@ public interface World
    *
    * @return collection of actors
    */
-  Collection<Actor> getActors();
+  Set<Actor> getActors();
 
   /**
    * Returns a list of all blocks in the world which are static but need to be updated.
    *
    * @return collection of blocks
    */
-  Collection<Block> getBlocks();
+  Set<Block> getBlocks();
 
   /**
    * Returns a list of all tiles which make up the floors and ceilings of the environment.
    *
    * @return collection of tiles
    */
-  Collection<Tile> getTiles();
+  Set<Tile> getTiles();
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine
