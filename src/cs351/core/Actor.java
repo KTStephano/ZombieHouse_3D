@@ -2,11 +2,23 @@ package cs351.core;
 
 import javafx.geometry.Point2D;
 
-// @TODO: Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
+/**
+ * The Actor class represents any object that can be added to the game
+ * and updated each frame. It can be used to represent both moving
+ * and non-moving objects.
+ *
+ * The Engine will guarantee that the update function for each Actor will
+ * be called at most once for frame unless the shouldUpdate boolean is
+ * set to false (this can be done for something like a wall that never
+ * needs to move/be updated but still needs to be drawn).
+ *
+ * TODO: Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
+ */
 public abstract class Actor
 {
   protected int width, height; // width and height are measured in terms of tiles, not pixels
   protected Point2D location = new Point2D(0.0, 0.0); // location of the object in 2D space
+  protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn, though)
 
   /**
    * UpdateResult contains a few different enum values that each Actor can use
@@ -79,5 +91,10 @@ public abstract class Actor
   public void setLocation(double x, double y)
   {
     location = new Point2D(x, y);
+  }
+
+  public boolean shouldUpdate()
+  {
+    return shouldUpdate;
   }
 }
