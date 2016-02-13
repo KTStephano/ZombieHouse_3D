@@ -127,21 +127,21 @@ public interface World
    *
    * @return collection of actors
    */
-  Set<Actor> getActors();
+  Collection<Actor> getActors();
 
   /**
    * Returns a list of all blocks in the world which are static but need to be updated.
    *
    * @return collection of blocks
    */
-  Set<Block> getBlocks();
+  Collection<Block> getBlocks();
 
   /**
    * Returns a list of all tiles which make up the floors and ceilings of the environment.
    *
    * @return collection of tiles
    */
-  Set<Tile> getTiles();
+  Collection<Tile> getTiles();
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine
