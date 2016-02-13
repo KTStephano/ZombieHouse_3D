@@ -19,7 +19,7 @@ public abstract class Actor
 {
   protected int width, height; // width and height are measured in terms of tiles, not pixels
   protected Point2D location = new Point2D(0.0, 0.0); // location of the object in 2D space
-  protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn, though)
+  protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn and collide with stuff, though)
   protected boolean isStatic = false; // if true, collision events won't cause the Actor to move at all
   protected boolean noClip = false; // if true the object will not collide with anything (phase through walls, zombies, etc.)
 
