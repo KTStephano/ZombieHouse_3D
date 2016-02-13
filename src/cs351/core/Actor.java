@@ -61,16 +61,16 @@ public abstract class Actor
    * When the Engine detects a collision between two actors (player and wall,
    * wall and zombie, etc.) it will generate collision events for all Actors
    * involved. For example, if a wall and a zombie collided, the wall object
-   * would get a list with the zombie, and the zombie would get a list with the
+   * would get a reference to the zombie, and the zombie would get a reference to the
    * wall.
    *
    * The only thing that Actors don't have to deal with is offsetting themselves
    * because of a collision. If two objects collide the Engine will push each of
    * them (unless one of the Actors is static) away from each other.
-   * @param engine
-   * @param actors
+   * @param engine reference to the Engine that is performing the frame update - can be used for Engine callbacks
+   * @param actor reference to the Actor object that collided with this object
    */
-  public abstract void collided(Engine engine, LinkedList<Actor> actors);
+  public abstract void collided(Engine engine, Actor actor);
 
   /**
    * Allows for the Actor's width and height to be set.
