@@ -1,5 +1,6 @@
-package cs351.core;
+package cs351.project1;
 
+import cs351.core.SoundEngine;
 import javafx.scene.media.Media;
 import java.awt.Point;
 public class ZombieHouseSoundEngine implements SoundEngine {
