@@ -8,8 +8,8 @@ package cs351.core;
  * The reason they extend Actor is because we might want to update some of
  * the Tiles each frame to see if a zombie needs to spawn on one.
  *
- * TODO: Need to finish this - still figuring out what all needs to be part of the base Actor classes/subclasses
  */
+// @todo: Need to finish this - still figuring out what all needs to be part of the base Actor classes/subclasses
 public abstract class Tile extends Actor
 {
   protected boolean isPartOfFloor; // true if floor tile, false if ceiling tile

@@ -12,8 +12,8 @@ import javafx.geometry.Point2D;
  * set to false (this can be done for something like a wall that never
  * needs to move/be updated but still needs to be drawn).
  *
- * TODO: Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
  */
+// @todo Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
 public abstract class Actor
 {
   protected int width, height; // width and height are measured in terms of tiles, not pixels
@@ -32,7 +32,7 @@ public abstract class Actor
   }
 
   /**
-   * Uses the Point3D hashCode function.
+   * Uses the Point2D hashCode function.
    *
    * @return hash code
    */
@@ -91,6 +91,16 @@ public abstract class Actor
   public void setLocation(double x, double y)
   {
     location = new Point2D(x, y);
+  }
+
+  /**
+   * Gets the current 2D location of the player.
+   *
+   * @return player location
+   */
+  public Point2D getLocation()
+  {
+    return location;
   }
 
   public boolean shouldUpdate()

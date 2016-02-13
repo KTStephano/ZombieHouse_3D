@@ -25,7 +25,7 @@ public interface SoundEngine
   /**
    * This function should not immediately play the sound at location
    * (x, y) but should instead add it to a queue. When the SoundEngine is told
-   * to flush all sounds from its queue, that is the point where all sounds
+   * to flush all sounds from its queue, that is the point when all sounds
    * should be played.
    *
    * The reason for this delay is so that the SoundEngine can blend/merge/etc. the

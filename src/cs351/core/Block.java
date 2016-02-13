@@ -6,8 +6,8 @@ package cs351.core;
  *      2) Sits between the floor and ceiling
  *      3) Can be interacted with
  *
- * TODO: Need to finish this - not sure exactly what needs to go here
  */
+// @todo: Need to finish this - not sure exactly what needs to go here
 public abstract class Block extends Actor
 {
 }
