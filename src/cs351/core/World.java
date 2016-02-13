@@ -163,4 +163,15 @@ public interface World
    *               separate lists to improve its performance/the renderer's performance
    */
   void nextLevel(Engine engine);
+
+  /**
+   * This function is called when the Engine wants to restart the same level over
+   * again.
+   *
+   * @param engine reference to the Engine object which is calling this function -
+   *               can be used for callbacks, especially to tell the Engine about
+   *               each new Actor that is being added so it can start building
+   *               separate lists to improve its performance/the renderer's performance
+   */
+  void restartLevel(Engine engine);
 }
