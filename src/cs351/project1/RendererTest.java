@@ -39,6 +39,8 @@ public class RendererTest extends Application
       @Override
       public void handle(long now)
       {
+        // you can switch this from DrawMode.FILL to DrawMode.LINE so that it
+        // draws wire-frame objects
         renderer.render(DrawMode.FILL);
         for (Actor actor : actors) actor.update(pretendEngine, 0.0);
       }

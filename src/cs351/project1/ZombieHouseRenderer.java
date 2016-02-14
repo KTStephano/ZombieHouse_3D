@@ -54,10 +54,10 @@ public class ZombieHouseRenderer implements Renderer
     orientPlayerToScene();
 
     // render the tiles
-    renderFloorAndCeiling();
+    renderFloorAndCeiling(mode);
 
     // render the actors
-    renderActors();
+    renderActors(mode);
   }
 
   @Override
@@ -110,7 +110,7 @@ public class ZombieHouseRenderer implements Renderer
     return model;
   }
 
-  private void renderFloorAndCeiling()
+  private void renderFloorAndCeiling(DrawMode mode)
   {
     int floorHeightOffset = 0;
     int ceilingHeightOffset = 0;
@@ -124,14 +124,16 @@ public class ZombieHouseRenderer implements Renderer
     {
       Tile tile = entry.getKey();
       Model model = entry.getValue();
+      if (model.shape == null) continue;
       setTranslationValuesForModel(model, tile.getLocation().getX(),
                                    tile.isPartOfFloor() ? floorHeightOffset : ceilingHeightOffset,
                                    tile.getLocation().getY());
-      if (model.shape != null) model.shape.getTransforms().add(model.translation);
+      model.shape.getTransforms().add(model.translation);
+      model.shape.setDrawMode(mode);
     }
   }
 
-  private void renderActors()
+  private void renderActors(DrawMode mode)
   {
     Translate translate = new Translate(0.0, 0.0, 0.0);
     for (Map.Entry<Actor, Model> entry : ACTOR_MODEL_MAP.entrySet())
@@ -145,6 +147,7 @@ public class ZombieHouseRenderer implements Renderer
       //model.shape.getTransforms().clear();
       //model.shape.getTransforms().addAll(translate);
       setTranslationValuesForModel(model, actor.getLocation().getX(), model.translation.getY(), actor.getLocation().getY());
+      model.shape.setDrawMode(mode);
     }
   }
 
