@@ -25,8 +25,6 @@ public class ZombieHouseRenderer implements Renderer
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
   private final HashMap<Tile, Model> TILE_MODEL_MAP = new HashMap<>(50);
-  private int sceneWidth, sceneHeight;
-  private double x = 0.0;
 
   private class Model
   {
@@ -40,8 +38,6 @@ public class ZombieHouseRenderer implements Renderer
 
   public ZombieHouseRenderer(Stage stage, int width, int height)
   {
-    sceneWidth = width;
-    sceneHeight = height;
     renderSceneGraph = new Group();
     renderScene = new SubScene(renderSceneGraph, width, height, true, SceneAntialiasing.BALANCED);
     renderScene.setFill(Color.GRAY);
