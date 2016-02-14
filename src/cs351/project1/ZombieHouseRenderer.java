@@ -144,7 +144,7 @@ public class ZombieHouseRenderer implements Renderer
       //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
       //model.shape.getTransforms().clear();
       //model.shape.getTransforms().addAll(translate);
-      setTranslationValuesForModel(model, actor.getLocation().getX(), 0.0, actor.getLocation().getY());
+      setTranslationValuesForModel(model, actor.getLocation().getX(), model.translation.getY(), actor.getLocation().getY());
     }
   }
 
@@ -158,7 +158,6 @@ public class ZombieHouseRenderer implements Renderer
                                         //0.0, player.getLocation().getY() - cameraTranslation.getZ());
     //camera.getTransforms().addAll(translate);
     cameraTranslation.setX(player.getLocation().getX());
-    cameraTranslation.setY(0.0);
     cameraTranslation.setZ(player.getLocation().getY());
   }
 
