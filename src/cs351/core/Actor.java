@@ -17,7 +17,7 @@ import java.util.LinkedList;
 // @todo Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
 public abstract class Actor
 {
-  protected int width, height; // width and height are measured in terms of tiles, not pixels
+  protected int width, height, depth; // width, height and depth are measured in tiles instead of pixels
   protected Point2D location = new Point2D(0.0, 0.0); // location of the object in 2D space
   protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn and collide with stuff, though)
   protected boolean isStatic = false; // if true, collision events won't cause the Actor to move at all
@@ -78,7 +78,12 @@ public abstract class Actor
    * @param width width (in tiles)
    * @param height height (in tiles)
    */
-  public abstract void setWidthHeight(int width, int height);
+  public void setWidthHeightDepth(int width, int height, int depth)
+  {
+    this.width = width;
+    this.height = height;
+    this.depth = depth;
+  }
 
   /**
    * Gets the width of the Actor.
@@ -98,6 +103,16 @@ public abstract class Actor
   public int getHeight()
   {
     return height;
+  }
+
+  /**
+   * Gets the depth of the Actor.
+   *
+   * @return depth in tiles
+   */
+  public int getDepth()
+  {
+    return depth;
   }
 
   /**

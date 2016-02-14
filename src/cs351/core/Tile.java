@@ -12,4 +12,15 @@ package cs351.core;
 public abstract class Tile extends Actor
 {
   protected boolean isPartOfFloor; // true if floor tile, false if ceiling tile
+
+  /**
+   * The renderer will use this function to figure out whether the tile is part of
+   * the floor or the ceiling so it can draw it properly.
+   *
+   * @return true if it is part of the floor and false if not
+   */
+  public boolean isPartOfFloor()
+  {
+    return isPartOfFloor;
+  }
 }

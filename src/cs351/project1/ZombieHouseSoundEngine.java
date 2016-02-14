@@ -7,6 +7,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.awt.Point;
 
+/**
+ * @author Scott Cooper
+ */
 public class ZombieHouseSoundEngine implements SoundEngine {
   
   private Point centralPoint;
