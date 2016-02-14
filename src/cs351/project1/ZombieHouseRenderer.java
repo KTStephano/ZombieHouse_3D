@@ -139,10 +139,11 @@ public class ZombieHouseRenderer implements Renderer
       Actor actor = entry.getKey();
       Model model = entry.getValue();
       if (model.shape == null) continue;
-      translate.setX(actor.getLocation().getX() - model.translation.getX());
-      translate.setY(model.translation.getY());
-      translate.setZ(actor.getLocation().getY() - model.translation.getZ());
-      model.shape.getTransforms().addAll(translate);
+      //translate.setX(actor.getLocation().getX() - model.translation.getX());
+      //translate.setY(model.translation.getY());
+      //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
+      //model.shape.getTransforms().clear();
+      //model.shape.getTransforms().addAll(translate);
       setTranslationValuesForModel(model, actor.getLocation().getX(), 0.0, actor.getLocation().getY());
     }
   }
@@ -152,9 +153,10 @@ public class ZombieHouseRenderer implements Renderer
     if (player == null) return;
     // calculate the amount of displacement between the current location the camera thinks
     // it's at versus the actual location of the player
-    Translate translate = new Translate(player.getLocation().getX() - cameraTranslation.getX(),
-                                        0.0, player.getLocation().getY() - cameraTranslation.getZ());
-    camera.getTransforms().addAll(translate);
+    //camera.getTransforms().clear();
+    //Translate translate = new Translate(player.getLocation().getX() - cameraTranslation.getX(),
+                                        //0.0, player.getLocation().getY() - cameraTranslation.getZ());
+    //camera.getTransforms().addAll(translate);
     cameraTranslation.setX(player.getLocation().getX());
     cameraTranslation.setY(0.0);
     cameraTranslation.setZ(player.getLocation().getY());
