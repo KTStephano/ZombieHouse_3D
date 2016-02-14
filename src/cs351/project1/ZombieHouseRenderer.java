@@ -21,6 +21,7 @@ public class ZombieHouseRenderer implements Renderer
   private Translate cameraTranslation;
   private Rotate cameraRotation;
   private Player player;
+  private PointLight playerLight;
   private Group renderSceneGraph; // camera and all actors are added to this
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
@@ -45,6 +46,8 @@ public class ZombieHouseRenderer implements Renderer
     renderSceneGroup.getChildren().add(renderScene);
     SCENE = new Scene(renderSceneGroup);
     stage.setScene(SCENE);
+
+    initLighting();
   }
 
   @Override
@@ -68,8 +71,12 @@ public class ZombieHouseRenderer implements Renderer
     renderSceneGraph.getChildren().add(camera);
     renderScene.setCamera(camera);
     this.player = (Player)player;
+    playerLight = new PointLight(Color.color(0.2, 0.2, 0.2));
+    playerLight.setLightOn(true);
+    renderSceneGraph.getChildren().add(playerLight);
     cameraTranslation = new Translate(this.player.getLocation().getX(), 0.0, this.player.getLocation().getY());
     cameraRotation = new Rotate(0.0, 0.0, 0.0);
+    playerLight.getTransforms().add(cameraTranslation);
     camera.getTransforms().addAll(cameraTranslation, cameraRotation);
     SCENE.setOnKeyPressed(this.player::keyPressed);
     SCENE.setOnKeyReleased(this.player::keyReleased);
@@ -169,5 +176,12 @@ public class ZombieHouseRenderer implements Renderer
     model.translation.setX(x);
     model.translation.setY(y);
     model.translation.setZ(z);
+  }
+
+  private void initLighting()
+  {
+    AmbientLight ambient = new AmbientLight(Color.color(0.1, 0.1, 0.1));
+    ambient.setLightOn(true);
+    renderSceneGraph.getChildren().add(ambient);
   }
 }

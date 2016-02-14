@@ -64,7 +64,7 @@ public class RendererTest extends Application
     {
       Zombie wall = new Zombie(rand.nextInt(100), rand.nextInt(100), 5, 5, 5);
       renderer.registerActor(wall, new Box(wall.getWidth(), wall.getHeight(), wall.getDepth()),
-                             colors[currColor], colors[currColor], colors[currColor]);
+                             colors[currColor], colors[currColor], Color.WHITE);
       currColor++;
       if (currColor >= colors.length) currColor = 0;
       actors.add(wall);
