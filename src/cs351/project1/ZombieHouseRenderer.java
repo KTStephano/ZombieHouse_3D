@@ -103,6 +103,8 @@ public class ZombieHouseRenderer implements Renderer
     model.lights = new ArrayList<>(5);
     model.translation = new Translate(0.0, 0.0, 0.0);
     model.rotation = new Rotate(0.0, 0.0, 0.0);
+    // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
+    if (player != null) model.translation.setY(player.getHeight() / 3.0);
     shape.getTransforms().addAll(model.rotation, model.translation);
 
     return model;
@@ -138,7 +140,7 @@ public class ZombieHouseRenderer implements Renderer
       Model model = entry.getValue();
       if (model.shape == null) continue;
       translate.setX(actor.getLocation().getX() - model.translation.getX());
-      translate.setY(0.0);
+      translate.setY(model.translation.getY());
       translate.setZ(actor.getLocation().getY() - model.translation.getZ());
       model.shape.getTransforms().addAll(translate);
       setTranslationValuesForModel(model, actor.getLocation().getX(), 0.0, actor.getLocation().getY());

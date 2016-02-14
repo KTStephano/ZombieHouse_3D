@@ -20,6 +20,7 @@ public class Player extends Actor
   public Player(double x, double y)
   {
     setLocation(x, y);
+    setWidthHeightDepth(5, 5, 5);
   }
 
   public UpdateResult update(Engine engine, double deltaSeconds)
