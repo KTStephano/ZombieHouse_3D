@@ -29,7 +29,6 @@ public class ZombieHouseSoundEngine implements SoundEngine {
   public void update() {
     SoundStackItem tmpSoundStackItem;
     MediaPlayer soundPlayer;
-    // TODO Auto-generated method stub
 
     // NOTE: x, y distance to centralPoint = sqrt((cp.x - x)^2 + (cp.y-y)^2)
     // determines volume during playback
@@ -44,7 +43,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     {
       tmpSoundStackItem = soundStack.pop();
       soundPlayer = new MediaPlayer(tmpSoundStackItem.sound);
-      soundPlayer.play(); 
+      soundPlayer.play();
      }
     
     
