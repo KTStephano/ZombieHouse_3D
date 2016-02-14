@@ -63,7 +63,7 @@
    </children>
   
   <stylesheets>
-    <URL value="@../../core/resources/Login.css" />
+    <URL value="@Login.css" />
   </stylesheets>
    <columnConstraints>
       <ColumnConstraints />
