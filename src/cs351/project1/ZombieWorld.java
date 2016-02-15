@@ -21,6 +21,12 @@ public class ZombieWorld implements World
   
   private Collection<Level> Level;
 
+  public ZombieWorld(int pixelWidth, int pixelHeight)
+  {
+    this.pixelWidth = pixelWidth;
+    this.pixelHeight = pixelHeight;
+  }
+  
   /**
    * Checks to see if the World currently has the given Actor object.
    *
