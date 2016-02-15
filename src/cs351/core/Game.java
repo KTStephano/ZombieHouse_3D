@@ -122,7 +122,6 @@ public class Game extends Application{
           renderer.render(DrawMode.FILL);
           for (Actor actor : actors) actor.update(pretendEngine, 0.0);
         }
-
       }
     }.start();
   }
@@ -137,16 +136,26 @@ public class Game extends Application{
   private void initZombies()
   {
     Random rand = new Random();
-    Color[] colors = { Color.RED, Color.ORANGE, Color.BLACK, Color.BLUE, Color.BEIGE, Color.AZURE, Color.BROWN };
+    Color[] colors = { Color.BEIGE };
+    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
+                          "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
+                          "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
     int currColor = 0;
+    int currTexture = 0;
 
-    for (int i = 0; i < 100; i++)
+    int numZombies = 100;
+    for (int i = 0; i < numZombies; i++)
     {
-      Zombie wall = new Zombie(rand.nextInt(100), rand.nextInt(100), 5, 5, 5);
+      Zombie wall = new Zombie(rand.nextInt(numZombies), rand.nextInt(numZombies), 5, 5, 5);
+      // register the actor with the renderer
       renderer.registerActor(wall, new Box(wall.getWidth(), wall.getHeight(), wall.getDepth()),
               colors[currColor], colors[currColor], Color.WHITE);
+      // associate the texture with the actor
+      renderer.associateDiffuseTextureWithActor(wall, textures[currTexture]);
       currColor++;
+      currTexture++;
       if (currColor >= colors.length) currColor = 0;
+      if (currTexture >= textures.length) currTexture = 0;
       actors.add(wall);
     }
   }

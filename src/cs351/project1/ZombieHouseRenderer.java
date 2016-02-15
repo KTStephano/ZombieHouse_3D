@@ -4,6 +4,7 @@ import cs351.core.*;
 import cs351.entities.Player;
 import javafx.scene.*;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -13,8 +14,11 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class ZombieHouseRenderer implements Renderer
@@ -28,17 +32,35 @@ public class ZombieHouseRenderer implements Renderer
   private Group renderSceneGraph; // camera and all actors are added to this
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
-  private final HashMap<Tile, Model> TILE_MODEL_MAP = new HashMap<>(50);
+  private final HashMap<Actor, Model> TILE_MODEL_MAP = new HashMap<>(50);
+  private final HashMap<String, Texture> TEXTURE_LOOKUP = new HashMap<>(50);
   private Group renderSceneGroup;
 
   private class Model
   {
     public Mesh mesh; // if a custom model was loaded
     public Shape3D shape; // if one of the default shapes was used
-    public Material material; // usually PhongMaterial
+    public PhongMaterial material;
+    public Texture diffuseTexture;
+    public Texture specularTexture;
     public ArrayList<PointLight> lights;
     public Translate translation; // this is used to position the model within the scene
     public Rotate rotation; // this is used to rotate the model about the origin within the scene
+  }
+
+  private class Texture
+  {
+    private Image texture;
+
+    public Texture(Image texture)
+    {
+      this.texture = texture;
+    }
+
+    public Image getTexture()
+    {
+      return texture;
+    }
   }
 
   /**
@@ -125,6 +147,20 @@ public class ZombieHouseRenderer implements Renderer
     renderSceneGraph.getChildren().add(model.shape);
   }
 
+  @Override
+  public void associateDiffuseTextureWithActor(Actor actor, String textureFile)
+  {
+    if (!ACTOR_MODEL_MAP.containsKey(actor) && !TILE_MODEL_MAP.containsKey(actor))
+    {
+      throw new RuntimeException("Actor not registered with renderer before call to associateTextureWithActor");
+    }
+    Model model = ACTOR_MODEL_MAP.containsKey(actor) ? ACTOR_MODEL_MAP.get(actor) : TILE_MODEL_MAP.get(actor);
+    // register the texture with the renderer and then set the diffuse map of the model's material
+    // to the newly-registered texture
+    model.diffuseTexture = registerTexture(textureFile);
+    model.material.setDiffuseMap(model.diffuseTexture.getTexture());
+  }
+
   private Model generateModel(Shape3D shape, Color ambientColor, Color diffuseColor, Color specularColor)
   {
     Model model = new Model();
@@ -154,9 +190,9 @@ public class ZombieHouseRenderer implements Renderer
       ceilingHeightOffset = -floorHeightOffset;
     }
 
-    for (Map.Entry<Tile, Model> entry : TILE_MODEL_MAP.entrySet())
+    for (Map.Entry<Actor, Model> entry : TILE_MODEL_MAP.entrySet())
     {
-      Tile tile = entry.getKey();
+      Tile tile = (Tile)entry.getKey();
       Model model = entry.getValue();
       if (model.shape == null) continue;
       setTranslationValuesForModel(model, tile.getLocation().getX(),
@@ -207,8 +243,19 @@ public class ZombieHouseRenderer implements Renderer
 
   private void initLighting()
   {
-    AmbientLight ambient = new AmbientLight(Color.color(0.1, 0.1, 0.1));
+    AmbientLight ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
     ambient.setLightOn(true);
     renderSceneGraph.getChildren().add(ambient);
+  }
+
+  private Texture registerTexture(String textureFile)
+  {
+    // if the texture already exists then don't bother reloading it
+    if (TEXTURE_LOOKUP.containsKey(textureFile)) return TEXTURE_LOOKUP.get(textureFile);
+    InputStream stream = ZombieHouseRenderer.class.getResourceAsStream(textureFile);
+    if (stream == null) throw new RuntimeException("Unable to load " + textureFile + " as a resource");
+    Texture texture = new Texture(new Image(stream));
+    TEXTURE_LOOKUP.put(textureFile, texture);
+    return texture;
   }
 }
