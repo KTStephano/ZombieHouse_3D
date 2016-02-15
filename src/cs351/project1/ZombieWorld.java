@@ -33,10 +33,8 @@ public class ZombieWorld implements World
     {
       // Continue
       return true;
-    } else
-    {
-      return false;
-    }
+    } 
+    else return false;
   }
   
   /**
@@ -48,17 +46,11 @@ public class ZombieWorld implements World
    */
   public void remove(Actor actor) throws RuntimeException
   {
-    // if (!getObjects(Actor.class).isEmpty())
-    // throw new RuntimeException();
-
-    if (getActors().isEmpty())
-      throw new RuntimeException();
-
+    if (getActors().isEmpty()) throw new RuntimeException();
     else
     {
-      // remove some stuff
+      // remove actor from list
       Actor.remove(actor);
-
     }
   }
 
