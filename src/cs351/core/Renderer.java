@@ -56,4 +56,12 @@ public interface Renderer
    * @param ambientColor base color of the object
    */
   void registerStaticTile(Tile tile, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor);
+
+  /**
+   * This should be used for both Actor and Tile objects.
+   *
+   * @param actor object to associate the texture with when rendering
+   * @param textureFile name of the texture file to be loaded
+   */
+  void associateDiffuseTextureWithActor(Actor actor, String textureFile);
 }
