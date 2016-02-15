@@ -3,6 +3,9 @@ package cs351.project1;
 import cs351.core.*;
 import cs351.entities.Player;
 import javafx.scene.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
@@ -16,7 +19,7 @@ import java.util.Map;
 
 public class ZombieHouseRenderer implements Renderer
 {
-  private final Scene SCENE;
+  private Scene scene;
   private PerspectiveCamera camera;
   private Translate cameraTranslation;
   private Rotate cameraRotation;
@@ -26,6 +29,7 @@ public class ZombieHouseRenderer implements Renderer
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
   private final HashMap<Tile, Model> TILE_MODEL_MAP = new HashMap<>(50);
+  private Group renderSceneGroup;
 
   private class Model
   {
@@ -37,17 +41,40 @@ public class ZombieHouseRenderer implements Renderer
     public Rotate rotation; // this is used to rotate the model about the origin within the scene
   }
 
+  /**
+   * This constructor will initialize itself, create a new scene with its renderSceneGroup
+   * and then set the stage's scene to it.
+   *
+   * @param stage stage object that will have its scene set
+   * @param width width of the scene's window
+   * @param height height of the scene's window
+   */
   public ZombieHouseRenderer(Stage stage, int width, int height)
+  {
+    this(width, height);
+    scene = new Scene(renderSceneGroup);
+    stage.setScene(scene);
+
+    initLighting();
+  }
+
+  public ZombieHouseRenderer(Stage stage, StackPane pane, int width, int height)
+  {
+    this(width, height);
+    scene = stage.getScene();
+    //pane.setContent(renderSceneGroup);
+    pane.getChildren().add(renderSceneGroup);
+
+    initLighting();
+  }
+
+  private ZombieHouseRenderer(int width, int height)
   {
     renderSceneGraph = new Group();
     renderScene = new SubScene(renderSceneGraph, width, height, true, SceneAntialiasing.BALANCED);
     renderScene.setFill(Color.GRAY);
-    Group renderSceneGroup = new Group();
+    renderSceneGroup = new Group();
     renderSceneGroup.getChildren().add(renderScene);
-    SCENE = new Scene(renderSceneGroup);
-    stage.setScene(SCENE);
-
-    initLighting();
   }
 
   @Override
@@ -78,8 +105,8 @@ public class ZombieHouseRenderer implements Renderer
     cameraRotation = new Rotate(0.0, 0.0, 0.0);
     playerLight.getTransforms().add(cameraTranslation);
     camera.getTransforms().addAll(cameraTranslation, cameraRotation);
-    SCENE.setOnKeyPressed(this.player::keyPressed);
-    SCENE.setOnKeyReleased(this.player::keyReleased);
+    scene.setOnKeyPressed(this.player::keyPressed);
+    scene.setOnKeyReleased(this.player::keyReleased);
   }
 
   @Override

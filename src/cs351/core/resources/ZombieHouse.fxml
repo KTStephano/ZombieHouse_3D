@@ -32,6 +32,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import javafx.geometry.*?>
@@ -39,19 +40,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="center" hgap="10" minHeight="750.0" minWidth="900.0" prefHeight="750.0" prefWidth="900.0"  styleClass="root" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="cs351.core.Game">
+<GridPane alignment="center" hgap="10" minHeight="750.0" minWidth="900.0" prefHeight="750.0" prefWidth="900.0" styleClass="root" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs351.core.Game">
   <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
    <children>
      
-     <Text id="welcome-text" fx:id="gameTitle" text="Zombie House" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+     <Text id="welcome-text" fx:id="gameTitle" text="Zombie House" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
     <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-     
-     <!--   Text fx:id="actiontarget" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="7" / -->
-      <ScrollPane fx:id="zombieHouseScrollPane" minHeight="565.0" minWidth="700.0" prefHeight="565.0" prefWidth="700.0" GridPane.columnSpan="2" GridPane.rowIndex="5">
-        <content>
-          <AnchorPane fx:id="zombieHouseAnchorPane" minHeight="10000.0" minWidth="10000.0"  prefHeight="10000" prefWidth="10000" />
-        </content>
-      </ScrollPane>
       <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
         <items>
                <Button fx:id="playButton" onAction="#handlePlay" text="Play" />
@@ -59,6 +53,7 @@
             <Button onAction="#handleSubmitButtonAction" text="Quit" />
         </items>
       </ToolBar>
+      <StackPane prefHeight="542.0" prefWidth="846.0" GridPane.columnIndex="1" GridPane.rowIndex="6"></StackPane>
       
    </children>
   
@@ -73,6 +68,8 @@
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />

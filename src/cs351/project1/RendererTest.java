@@ -2,6 +2,7 @@ package cs351.project1;
 
 import cs351.core.Actor;
 import cs351.core.Engine;
+import cs351.core.Game;
 import cs351.entities.Player;
 import cs351.entities.Zombie;
 import javafx.animation.AnimationTimer;
@@ -15,7 +16,9 @@ import java.util.LinkedList;
 import java.util.Random;
 
 /**
- * Basic class with main and stuff. You guys can delete this whenever you want.
+ * Basic class with main and stuff.
+ *
+ * EDITED: Now all this does is create a Game object and call its start method.
  */
 public class RendererTest extends Application
 {
@@ -27,6 +30,15 @@ public class RendererTest extends Application
   @Override
   public void start(Stage primaryStage)
   {
+    try
+    {
+      new Game().start(primaryStage);
+    }
+    catch (Exception e)
+    {
+      System.exit(-1);
+    }
+    /**
     int widthHeight = 700;
     renderer = new ZombieHouseRenderer(primaryStage, widthHeight, widthHeight);
     initPlayer();
@@ -45,8 +57,10 @@ public class RendererTest extends Application
         for (Actor actor : actors) actor.update(pretendEngine, 0.0);
       }
     }.start();
+     */
   }
 
+  /**
   private void initPlayer()
   {
     Player player = new Player(100.0, 0.0);
@@ -70,6 +84,7 @@ public class RendererTest extends Application
       actors.add(wall);
     }
   }
+   */
 
   public static void main(String[] args)
   {
