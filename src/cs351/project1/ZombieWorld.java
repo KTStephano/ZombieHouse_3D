@@ -9,7 +9,7 @@ import java.util.Collection;
  * deal with things like collision detection as that will
  * be handled at the Engine level.
  */
-public class ZombieWorld
+public class ZombieWorld implements World
 {
   private int pixelWidth;
   private int pixelHeight;
@@ -17,6 +17,9 @@ public class ZombieWorld
   private Collection<Actor> Actor;
   private Collection<Block> Block;
   private Collection<Tile> Tile;
+  
+  
+  private Collection<Level> Level;
 
   /**
    * Checks to see if the World currently has the given Actor object.
@@ -24,12 +27,18 @@ public class ZombieWorld
    * @param actor object to check for
    * @return true if it exists in the World and false if not
    */
-  boolean contains(Actor actor)
+  public boolean contains(Actor actor)
   {
-    //TODO add more later
-    return true;
+    if (!getActors().isEmpty())
+    {
+      // Continue
+      return true;
+    } else
+    {
+      return false;
+    }
   }
-
+  
   /**
    * Takes a reference to an Actor object and tries to remove it from
    * the World.
@@ -37,7 +46,21 @@ public class ZombieWorld
    * @param actor object to remove
    * @throws RuntimeException if the given Actor does not exist in the World
    */
-  void remove(Actor actor) throws RuntimeException{}
+  public void remove(Actor actor) throws RuntimeException
+  {
+    // if (!getObjects(Actor.class).isEmpty())
+    // throw new RuntimeException();
+
+    if (getActors().isEmpty())
+      throw new RuntimeException();
+
+    else
+    {
+      // remove some stuff
+      Actor.remove(actor);
+
+    }
+  }
 
   /**
    * Tries to add an Actor object to the existing World. This should only
@@ -45,7 +68,11 @@ public class ZombieWorld
    *
    * @param actor Actor object to add
    */
-  void add(Actor actor){}
+  public void add(Actor actor)
+  {
+    //Add actor object to generic collection
+    Actor.add(actor);
+  }
 
   /**
    * Tries to add a Block (Actor) to the existing World. This is a separate
@@ -54,7 +81,11 @@ public class ZombieWorld
    *
    * @param block Block object to add
    */
-  void add(Block block){}
+  public void add(Block block)
+  {
+    //Add block object to generic collection
+    Block.add(block);
+  }
 
   /**
    * Tries to add a Tile (Actor) to the existing World. This is used by a Level
@@ -64,21 +95,29 @@ public class ZombieWorld
    *
    * @param tile Tile object to add
    */
-  void add(Tile tile){}
+  public void add(Tile tile)
+  {
+    //Add tile to generic collection
+    Tile.add(tile);
+  }
 
   /**
    * Adds a level to the end of the current list of levels.
    *
    * @param level Level to add
    */
-  void add(Level level){}
+  public void add(Level level)
+  {
+    Level.add(level);
+  }
 
   /**
    * This should return the width of the world in terms of pixels.
    *
    * @return pixel world width
    */
-  int getWorldPixelWidth(){
+  public int getWorldPixelWidth()
+  {
     return pixelWidth;
   }
 
@@ -87,7 +126,7 @@ public class ZombieWorld
    *
    * @return pixel world height
    */
-  int getWorldPixelHeight()
+  public int getWorldPixelHeight()
   {
     return pixelHeight;
   }
@@ -99,7 +138,7 @@ public class ZombieWorld
    * @param pixelWidth width of the world in pixels
    * @param pixelHeight height of the world in pixels
    */
-  void setPixelWidthHeight(int pixelWidth, int pixelHeight)
+  public void setPixelWidthHeight(int pixelWidth, int pixelHeight)
   {
     this.pixelWidth = pixelWidth;
     this. pixelHeight = pixelHeight;
@@ -110,7 +149,7 @@ public class ZombieWorld
    *
    * @return width of each tile in pixels
    */
-  int getTilePixelWidth()
+  public int getTilePixelWidth()
   {
     return pixelWidth;
   }
@@ -120,7 +159,7 @@ public class ZombieWorld
    *
    * @return height of each tile in pixels
    */
-  int getTilePixelHeight()
+  public int getTilePixelHeight()
   {
     return pixelHeight;
   }
@@ -131,7 +170,7 @@ public class ZombieWorld
    * @param pixelWidth tile width in pixels
    * @param pixelHeight tile height in pixels
    */
-  void setTilePixelWidthHeight(int pixelWidth, int pixelHeight)
+  public void setTilePixelWidthHeight(int pixelWidth, int pixelHeight)
   {
     this.pixelWidth = pixelWidth;
     this.pixelHeight = pixelHeight;
@@ -143,7 +182,7 @@ public class ZombieWorld
    *
    * @return reference to player
    */
-  Actor getPlayer()
+  public Actor getPlayer()
   {
     return player;
   }
@@ -153,9 +192,10 @@ public class ZombieWorld
    *
    * @throws RuntimeException if the given Actor does not exist in the World
    */
-  void setPlayer(Actor player) throws RuntimeException
+  public void setPlayer(Actor player) throws RuntimeException
   {
-    this.player = player;
+    if( player == null) throw new RuntimeException();
+    else this.player = player;
   }
 
   /**
@@ -163,7 +203,7 @@ public class ZombieWorld
    *
    * @return collection of actors
    */
-  Collection<Actor> getActors()
+  public Collection<Actor> getActors()
   {
     return Actor;
   }
@@ -172,7 +212,7 @@ public class ZombieWorld
    *
    * @return collection of blocks
    */
-  Collection<Block> getBlocks()
+  public Collection<Block> getBlocks()
   {
     return Block;
   }
@@ -182,7 +222,7 @@ public class ZombieWorld
    *
    * @return collection of tiles
    */
-  Collection<Tile> getTiles()
+  public Collection<Tile> getTiles()
   {
     return Tile;
   }
@@ -193,7 +233,7 @@ public class ZombieWorld
    *
    * @return true if there is and false if not
    */
-  boolean hasNextLevel()
+  public boolean hasNextLevel()
   {
     //TODO add more here
     return true;
@@ -203,7 +243,7 @@ public class ZombieWorld
    * This function is called when the Engine is first started up and it wants
    * to begin the game as well as each time the previous level has ended.
    *
-   * If there is another Level the World should load it and then tell the
+   * If there is another Level, the World should load it, and then tell the
    * next Level to initialize the starting state of the game.
    *
    * @param engine reference to the Engine object which is calling this function -
@@ -211,9 +251,13 @@ public class ZombieWorld
    *               each new Actor that is being added so it can start building
    *               separate lists to improve its performance/the renderer's performance
    */
-  void nextLevel(Engine engine)
+  public void nextLevel(Engine engine)
   {
-    
+    if (hasNextLevel() == true)
+    {
+      // There is another level, the world will load it
+      // initialize starting state of game
+    }
   }
 
   /**
@@ -225,9 +269,9 @@ public class ZombieWorld
    *               each new Actor that is being added so it can start building
    *               separate lists to improve its performance/the renderer's performance
    */
-  void restartLevel(Engine engine)
+  public void restartLevel(Engine engine)
   {
-    
+    //Will work on this later once engine has more implementations
   }
 }
 
