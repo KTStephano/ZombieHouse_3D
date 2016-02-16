@@ -153,8 +153,7 @@ public class Game extends Application {
         }
 
         private void doHandle() {      
-            
-          
+                   
             if (!started)
             {
               stop();
@@ -167,7 +166,7 @@ public class Game extends Application {
                 timerCt = 300;
                 final URL resource = getClass().getClassLoader().getResource("zombie.mp3");
                 final Media media = new Media(resource.toString());
-                sounds.queueSoundAtLocation(media   , 0, 0);
+                sounds.queueSoundAtLocation(media, 0, 0);
                 sounds.update();
               }
               renderer.render(DrawMode.FILL);
