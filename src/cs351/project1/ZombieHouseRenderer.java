@@ -2,13 +2,14 @@ package cs351.project1;
 
 import cs351.core.*;
 import cs351.entities.Player;
+import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
@@ -18,16 +19,14 @@ import javafx.stage.Stage;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class ZombieHouseRenderer implements Renderer
 {
   private Scene scene;
   private PerspectiveCamera camera;
-  private Translate cameraTranslation;
-  private Rotate cameraRotation;
   private Player player;
+  private PlayerController controller;
   private PointLight playerLight;
   private Group renderSceneGraph; // camera and all actors are added to this
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
@@ -60,6 +59,133 @@ public class ZombieHouseRenderer implements Renderer
     public Image getTexture()
     {
       return texture;
+    }
+  }
+
+  private class PlayerController
+  {
+    private Player player;
+    private Translate translation;
+    private Rotate rotation;
+    private Point2D direction;
+    private Point2D right;
+    private double prevX = 0.0;
+    private double angle = 0.0;
+    private final double SPEED = 1.0; // for x and y movement
+
+    public PlayerController(Player player)
+    {
+      this.player = player;
+      translation = new Translate(0.0, 0.0, 0.0);
+      rotation = new Rotate(0.0, 0.0, 0.0);
+      rotation.setAxis(new Point3D(0.0, 1.0, 0.0)); // sets it to rotate about the y-axis
+      rotation.setAngle(angle);
+      buildDirectionVectors();
+      scene.setOnMouseMoved(this::mouseMoved);
+      scene.setOnKeyPressed(this::keyPressed);
+      scene.setOnKeyReleased(this::keyReleased);
+    }
+
+    public Translate getTranslation()
+    {
+      return translation;
+    }
+
+    public Rotate getRotation()
+    {
+      return rotation;
+    }
+
+    private void mouseMoved(MouseEvent event)
+    {
+      // This if statement is here since prevX is initially going to be 0.0, so it can cause
+      // an initial spasm with the camera since event.getX() - prevX might result in a very large
+      // angle
+      if (prevX > 0.0)
+      {
+        angle += event.getX() - prevX;
+        angle = angle % 360.0;
+        rotation.setAngle(angle);
+      }
+      prevX = event.getX();
+      buildDirectionVectors();
+    }
+
+    public void keyPressed(KeyEvent event)
+    {
+      //if (event.getText().equals("w")) player.setLocation(player.getLocation().getX() + direction.getY(), player.getLocation().getY() + direction.getX());
+      //else if (event.getText().equals("s")) player.setLocation(player.getLocation().getX() + -direction.getY(), player.getLocation().getY() + -direction.getX());
+      if (event.getText().equals("w"))
+      {
+        player.setForwardSpeedX(SPEED); //speedY = SPEED;
+        player.setForwardSpeedY(SPEED); //speedY = SPEED;
+      }
+      else if (event.getText().equals("s"))
+      {
+        player.setForwardSpeedX(-SPEED); //speedY = SPEED;
+        player.setForwardSpeedY(-SPEED); //speedY = -SPEED;
+      }
+      else if (event.getText().equals("a"))
+      {
+        player.setRightSpeedX(-SPEED);
+        player.setRightSpeedY(-SPEED);
+      }
+      else if (event.getText().equals("d"))
+      {
+        player.setRightSpeedX(SPEED);
+        player.setRightSpeedY(SPEED);
+      }
+    }
+
+    public void keyReleased(KeyEvent event)
+    {
+      if (event.getText().equals("w") || event.getText().equals("s"))
+      {
+        player.setForwardSpeedX(0.0);
+        player.setForwardSpeedY(0.0);
+      }
+      else if (event.getText().equals("a") || event.getText().equals("d"))
+      {
+        player.setRightSpeedX(0.0);
+        player.setRightSpeedY(0.0);
+      }
+    }
+
+    private double degreesToRadians(double angle)
+    {
+      return angle * (3.14159265359 / 180.0);
+    }
+
+    private void buildDirectionVectors()
+    {
+      // for information on this, see:
+      // http://stackoverflow.com/questions/1568568/how-to-convert-euler-angles-to-directional-vector
+      //
+      // In our case the angle variable represents yaw (rotation about the y-axis), but pitch and roll remain at a constant 0.0. Because
+      // of this, the z-component of the direction vector is always 0, so it is a 2D direction vector in the end (starts off pointing
+      // down x-axis at 0 degrees, y-axis at 90 degrees, etc.).
+      // Notes:
+      //        1) When the angle variable is 0, the direction vector points straight down the x-axis (on a 2-dimensional grid)
+      //        2) When the angle variable is 90, the direction vector points straight up the y-axis
+      //        3) For our game, an actor's y-component represents forward in 3D space and its x-component represents side to side
+
+      // CAUTION: The values are reversed: direction's x-component should be Math.cos(degreesToRadians(angle)), but it is
+      // inverted since the x-component needs to point straight ahead, but straight ahead (for us) is the y-axis
+      direction = new Point2D(Math.sin(degreesToRadians(angle)), Math.cos(degreesToRadians(angle)));
+      direction.normalize(); // with direction vectors you only need their magnitude to be 1.0 since their job is just to point
+      // For more information on this, see:
+      // http://answers.unity3d.com/questions/228203/getting-vector-which-is-pointing-to-the-rightleft.html
+      // I dropped the negative since in JavaFX the -y points up instead of down, so when x = 1.0, the right of
+      // that should be y = -1.0, but in JavaFX it needs to be y = 1.0
+
+      // CAUTION: The negative sign should be in front of direction.getY(), but since direction's components
+      // are reversed I had to swap it around for the math to work inside of the Player class (otherwise right
+      // became left and left became right)
+      right = new Point2D(direction.getY(), -direction.getX()); // figure out the direction of right
+      // this is flipped (getY first instead of getX) because we start off with a direction vector that points
+      // down the x-axis, and we want that initial pointing to represent forward.
+      player.setForwardDirection(direction);
+      player.setRightDirection(right);
     }
   }
 
@@ -115,20 +241,22 @@ public class ZombieHouseRenderer implements Renderer
   @Override
   public void registerPlayer(Actor player, double fieldOfView)
   {
+    this.player = (Player)player;
     camera = new PerspectiveCamera(true);
+    controller = new PlayerController(this.player);
     camera.setFieldOfView(fieldOfView);
     renderSceneGraph.getChildren().add(camera);
     renderScene.setCamera(camera);
-    this.player = (Player)player;
     playerLight = new PointLight(Color.color(0.2, 0.2, 0.2));
     playerLight.setLightOn(true);
     renderSceneGraph.getChildren().add(playerLight);
-    cameraTranslation = new Translate(this.player.getLocation().getX(), 0.0, this.player.getLocation().getY());
-    cameraRotation = new Rotate(0.0, 0.0, 0.0);
-    playerLight.getTransforms().add(cameraTranslation);
-    camera.getTransforms().addAll(cameraTranslation, cameraRotation);
-    scene.setOnKeyPressed(this.player::keyPressed);
-    scene.setOnKeyReleased(this.player::keyReleased);
+    controller.getTranslation().setX(this.player.getLocation().getX());
+    controller.getTranslation().setY(0.0);
+    controller.getTranslation().setZ(this.player.getLocation().getY());
+    playerLight.getTransforms().addAll(controller.getTranslation(), controller.getRotation());
+    camera.getTransforms().addAll(controller.getTranslation(), controller.getRotation());
+    //scene.setOnKeyPressed(this.player::keyPressed);
+    //scene.setOnKeyReleased(this.player::keyReleased);
   }
 
   @Override
@@ -230,8 +358,8 @@ public class ZombieHouseRenderer implements Renderer
     //Translate translate = new Translate(player.getLocation().getX() - cameraTranslation.getX(),
                                         //0.0, player.getLocation().getY() - cameraTranslation.getZ());
     //camera.getTransforms().addAll(translate);
-    cameraTranslation.setX(player.getLocation().getX());
-    cameraTranslation.setZ(player.getLocation().getY());
+    controller.getTranslation().setX(player.getLocation().getX());
+    controller.getTranslation().setZ(player.getLocation().getY());
   }
 
   private void setTranslationValuesForModel(Model model, double x, double y, double z)
