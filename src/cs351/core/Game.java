@@ -10,54 +10,53 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
+
 
 /*
  *   Game Class - contains main entry point
  *   here we direct traffic for the rest of
  *   Zombie House
  */
-public class Game extends Application{
+public class Game extends Application {
+
 
   @FXML private Button playButton;
   @FXML private  AnchorPane ZombieHouseAnchorPane; 
   @FXML private StackPane zombieHouseScrollPane;
   @FXML private Text gameTitle;
   @FXML private Text gameTitle2;
-  private boolean started;
+  private AnimationTimer timer;
+  private volatile boolean started=true;
   private ZombieHouseRenderer renderer;
   private Engine pretendEngine = new NotTheRealEngine();
   private LinkedList<Actor> actors = new LinkedList<Actor>();
 
-
+  
   //play button handler - run continually (Until Pause)
   @FXML protected void handlePlay(ActionEvent event)  {
 
     started = !started;
-    System.out.println(started);
     if (started)
     {
-      playButton.setText("Pause");
+      playButton.setText("Pause");   
     } else
     {
-      playButton.setText("Play");
-
+      playButton.setText("Play");   
     }
-  }  
+    
+}
+  
 
   // clear 
   @FXML protected void handleClear(ActionEvent event) {
@@ -71,60 +70,13 @@ public class Game extends Application{
   }  
 
 
-
-  public static void main(String[] args) {
-    Application.launch(Game.class, args);
-  }
-  /*
-   * Implementing required method for extending Application
-   * @see javafx.application.Application#start(javafx.stage.Stage)
-   * 
-   * Load JavaFX Scene and show
-   */
-  @Override
-  public void start(Stage stage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ZombieHouse.fxml"));
-    stage.setTitle("Zombie House");
-    stage.setScene(new Scene(root, 900, 750));
-    stage.show();
-    for (Node node : root.getChildrenUnmodifiable())
-    {
-      if (node instanceof StackPane)
-      {
-        StackPane pane = (StackPane)node;
-        renderer = new ZombieHouseRenderer(stage, pane, (int)pane.getWidth(), (int)pane.getHeight());
-      }
-    }
-    // if the above for loop does not find a StackPane, throw an exception
-    if (renderer == null) throw new RuntimeException("Could not find a StackPane for the renderer to use");
-    initPlayer();
-    initZombies();
-    initGameLoop();
-  }
-
-
+  
   private void initGameLoop()
   {
-
-    /*
-     * AnimationTimer() - loops forever
-     * @param started
-     */
-    new AnimationTimer() {
-      @Override
-      public void handle(long now) {
-
-        started = true; // TODO make this work - had to add this so the renderer would run
-        if (started)
-        {
-          // all the updates at 60fps
-          // this is one frame
-          renderer.render(DrawMode.FILL);
-          for (Actor actor : actors) actor.update(pretendEngine, 0.0);
-        }
-      }
-    }.start();
+    timer = new MyTimer();
+    timer.start();
   }
+
 
   private void initPlayer()
   {
@@ -159,6 +111,60 @@ public class Game extends Application{
       actors.add(wall);
     }
   }
+
+
+
+    @Override
+    public void start(Stage stage) throws IOException {
+      Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ZombieHouse.fxml"));
+      stage.setTitle("Zombie House");
+      stage.setScene(new Scene(root, 900, 750));
+      stage.show();
+      for (Node node : root.getChildrenUnmodifiable())
+      {
+        if (node instanceof StackPane)
+        {
+          StackPane pane = (StackPane)node;
+          renderer = new ZombieHouseRenderer(stage, pane, (int)pane.getWidth(), (int)pane.getHeight());
+        }
+      }
+      // if the above for loop does not find a StackPane, throw an exception
+      if (renderer == null) throw new RuntimeException("Could not find a StackPane for the renderer to use");
+   
+    
+      initPlayer();
+      initZombies();
+      initGameLoop();
+    }
+
+
+
+    private class MyTimer extends AnimationTimer {
+
+        @Override
+        public void handle(long now) {
+        
+            doHandle();
+        }
+
+        private void doHandle() {
+
+         
+            if (!started)
+            {
+              stop();
+              System.out.println("Animation stopped");
+            } else
+            {
+              renderer.render(DrawMode.FILL);
+              for (Actor actor : actors) actor.update(pretendEngine, 0.0);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
 
 
