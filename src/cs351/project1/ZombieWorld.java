@@ -1,5 +1,7 @@
 package cs351.project1;
 import cs351.core.*;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -14,16 +16,17 @@ public class ZombieWorld implements World
   private int pixelWidth;
   private int pixelHeight;
   private Actor player;
-  private Collection<Actor> Actor;
-  private Collection<Block> Block;
-  private Collection<Tile> Tile;
+  private ArrayList<Actor> actors = new ArrayList<>();
+  private ArrayList<Block> blocks = new ArrayList<>();
+  private ArrayList<Tile>  tiles  = new ArrayList<>();
   
+  private ArrayList<Level> levels = new ArrayList<>();
   
-  private Collection<Level> Level;
+  public ZombieWorld(){}
 
   public ZombieWorld(int pixelWidth, int pixelHeight)
   {
-    this.pixelWidth = pixelWidth;
+    this.pixelWidth  = pixelWidth;
     this.pixelHeight = pixelHeight;
   }
   
@@ -52,11 +55,14 @@ public class ZombieWorld implements World
    */
   public void remove(Actor actor) throws RuntimeException
   {
-    if (getActors().isEmpty()) throw new RuntimeException();
+    if (getActors().isEmpty()){
+      System.out.println("remove ex1");
+      throw new RuntimeException();
+    }
     else
     {
       // remove actor from list
-      Actor.remove(actor);
+      actors.remove(actor);
     }
   }
 
@@ -69,7 +75,7 @@ public class ZombieWorld implements World
   public void add(Actor actor)
   {
     //Add actor object to generic collection
-    Actor.add(actor);
+    actors.add(actor);
   }
 
   /**
@@ -82,7 +88,8 @@ public class ZombieWorld implements World
   public void add(Block block)
   {
     //Add block object to generic collection
-    Block.add(block);
+    System.out.println("add blocks");
+    blocks.add(block);
   }
 
   /**
@@ -96,7 +103,8 @@ public class ZombieWorld implements World
   public void add(Tile tile)
   {
     //Add tile to generic collection
-    Tile.add(tile);
+    System.out.println("tile");
+    tiles.add(tile);
   }
 
   /**
@@ -106,7 +114,7 @@ public class ZombieWorld implements World
    */
   public void add(Level level)
   {
-    Level.add(level);
+    levels.add(level);
   }
 
   /**
@@ -138,6 +146,7 @@ public class ZombieWorld implements World
    */
   public void setPixelWidthHeight(int pixelWidth, int pixelHeight)
   {
+    System.err.println("set pixel widthheight");
     this.pixelWidth = pixelWidth;
     this. pixelHeight = pixelHeight;
   }
@@ -192,8 +201,11 @@ public class ZombieWorld implements World
    */
   public void setPlayer(Actor player) throws RuntimeException
   {
-    if( player == null) throw new RuntimeException();
-    else this.player = player;
+//    if( player == null){
+//      System.out.println("setPlayer ex2, player doesn't exist");
+//      throw new RuntimeException();
+//    }
+    this.player = player;
   }
 
   /**
@@ -201,18 +213,18 @@ public class ZombieWorld implements World
    *
    * @return collection of actors
    */
-  public Collection<Actor> getActors()
+  public ArrayList<Actor> getActors()
   {
-    return Actor;
+    return actors;
   }
   /**
    * Returns a list of all blocks in the world which are static but need to be updated.
    *
    * @return collection of blocks
    */
-  public Collection<Block> getBlocks()
+  public ArrayList<Block> getBlocks()
   {
-    return Block;
+    return blocks;
   }
 
   /**
@@ -220,9 +232,9 @@ public class ZombieWorld implements World
    *
    * @return collection of tiles
    */
-  public Collection<Tile> getTiles()
+  public ArrayList<Tile> getTiles()
   {
-    return Tile;
+    return tiles;
   }
 
   /**
