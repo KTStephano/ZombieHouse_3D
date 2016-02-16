@@ -48,7 +48,7 @@
     <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="9" />
       <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
         <items>
-               <Button fx:id="playButton" onAction="#handlePlay" text="Play" />
+               <Button fx:id="playButton" onAction="#handlePlay" text="Pause" />
                <Button onAction="#handleClear" text="Reset" />
             <Button onAction="#handleSubmitButtonAction" text="Quit" />
         </items>

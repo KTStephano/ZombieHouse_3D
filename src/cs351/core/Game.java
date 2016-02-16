@@ -4,6 +4,7 @@ import cs351.entities.Player;
 import cs351.entities.Zombie;
 import cs351.project1.NotTheRealEngine;
 import cs351.project1.ZombieHouseRenderer;
+import cs351.project1.ZombieHouseSoundEngine;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
@@ -21,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
+import java.net.URL;
 
 
 /*
@@ -120,6 +123,7 @@ public class Game extends Application {
       stage.setTitle("Zombie House");
       stage.setScene(new Scene(root, 900, 750));
       stage.show();
+      ZombieHouseSoundEngine sounds = new ZombieHouseSoundEngine();
       for (Node node : root.getChildrenUnmodifiable())
       {
         if (node instanceof StackPane)
@@ -140,22 +144,32 @@ public class Game extends Application {
 
 
     private class MyTimer extends AnimationTimer {
-
+        private int timerCt = 300;
+        private ZombieHouseSoundEngine sounds = new ZombieHouseSoundEngine();
         @Override
         public void handle(long now) {
         
             doHandle();
         }
 
-        private void doHandle() {
-
-         
+        private void doHandle() {      
+            
+          
             if (!started)
             {
               stop();
               System.out.println("Animation stopped");
             } else
             {
+              timerCt--;
+              if (timerCt == 0)
+              {
+                timerCt = 300;
+                final URL resource = getClass().getClassLoader().getResource("zombie.mp3");
+                final Media media = new Media(resource.toString());
+                sounds.queueSoundAtLocation(media   , 0, 0);
+                sounds.update();
+              }
               renderer.render(DrawMode.FILL);
               for (Actor actor : actors) actor.update(pretendEngine, 0.0);
             }
