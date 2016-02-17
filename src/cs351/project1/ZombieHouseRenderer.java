@@ -96,6 +96,12 @@ public class ZombieHouseRenderer implements Renderer
       return rotation;
     }
 
+    public void update()
+    {
+      rotation.setAngle(angle);
+      buildDirectionVectors();
+    }
+
     private void mouseMoved(MouseEvent event)
     {
       // This if statement is here since prevX is initially going to be 0.0, so it can cause
@@ -105,10 +111,8 @@ public class ZombieHouseRenderer implements Renderer
       {
         angle += event.getX() - prevX;
         angle = angle % 360.0;
-        rotation.setAngle(angle);
       }
       prevX = event.getX();
-      buildDirectionVectors();
     }
 
     public void keyPressed(KeyEvent event)
@@ -374,6 +378,7 @@ public class ZombieHouseRenderer implements Renderer
     //camera.getTransforms().addAll(translate);
     controller.getTranslation().setX(player.getLocation().getX());
     controller.getTranslation().setZ(player.getLocation().getY());
+    controller.update();
   }
 
   private void setTranslationValuesForModel(Model model, double x, double y, double z)
