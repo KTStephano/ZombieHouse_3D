@@ -1,6 +1,7 @@
 package cs351.project1;
 import cs351.core.*;
 import cs351.entities.Tiles;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +23,11 @@ public class ZombieWorld implements World
   private HashSet<Actor> changeList = new HashSet<Actor>(50);
   private ArrayList<Actor> actors = new ArrayList<>();
   private ArrayList<Level> levels = new ArrayList<>();
+  private LinkedList<Integer> currentLevel;
+  private int currLevel;
+  private Stage stage;
+  private SoundEngine soundEngine;
+  private Renderer renderer;
   
   public ZombieWorld(){}
 
@@ -185,6 +191,20 @@ public class ZombieWorld implements World
     return changeList;
   }
 
+  /*
+   ==========================================================
+   * This represents the different levels that are available 
+   * for gamePlay
+   ==========================================================
+   */
+  public void initializeLevels(int numberOfLevels)
+  {
+    System.out.println("init levels");
+    for(int i = 0; i < numberOfLevels; i++)
+    {
+      currentLevel.add(i);
+    }
+  }
   /**
    * Checks to see if there is another Level that can be loaded. The Engine
    * will call this whenever the previous Level has ended.
@@ -193,8 +213,10 @@ public class ZombieWorld implements World
    */
   public boolean hasNextLevel()
   {
-    //TODO add more here
-    return true;
+    //Retrieves and removes the first element of this 
+    //list, or returns null if this list is empty.
+    if(currentLevel.pollFirst() != null) return true;
+    else return false;
   }
 
   /**
@@ -214,7 +236,9 @@ public class ZombieWorld implements World
     if (hasNextLevel() == true)
     {
       // There is another level, the world will load it
-      // initialize starting state of game
+      currLevel = currentLevel.poll(); 
+      System.out.println("level" + currLevel);
+             
     }
   }
 
@@ -229,7 +253,7 @@ public class ZombieWorld implements World
    */
   public void restartLevel(Engine engine)
   {
-    //Will work on this later once engine has more implementations
+    engine.init(stage, this, soundEngine, renderer);
   }
 }
 

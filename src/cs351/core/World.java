@@ -117,6 +117,14 @@ public interface World
    * @return collection of actors
    */
   Collection<Actor> getChangeList(boolean clearChangeList);
+  
+ /**
+  ==============================================================
+  * Sets how many levels are going to exist for the entire Game
+  * @param numberOfLevels
+  ==============================================================
+  */
+  void initializeLevels(int numberOfLevels);
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine

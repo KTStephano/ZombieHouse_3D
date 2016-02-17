@@ -154,4 +154,11 @@ public class NotTheRealWorld implements World
   public void restartLevel(Engine engine) {
     nextLevel(engine);
   }
+
+  @Override
+  public void initializeLevels(int numberOfLevels)
+  {
+    // TODO Auto-generated method stub
+    
+  }
 }

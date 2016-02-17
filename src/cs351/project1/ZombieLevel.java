@@ -5,10 +5,12 @@ import cs351.core.*;
 
 public class ZombieLevel implements Level
 {
+  private static World world;
   private int pixelWidth;
   private int pixelHeight;
   private int tileWidth;
   private int tileHeight;
+  private Actor player;
   
   private LinkedList<Actor> actors;
   private LinkedList<Block> block;
@@ -21,6 +23,7 @@ public class ZombieLevel implements Level
    *
    * @param world World object to initialize/reinitialize
    */
+  public ZombieLevel(){}
   public ZombieLevel(int pixelWidth, int pixelHeight,int tileWidth, int tileHeight)
   {
     this.pixelWidth = pixelWidth;
@@ -29,15 +32,25 @@ public class ZombieLevel implements Level
     this.tileHeight = tileHeight;
     this.tileWidth = tileWidth;
     
-    //initialize actors and player
-    //store in list
   }
   
+  /**
+   * This is a callback method to the Zombie world. It 
+   * initializes everything once. These values won't change
+   */
   public void initWorld(World world)
   {
-    //callback zombie world
-    //iterate through each collection then add to world
-    //ex world .set pixel width hetight(pixel width
+    world.setPixelWidthHeight(pixelWidth, pixelHeight);
+    world.setTilePixelWidthHeight(pixelWidth, pixelHeight);
+    world.setPlayer(player);
+    world.initializeLevels(6);
+    
+//    // init the starting actors for the world
+//    for (Actor actor : actors) world.add(actor);
+//    for (Block block : block) world.add(block);
+//    for (Tile  tile  : tile) world.add(tile);
+    
     
   }
+
 }
