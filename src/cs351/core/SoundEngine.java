@@ -1,6 +1,6 @@
 package cs351.core;
 
-import javafx.scene.media.Media;
+import javafx.scene.media.AudioClip;
 
 /**
  * The idea behind a SoundEngine is that each frame a number of objects
@@ -35,7 +35,7 @@ public interface SoundEngine
    * @param x x-coordinate where the sound started
    * @param y y-coordinate where the sound started
    */
-  void queueSoundAtLocation(Media sound, int x, int y);
+  void queueSoundAtLocation(AudioClip sound, int x, int y);
 
   /**
    * When this function is called, all sounds that were added to the sound queue

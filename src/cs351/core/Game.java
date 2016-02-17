@@ -43,6 +43,7 @@ public class Game extends Application {
     engine.togglePause(started); // lets the engine know what's going on
     if (started)
     {
+      timer.start();
       playButton.setText("Pause");
     } else
     {
@@ -104,13 +105,11 @@ public class Game extends Application {
   private class MyTimer extends AnimationTimer {
     private int timerCt = 300;
     private ZombieHouseSoundEngine sounds = new ZombieHouseSoundEngine();
+
+    // private Point pt = new Point();
+    // sounds.setCentralPoint(pt);
     @Override
-    public void handle(long now) {
-
-      doHandle();
-    }
-
-    private void doHandle()
+    public void handle(long now)
     {
       engine.frame();
     }

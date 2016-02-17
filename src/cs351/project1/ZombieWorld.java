@@ -1,5 +1,8 @@
 package cs351.project1;
 import cs351.core.*;
+import cs351.entities.Tiles;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -16,15 +19,15 @@ public class ZombieWorld implements World
   private int pixelWidth;
   private int pixelHeight;
   private Actor player;
-  private Collection<Actor> Actor;
   private HashSet<Actor> changeList = new HashSet<Actor>(50);
+  private ArrayList<Actor> actors = new ArrayList<>();
+  private ArrayList<Level> levels = new ArrayList<>();
   
-  
-  private Collection<Level> Level;
+  public ZombieWorld(){}
 
   public ZombieWorld(int pixelWidth, int pixelHeight)
   {
-    this.pixelWidth = pixelWidth;
+    this.pixelWidth  = pixelWidth;
     this.pixelHeight = pixelHeight;
   }
   
@@ -36,7 +39,7 @@ public class ZombieWorld implements World
    */
   public boolean contains(Actor actor)
   {
-    return Actor.contains(actor);
+    return actors.contains(actor);
   }
   
   /**
@@ -52,21 +55,23 @@ public class ZombieWorld implements World
     else
     {
       // remove actor from list
-      Actor.remove(actor);
+      actors.remove(actor);
       if (changeList.contains(actor)) changeList.remove(actor);
     }
   }
 
   /**
-   * Tries to add an Actor object to the existing World. This should only
-   * be used on Actors that can move.
-   *
-   * @param actor Actor object to add
+   ============================================
+   This method passes an actor as an argument
+   and adds to the respective ArrayList. It's
+   supposed to be more consolidated instead of
+   having multiple add() methods
+   ============================================
    */
   public void add(Actor actor)
   {
     //Add actor object to generic collection
-    Actor.add(actor);
+    actors.add(actor);
     changeList.add(actor);
   }
 
@@ -77,7 +82,7 @@ public class ZombieWorld implements World
    */
   public void add(Level level)
   {
-    Level.add(level);
+    levels.add(level);
   }
 
   /**
@@ -163,25 +168,22 @@ public class ZombieWorld implements World
    */
   public void setPlayer(Actor player) throws RuntimeException
   {
-    if( player == null) throw new RuntimeException();
-    else this.player = player;
+//    if( player == null){
+//      System.out.println("setPlayer ex2, player doesn't exist");
+//      throw new RuntimeException();
+//    }
+    this.player = player;
   }
 
   public Collection<Actor> getChangeList(boolean clearChangeList)
   {
-    if (clearChangeList)
-    {
+    if (clearChangeList) {
       HashSet<Actor> returnVal = new HashSet<Actor>(changeList);
       changeList.clear();
       return returnVal;
     }
     return changeList;
   }
-
-  /**
-   * Returns a list of all blocks in the world which are static but need to be updated.
-   *
-   * @return collection of blocks
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine

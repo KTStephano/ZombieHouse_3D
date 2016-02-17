@@ -1,7 +1,10 @@
 package cs351.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+
+import cs351.entities.Tiles;
 
 /**
  * A World object maintains the current state of all active
@@ -109,10 +112,9 @@ public interface World
    * Returns a list of all actors that were added since the last time the
    * change list was cleared. The change list should only be cleared at this
    * point if clearChangeList is true.
+   * Returns a list of all actors in the world that are not static.
    *
-   * @param clearChangeList if true, copy the change list to return it and then clear
-   *                        the main change list
-   * @return list of all actors added since the last time the change list was cleared
+   * @return collection of actors
    */
   Collection<Actor> getChangeList(boolean clearChangeList);
 
