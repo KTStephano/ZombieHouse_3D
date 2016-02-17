@@ -20,6 +20,8 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.awt.Point;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
@@ -146,6 +148,8 @@ public class Game extends Application {
   private class MyTimer extends AnimationTimer {
     private int timerCt = 300;
     private ZombieHouseSoundEngine sounds = new ZombieHouseSoundEngine();
+   // private Point pt = new Point();
+   // sounds.setCentralPoint(pt);
     @Override
     public void handle(long now) {
 

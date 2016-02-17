@@ -10,8 +10,9 @@ import java.awt.Point;
  * @author Scott Cooper
  */
 public class ZombieHouseSoundEngine implements SoundEngine {
-  
+
   private Point centralPoint;
+  private final int GREATEST_DISTANCE_ACROSS_ROOM = 50;
   private Stack<SoundStackItem> soundStack = new Stack<>();
   
   @Override
@@ -44,8 +45,21 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     while (!soundStack.isEmpty()) 
     {
       tmpSoundStackItem = soundStack.pop();
-      tmpSoundStackItem.sound.play();
-     }
+      /*
+      tmpSoundStackItem.sound.setVolume(1-Math.sqrt(  (tmpSoundStackItem.x-centralPoint.x)*(tmpSoundStackItem.x-centralPoint.x)+(tmpSoundStackItem.y-centralPoint.y)*(tmpSoundStackItem.y-centralPoint.y) ) / GREATEST_DISTANCE_ACROSS_ROOM);
+          
+      if ((tmpSoundStackItem.x-centralPoint.x)!=0)
+      {
+        tmpSoundStackItem.sound.setBalance(  (tmpSoundStackItem.x-centralPoint.x) / (tmpSoundStackItem.x-centralPoint.x));       
+      } else
+      {
+        tmpSoundStackItem.sound.setBalance(0);
+      }
+        */    
+  
+      
+     tmpSoundStackItem.sound.play();
+    }
     
     
   }
