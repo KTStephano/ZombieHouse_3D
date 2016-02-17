@@ -2,6 +2,7 @@ package cs351.entities;
 
 import cs351.core.Actor;
 import cs351.core.Engine;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 
 import java.net.URL;
@@ -19,7 +20,7 @@ public class PlayASoundThingy extends Actor
     if (rand.nextInt(200) >= 198)
     {
       final URL resource = getClass().getClassLoader().getResource("cs351/entities/sound/zombie.mp3");
-      final Media media = new Media(resource.toString());
+      final AudioClip media = new AudioClip(resource.toString());
       engine.getSoundEngine().queueSoundAtLocation(media, 0, 0);
     }
     return UpdateResult.UPDATE_COMPLETED;

@@ -26,7 +26,7 @@ public class LevelTest extends Application
   private ZombieHouseRenderer renderer;
   // real Game class won't have this
   private LinkedList<Actor> actors = new LinkedList<Actor>();
-  private Engine pretendEngine = new NotTheRealEngine(); // need this to update the actors
+  private Engine engine = new ZombieHouseEngine(); // need this to update the actors
   private World world;
 
   @Override
@@ -62,10 +62,7 @@ public class LevelTest extends Application
       @Override
       public void handle(long now)
       {
-        // you can switch this from DrawMode.FILL to DrawMode.LINE so that it
-        // draws wire-frame objects
-        renderer.render(DrawMode.FILL);
-        for (Actor actor : actors) actor.update(pretendEngine, 0.0);
+        engine.frame(); // run the next frame
       }
     }.start();
 
