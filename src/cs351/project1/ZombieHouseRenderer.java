@@ -248,6 +248,8 @@ public class ZombieHouseRenderer implements Renderer
     TILE_MODEL_MAP.clear();
     // doesn't clear textures in case they're needed again for the next frame
     renderSceneGraph.getChildren().clear();
+    // clearing the scene graph kills the lighting
+    initLighting();
   }
 
   @Override
