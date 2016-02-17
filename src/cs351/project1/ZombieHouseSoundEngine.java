@@ -42,7 +42,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     
     //  This was created as a test to see how
     //  well a very basic approach would work.
-    while (soundStack.isEmpty()) 
+    while (!soundStack.isEmpty()) 
     {
       tmpSoundStackItem = soundStack.pop();
       soundPlayer = new MediaPlayer(tmpSoundStackItem.sound);
