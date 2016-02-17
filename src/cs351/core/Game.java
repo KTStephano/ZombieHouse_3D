@@ -30,17 +30,16 @@ public class Game extends Application {
   @FXML private StackPane zombieHouseScrollPane;
   @FXML private Text gameTitle;
   @FXML private Text gameTitle2;
-  private AnimationTimer timer;
+  private AnimationTimer timer = new MyTimer();
   private boolean started=true;
   private ZombieHouseRenderer renderer;
-  private Engine engine;
+  private static Engine engine = new ZombieHouseEngine();
 
 
   //play button handler - run continually (Until Pause)
   @FXML protected void handlePlay(ActionEvent event)  {
-
-    started = !started;
     engine.togglePause(started); // lets the engine know what's going on
+    started = !started;
     if (started)
     {
       timer.start();
@@ -67,13 +66,11 @@ public class Game extends Application {
 
   private void initEngine(Stage stage)
   {
-    engine = new ZombieHouseEngine();
     engine.init(stage, new NotTheRealWorld(), new ZombieHouseSoundEngine(), renderer);
   }
 
   private void initGameLoop()
   {
-    timer = new MyTimer();
     timer.start();
   }
 
