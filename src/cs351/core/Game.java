@@ -123,11 +123,13 @@ public class Game extends Application {
     stage.setTitle("Zombie House");
     stage.setScene(new Scene(root, 900, 750));
     stage.show();
-    ZombieHouseSoundEngine sounds = new ZombieHouseSoundEngine();
     for (Node node : root.getChildrenUnmodifiable())
     {
-      StackPane pane = (StackPane)node;
-      renderer = new ZombieHouseRenderer(stage, pane, (int)pane.getWidth(), (int)pane.getHeight());
+      if (node instanceof StackPane)
+      {
+        StackPane pane = (StackPane)node;
+        renderer = new ZombieHouseRenderer(stage, pane, (int)pane.getWidth(), (int)pane.getHeight());
+      }
     }
 
     // if the above for loop does not find a StackPane, throw an exception
