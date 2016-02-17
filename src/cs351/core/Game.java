@@ -108,6 +108,7 @@ public class Game extends Application {
     @Override
     public void handle(long now)
     {
+      // run the next frame
       engine.frame();
     }
   }
