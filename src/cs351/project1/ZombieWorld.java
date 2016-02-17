@@ -1,6 +1,8 @@
 package cs351.project1;
 import cs351.core.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 
 /**
@@ -15,8 +17,7 @@ public class ZombieWorld implements World
   private int pixelHeight;
   private Actor player;
   private Collection<Actor> Actor;
-  private Collection<Block> Block;
-  private Collection<Tile> Tile;
+  private HashSet<Actor> changeList = new HashSet<Actor>(50);
   
   
   private Collection<Level> Level;
@@ -35,12 +36,7 @@ public class ZombieWorld implements World
    */
   public boolean contains(Actor actor)
   {
-    if (!getActors().isEmpty())
-    {
-      // Continue
-      return true;
-    } 
-    else return false;
+    return Actor.contains(actor);
   }
   
   /**
@@ -52,11 +48,12 @@ public class ZombieWorld implements World
    */
   public void remove(Actor actor) throws RuntimeException
   {
-    if (getActors().isEmpty()) throw new RuntimeException();
+    if (!contains(actor)) throw new RuntimeException();
     else
     {
       // remove actor from list
       Actor.remove(actor);
+      if (changeList.contains(actor)) changeList.remove(actor);
     }
   }
 
@@ -70,33 +67,7 @@ public class ZombieWorld implements World
   {
     //Add actor object to generic collection
     Actor.add(actor);
-  }
-
-  /**
-   * Tries to add a Block (Actor) to the existing World. This is a separate
-   * function so that moving objects can be separated from things like walls
-   * or other static objects that can collide with the player.
-   *
-   * @param block Block object to add
-   */
-  public void add(Block block)
-  {
-    //Add block object to generic collection
-    Block.add(block);
-  }
-
-  /**
-   * Tries to add a Tile (Actor) to the existing World. This is used by a Level
-   * to tell the World where all of the floor/ceiling tiles are so that the
-   * Engine will know not to check for collisions against them and the Renderer
-   * will know to drawn them on the top/bottom of the environment.
-   *
-   * @param tile Tile object to add
-   */
-  public void add(Tile tile)
-  {
-    //Add tile to generic collection
-    Tile.add(tile);
+    changeList.add(actor);
   }
 
   /**
@@ -196,34 +167,21 @@ public class ZombieWorld implements World
     else this.player = player;
   }
 
-  /**
-   * Returns a list of all actors in the world that are not static.
-   *
-   * @return collection of actors
-   */
-  public Collection<Actor> getActors()
+  public Collection<Actor> getChangeList(boolean clearChangeList)
   {
-    return Actor;
+    if (clearChangeList)
+    {
+      HashSet<Actor> returnVal = new HashSet<Actor>(changeList);
+      changeList.clear();
+      return returnVal;
+    }
+    return changeList;
   }
+
   /**
    * Returns a list of all blocks in the world which are static but need to be updated.
    *
    * @return collection of blocks
-   */
-  public Collection<Block> getBlocks()
-  {
-    return Block;
-  }
-
-  /**
-   * Returns a list of all tiles which make up the floors and ceilings of the environment.
-   *
-   * @return collection of tiles
-   */
-  public Collection<Tile> getTiles()
-  {
-    return Tile;
-  }
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine

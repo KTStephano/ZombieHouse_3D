@@ -226,7 +226,7 @@ public class ZombieHouseRenderer implements Renderer
   }
 
   @Override
-  public void render(DrawMode mode)
+  public void render(Engine engine, DrawMode mode)
   {
     // orient the player to their rotation/location
     orientPlayerToScene();
@@ -236,6 +236,18 @@ public class ZombieHouseRenderer implements Renderer
 
     // render the actors
     renderActors(mode);
+  }
+
+  @Override
+  public void reset()
+  {
+    camera = null;
+    player = null;
+    controller = null;
+    ACTOR_MODEL_MAP.clear();
+    TILE_MODEL_MAP.clear();
+    // doesn't clear textures in case they're needed again for the next frame
+    renderSceneGraph.getChildren().clear();
   }
 
   @Override
@@ -301,8 +313,6 @@ public class ZombieHouseRenderer implements Renderer
     model.lights = new ArrayList<>(5);
     model.translation = new Translate(0.0, 0.0, 0.0);
     model.rotation = new Rotate(0.0, 0.0, 0.0);
-    // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
-    if (player != null) model.translation.setY(player.getHeight() / 3.0);
     shape.getTransforms().addAll(model.rotation, model.translation);
 
     return model;
@@ -344,6 +354,8 @@ public class ZombieHouseRenderer implements Renderer
       //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
       //model.shape.getTransforms().clear();
       //model.shape.getTransforms().addAll(translate);
+      // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
+      if (player != null) model.translation.setY(player.getHeight() / 3.0);
       setTranslationValuesForModel(model, actor.getLocation().getX(), model.translation.getY(), actor.getLocation().getY());
       model.shape.setDrawMode(mode);
     }

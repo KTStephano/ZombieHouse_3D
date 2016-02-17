@@ -25,7 +25,6 @@ public class RendererTest extends Application
   private ZombieHouseRenderer renderer;
   // real Game class won't have this
   private LinkedList<Actor> actors = new LinkedList<Actor>();
-  private Engine pretendEngine = new NotTheRealEngine(); // need this to update the actors
 
   @Override
   public void start(Stage primaryStage)

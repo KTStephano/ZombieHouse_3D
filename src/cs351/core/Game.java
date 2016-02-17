@@ -1,8 +1,7 @@
 package cs351.core;
 
-import cs351.entities.Player;
-import cs351.entities.Zombie;
-import cs351.project1.NotTheRealEngine;
+import cs351.project1.NotTheRealWorld;
+import cs351.project1.ZombieHouseEngine;
 import cs351.project1.ZombieHouseRenderer;
 import cs351.project1.ZombieHouseSoundEngine;
 import javafx.animation.AnimationTimer;
@@ -14,17 +13,9 @@ import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Random;
-import java.net.URL;
-
 
 /*
  *   Game Class - contains main entry point
@@ -40,16 +31,16 @@ public class Game extends Application {
   @FXML private Text gameTitle;
   @FXML private Text gameTitle2;
   private AnimationTimer timer;
-  private volatile boolean started=true;
+  private boolean started=true;
   private ZombieHouseRenderer renderer;
-  private Engine pretendEngine = new NotTheRealEngine();
-  private LinkedList<Actor> actors = new LinkedList<Actor>();
+  private Engine engine;
 
 
   //play button handler - run continually (Until Pause)
   @FXML protected void handlePlay(ActionEvent event)  {
 
     started = !started;
+    engine.togglePause(started); // lets the engine know what's going on
     if (started)
     {
       playButton.setText("Pause");
@@ -73,46 +64,16 @@ public class Game extends Application {
   }
 
 
+  private void initEngine(Stage stage)
+  {
+    engine = new ZombieHouseEngine();
+    engine.init(stage, new NotTheRealWorld(), new ZombieHouseSoundEngine(), renderer);
+  }
 
   private void initGameLoop()
   {
     timer = new MyTimer();
     timer.start();
-  }
-
-
-  private void initPlayer()
-  {
-    Player player = new Player(100.0, 0.0);
-    renderer.registerPlayer(player, 90.0);
-    actors.add(player);
-  }
-
-  private void initZombies()
-  {
-    Random rand = new Random();
-    Color[] colors = { Color.BEIGE };
-    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
-        "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
-        "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
-    int currColor = 0;
-    int currTexture = 0;
-
-    int numZombies = 100;
-    for (int i = 0; i < numZombies; i++)
-    {
-      Zombie wall = new Zombie(rand.nextInt(numZombies), rand.nextInt(numZombies), 5, 5, 5);
-      // register the actor with the renderer
-      renderer.registerActor(wall, new Box(wall.getWidth(), wall.getHeight(), wall.getDepth()),
-          colors[currColor], colors[currColor], Color.WHITE);
-      // associate the texture with the actor
-      renderer.associateDiffuseTextureWithActor(wall, textures[currTexture]);
-      currColor++;
-      currTexture++;
-      if (currColor >= colors.length) currColor = 0;
-      if (currTexture >= textures.length) currTexture = 0;
-      actors.add(wall);
-    }
   }
 
 
@@ -135,9 +96,7 @@ public class Game extends Application {
     // if the above for loop does not find a StackPane, throw an exception
     if (renderer == null) throw new RuntimeException("Could not find a StackPane for the renderer to use");
 
-
-    initPlayer();
-    initZombies();
+    initEngine(stage);
     initGameLoop();
   }
 
@@ -151,26 +110,9 @@ public class Game extends Application {
       doHandle();
     }
 
-    private void doHandle() {      
-
-      if (!started)
-      {
-        stop();
-        System.out.println("Animation stopped");
-      } else
-      {
-        timerCt--;
-        if (timerCt == 0)
-        {
-          timerCt = 300;
-          final URL resource = getClass().getClassLoader().getResource("zombie.mp3");
-          final Media media = new Media(resource.toString());
-          sounds.queueSoundAtLocation(media, 0, 0);
-          sounds.update();
-        }
-        renderer.render(DrawMode.FILL);
-        for (Actor actor : actors) actor.update(pretendEngine, 0.0);
-      }
+    private void doHandle()
+    {
+      engine.frame();
     }
   }
 

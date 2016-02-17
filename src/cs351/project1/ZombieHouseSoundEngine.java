@@ -12,7 +12,7 @@ import java.awt.Point;
  */
 public class ZombieHouseSoundEngine implements SoundEngine {
   
-  private Point centralPoint;
+  private Point centralPoint = new Point();
   private Stack<SoundStackItem> soundStack = new Stack<>();
   
   @Override

@@ -29,31 +29,14 @@ public interface World
   void remove(Actor actor) throws RuntimeException;
 
   /**
-   * Tries to add an Actor object to the existing World. This should only
-   * be used on Actors that can move.
-   *
+       =========================================
+       This is a little more consolidated
+       instead of implementing multiple add
+       methods
+       =========================================
    * @param actor Actor object to add
    */
   void add(Actor actor);
-
-  /**
-   * Tries to add a Block (Actor) to the existing World. This is a separate
-   * function so that moving objects can be separated from things like walls
-   * or other static objects that can collide with the player.
-   *
-   * @param block Block object to add
-   */
-  void add(Block block);
-
-  /**
-   * Tries to add a Tile (Actor) to the existing World. This is used by a Level
-   * to tell the World where all of the floor/ceiling tiles are so that the
-   * Engine will know not to check for collisions against them and the Renderer
-   * will know to drawn them on the top/bottom of the environment.
-   *
-   * @param tile Tile object to add
-   */
-  void add(Tile tile);
 
   /**
    * Adds a level to the end of the current list of levels.
@@ -123,25 +106,15 @@ public interface World
   void setPlayer(Actor player) throws RuntimeException;
 
   /**
-   * Returns a list of all actors in the world that are not static.
+   * Returns a list of all actors that were added since the last time the
+   * change list was cleared. The change list should only be cleared at this
+   * point if clearChangeList is true.
    *
-   * @return collection of actors
+   * @param clearChangeList if true, copy the change list to return it and then clear
+   *                        the main change list
+   * @return list of all actors added since the last time the change list was cleared
    */
-  Collection<Actor> getActors();
-
-  /**
-   * Returns a list of all blocks in the world which are static but need to be updated.
-   *
-   * @return collection of blocks
-   */
-  Collection<Block> getBlocks();
-
-  /**
-   * Returns a list of all tiles which make up the floors and ceilings of the environment.
-   *
-   * @return collection of tiles
-   */
-  Collection<Tile> getTiles();
+  Collection<Actor> getChangeList(boolean clearChangeList);
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine

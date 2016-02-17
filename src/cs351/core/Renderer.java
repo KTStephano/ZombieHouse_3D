@@ -16,10 +16,16 @@ public interface Renderer
    * When this is called this will walk through all of the actors that have
    * been registered with it and render them relative to the player.
    *
+   * @param engine reference to the current engine
    * @param mode if this is set to DrawMode.FILL the objects will appear solid, but if
    *             this is set to DrawMode.LINE everything will look like it is a wire-frame model
    */
-  void render(DrawMode mode);
+  void render(Engine engine, DrawMode mode);
+
+  /**
+   * Resets the renderer to its default starting state.
+   */
+  void reset();
 
   /**
    * This is how you let the renderer know which actor is the player in the scene. It will
