@@ -14,7 +14,7 @@ import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
@@ -165,7 +165,7 @@ public class Game extends Application {
         {
           timerCt = 300;
           final URL resource = getClass().getClassLoader().getResource("zombie.mp3");
-          final Media media = new Media(resource.toString());
+          final AudioClip media = new AudioClip(resource.toString());
           sounds.queueSoundAtLocation(media, 0, 0);
           sounds.update();
         }

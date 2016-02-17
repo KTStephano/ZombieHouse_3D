@@ -3,8 +3,7 @@ package cs351.project1;
 import cs351.core.SoundEngine;
 import java.util.*;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
 import java.awt.Point;
 
 /**
@@ -23,7 +22,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
   }
 
   @Override
-  public void queueSoundAtLocation(Media sound, int x, int y) 
+  public void queueSoundAtLocation(AudioClip sound, int x, int y) 
   {
     soundStack.push(new SoundStackItem(sound,x,y));   
   }
@@ -31,7 +30,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
   @Override
   public void update() {
     SoundStackItem tmpSoundStackItem;
-    MediaPlayer soundPlayer;
+
 
     // NOTE: x, y distance to centralPoint = sqrt((cp.x - x)^2 + (cp.y-y)^2)
     // determines volume during playback
@@ -45,8 +44,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     while (!soundStack.isEmpty()) 
     {
       tmpSoundStackItem = soundStack.pop();
-      soundPlayer = new MediaPlayer(tmpSoundStackItem.sound);
-      soundPlayer.play();
+      tmpSoundStackItem.sound.play();
      }
     
     
