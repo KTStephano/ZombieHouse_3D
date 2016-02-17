@@ -39,8 +39,8 @@ public class Game extends Application {
   @FXML private StackPane zombieHouseScrollPane;
   @FXML private Text gameTitle;
   @FXML private Text gameTitle2;
-  private AnimationTimer timer;
-  private volatile boolean started=true;
+  private static volatile AnimationTimer timer;
+  private static volatile boolean started=true;
   private ZombieHouseRenderer renderer;
   private Engine pretendEngine = new NotTheRealEngine();
   private LinkedList<Actor> actors = new LinkedList<Actor>();
@@ -52,6 +52,7 @@ public class Game extends Application {
     started = !started;
     if (started)
     {
+      timer.start();
       playButton.setText("Pause");
     } else
     {
@@ -159,6 +160,7 @@ public class Game extends Application {
         System.out.println("Animation stopped");
       } else
       {
+
         timerCt--;
         if (timerCt == 0)
         {
