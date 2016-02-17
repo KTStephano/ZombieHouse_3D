@@ -157,7 +157,6 @@ public class Game extends Application {
       if (!started)
       {
         stop();
-        System.out.println("Animation stopped");
       } else
       {
 
