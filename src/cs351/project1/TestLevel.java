@@ -5,7 +5,9 @@ import cs351.core.Level;
 import cs351.core.World;
 import cs351.core.Tile;
 import cs351.core.Block;
+import cs351.entities.Blocks;
 import cs351.entities.Player;
+import cs351.entities.Tiles;
 import cs351.entities.Zombie;
 
 import java.util.LinkedList;
@@ -16,8 +18,8 @@ public class TestLevel implements Level
 {
   
   private LinkedList<Actor> actors            = new LinkedList<>();
-  private LinkedList<Block> staticBlocks      = new LinkedList<>();
-  private LinkedList<Tile>  floorCeilingTiles = new LinkedList<>();
+  private LinkedList<Blocks> staticBlocks      = new LinkedList<>();
+  private LinkedList<Tiles>  floorCeilingTiles = new LinkedList<>();
   private Actor player;
 
   private int pixelTileWidthHeight;
@@ -35,6 +37,8 @@ public class TestLevel implements Level
     // never reinitialize it
     initPlayer();
     initZombies();
+    initTiles();
+    initBlocks();
   }
 
   /*
@@ -57,8 +61,8 @@ public class TestLevel implements Level
     
     // init the starting actors for the world
     for (Actor actor : actors) world.add(actor);
-    for (Block block : staticBlocks) world.add(block);
-    for (Tile  tile  : floorCeilingTiles) world.add(tile);
+    for (Blocks block : staticBlocks) world.add(block);
+    for (Tiles  tile  : floorCeilingTiles) world.add(tile);
   }
 
   private void initPlayer()
@@ -87,16 +91,21 @@ public class TestLevel implements Level
    */
   private void initTiles()
   {
-    Tile tile;
     int numTiles = 100;
     for(int i = 0; i < numTiles; i++ )
     {
-      //floorCeilingTiles.add(tile);
+      Tiles tile = new Tiles();
+      floorCeilingTiles.add(tile);
     }
   }
   private void initBlocks()
   {
-    
+    int numBlocks = 20;
+    for(int i = 0; i < numBlocks; i++)
+    {
+      Blocks b = new Blocks();
+      staticBlocks.add(b);
+    }
   }
   
   

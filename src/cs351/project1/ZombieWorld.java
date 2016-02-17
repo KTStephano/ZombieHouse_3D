@@ -1,5 +1,6 @@
 package cs351.project1;
 import cs351.core.*;
+import cs351.entities.Tiles;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +19,7 @@ public class ZombieWorld implements World
   private Actor player;
   private ArrayList<Actor> actors = new ArrayList<>();
   private ArrayList<Block> blocks = new ArrayList<>();
-  private ArrayList<Tile>  tiles  = new ArrayList<>();
+  private ArrayList<Tiles>  tiles  = new ArrayList<>();
   
   private ArrayList<Level> levels = new ArrayList<>();
   
@@ -38,7 +39,7 @@ public class ZombieWorld implements World
    */
   public boolean contains(Actor actor)
   {
-    if (!getActors().isEmpty())
+    if (!actors.isEmpty())
     {
       // Continue
       return true;
@@ -55,8 +56,7 @@ public class ZombieWorld implements World
    */
   public void remove(Actor actor) throws RuntimeException
   {
-    if (getActors().isEmpty()){
-      System.out.println("remove ex1");
+    if (actors.isEmpty()){
       throw new RuntimeException();
     }
     else
@@ -66,56 +66,56 @@ public class ZombieWorld implements World
     }
   }
 
-  /**
-   * Tries to add an Actor object to the existing World. This should only
-   * be used on Actors that can move.
-   *
-   * @param actor Actor object to add
-   */
-  public void add(Actor actor)
-  {
-    //Add actor object to generic collection
-    actors.add(actor);
-  }
-
-  /**
-   * Tries to add a Block (Actor) to the existing World. This is a separate
-   * function so that moving objects can be separated from things like walls
-   * or other static objects that can collide with the player.
-   *
-   * @param block Block object to add
-   */
-  public void add(Block block)
-  {
-    //Add block object to generic collection
-    System.out.println("add blocks");
-    blocks.add(block);
-  }
-
-  /**
-   * Tries to add a Tile (Actor) to the existing World. This is used by a Level
-   * to tell the World where all of the floor/ceiling tiles are so that the
-   * Engine will know not to check for collisions against them and the Renderer
-   * will know to drawn them on the top/bottom of the environment.
-   *
-   * @param tile Tile object to add
-   */
-  public void add(Tile tile)
-  {
-    //Add tile to generic collection
-    System.out.println("tile");
-    tiles.add(tile);
-  }
-
-  /**
-   * Adds a level to the end of the current list of levels.
-   *
-   * @param level Level to add
-   */
-  public void add(Level level)
-  {
-    levels.add(level);
-  }
+//  /**
+//   * Tries to add an Actor object to the existing World. This should only
+//   * be used on Actors that can move.
+//   *
+//   * @param actor Actor object to add
+//   */
+//  public void add(Actor actor)
+//  {
+//    //Add actor object to generic collection
+//    actors.add(actor);
+//  }
+//
+//  /**
+//   * Tries to add a Block (Actor) to the existing World. This is a separate
+//   * function so that moving objects can be separated from things like walls
+//   * or other static objects that can collide with the player.
+//   *
+//   * @param block Block object to add
+//   */
+//  public void add(Block block)
+//  {
+//    //Add block object to generic collection
+//    System.out.println("add blocks");
+//    blocks.add(block);
+//  }
+//
+//  /**
+//   * Tries to add a Tile (Actor) to the existing World. This is used by a Level
+//   * to tell the World where all of the floor/ceiling tiles are so that the
+//   * Engine will know not to check for collisions against them and the Renderer
+//   * will know to drawn them on the top/bottom of the environment.
+//   *
+//   * @param tile Tile object to add
+//   */
+//  public void add(Tile tile)
+//  {
+//    //Add tile to generic collection
+//    System.out.println("tile");
+//    tiles.add(tile);
+//  }
+//
+//  /**
+//   * Adds a level to the end of the current list of levels.
+//   *
+//   * @param level Level to add
+//   */
+//  public void add(Level level)
+//  {
+//    levels.add(level);
+//  }
 
   /**
    * This should return the width of the world in terms of pixels.
@@ -146,7 +146,6 @@ public class ZombieWorld implements World
    */
   public void setPixelWidthHeight(int pixelWidth, int pixelHeight)
   {
-    System.err.println("set pixel widthheight");
     this.pixelWidth = pixelWidth;
     this. pixelHeight = pixelHeight;
   }
@@ -232,7 +231,7 @@ public class ZombieWorld implements World
    *
    * @return collection of tiles
    */
-  public ArrayList<Tile> getTiles()
+  public ArrayList<Tiles> getTiles()
   {
     return tiles;
   }
@@ -282,6 +281,39 @@ public class ZombieWorld implements World
   public void restartLevel(Engine engine)
   {
     //Will work on this later once engine has more implementations
+  }
+
+  /*
+   ============================================
+   This method passes an object as an argument
+   and adds to the respective ArrayList. It's
+   supposed to be more consolidated instead of
+   having multiple add() methods 
+   ============================================
+   */
+  @Override
+  public void add(Object obj)
+  {
+    Class cls = obj.getClass();
+    
+    System.out.println(cls);
+    
+    if (obj instanceof Tiles)
+    {
+      System.out.println("tiles");
+      tiles.add((Tiles) obj);
+    }
+    if (obj instanceof Actor)
+    {
+      System.out.println("Actor");
+      actors.add((Actor) obj);
+    }
+    if (obj instanceof Block)
+    {
+      System.out.println("Block");
+      blocks.add((Block) obj);
+    }
+    
   }
 }
 

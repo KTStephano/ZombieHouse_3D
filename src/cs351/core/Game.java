@@ -45,7 +45,8 @@ public class Game extends Application {
 
   //play button handler - run continually (Until Pause)
   @FXML protected void handlePlay(ActionEvent event)  {
-
+    
+    System.out.println(""+started);
     started = !started;
     if (started)
     {
@@ -151,7 +152,8 @@ public class Game extends Application {
 
     private void doHandle() {
 
-
+      
+  //    System.out.println("test"+started);
       if (!started)
       {
         stop();

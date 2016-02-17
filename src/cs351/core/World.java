@@ -1,7 +1,10 @@
 package cs351.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+
+import cs351.entities.Tiles;
 
 /**
  * A World object maintains the current state of all active
@@ -27,40 +30,56 @@ public interface World
    * @throws RuntimeException if the given Actor does not exist in the World
    */
   void remove(Actor actor) throws RuntimeException;
-
-  /**
-   * Tries to add an Actor object to the existing World. This should only
-   * be used on Actors that can move.
-   *
-   * @param actor Actor object to add
+  
+  /*
+   =========================================
+   This is a little more consolidated 
+   instead of implementing multiple add
+   methods
+   =========================================
    */
-  void add(Actor actor);
+   
+  void add(Object object);
 
-  /**
-   * Tries to add a Block (Actor) to the existing World. This is a separate
-   * function so that moving objects can be separated from things like walls
-   * or other static objects that can collide with the player.
-   *
-   * @param block Block object to add
-   */
-  void add(Block block);
-
-  /**
-   * Tries to add a Tile (Actor) to the existing World. This is used by a Level
-   * to tell the World where all of the floor/ceiling tiles are so that the
-   * Engine will know not to check for collisions against them and the Renderer
-   * will know to drawn them on the top/bottom of the environment.
-   *
-   * @param tile Tile object to add
-   */
-  void add(Tile tile);
-
-  /**
-   * Adds a level to the end of the current list of levels.
-   *
-   * @param level Level to add
-   */
-  void add(Level level);
+//  /**
+//   * Tries to add an Actor object to the existing World. This should only
+//   * be used on Actors that can move.
+//   *
+//   * @param actor Actor object to add
+//   */
+//  void add(Actor actor);
+//
+//  /**
+//   * Tries to add a Block (Actor) to the existing World. This is a separate
+//   * function so that moving objects can be separated from things like walls
+//   * or other static objects that can collide with the player.
+//   *
+//   * @param block Block object to add
+//   */
+//  void add(Block block);
+//
+//  /**
+//   * Tries to add a Tile (Actor) to the existing World. This is used by a Level
+//   * to tell the World where all of the floor/ceiling tiles are so that the
+//   * Engine will know not to check for collisions against them and the Renderer
+//   * will know to drawn them on the top/bottom of the environment.
+//   *
+//   * @param tile Tile object to add
+//   */
+//  void add(Tile tile);
+//
+//  /**
+//   * Adds a level to the end of the current list of levels.
+//   *
+//   * @param level Level to add
+//   */
+//  void add(Level level);
+//  
+//  /**
+//   * Adds a tile, actor 
+//   * @param obj
+//   */
+//  void add(Object obj);
 
   /**
    * This should return the width of the world in terms of pixels.
@@ -127,21 +146,21 @@ public interface World
    *
    * @return collection of actors
    */
-  Collection<Actor> getActors();
+  ArrayList<Actor> getActors();
 
   /**
    * Returns a list of all blocks in the world which are static but need to be updated.
    *
    * @return collection of blocks
    */
-  Collection<Block> getBlocks();
+  ArrayList<Block> getBlocks();
 
   /**
    * Returns a list of all tiles which make up the floors and ceilings of the environment.
    *
    * @return collection of tiles
    */
-  Collection<Tile> getTiles();
+  ArrayList<Tiles> getTiles();
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine
