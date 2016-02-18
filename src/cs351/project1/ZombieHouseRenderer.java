@@ -335,7 +335,7 @@ public class ZombieHouseRenderer implements Renderer
   private void renderActors(Engine engine, DrawMode mode)
   {
     //double floorDepthOffset = engine.getWorld().getTilePixelHeight();
-    double floorDepthOffset = 0.0;
+    double floorDepthOffset = 0.5;
     double floorHeightOffset = largestWall;
     for (Map.Entry<Actor, Model> entry : ACTOR_MODEL_MAP.entrySet())
     {
@@ -352,7 +352,7 @@ public class ZombieHouseRenderer implements Renderer
                                                               floorDepthOffset,
                                                               actor.getLocation().getY());
       else if (actor.isPartOfCeiling()) setTranslationValuesForModel(model, actor.getLocation().getX(),
-                                                                     floorHeightOffset,
+                                                                     floorHeightOffset - actor.getHeight() / 2.0,
                                                                      actor.getLocation().getY());
       else setTranslationValuesForModel(model, actor.getLocation().getX(),
                                         -actor.getHeight() / 2.0,

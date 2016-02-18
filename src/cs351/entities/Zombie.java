@@ -8,9 +8,9 @@ import java.util.Random;
 public class Zombie extends Actor
 {
   private Random rand = new Random();
-  private final double SPEED = 0.1; // for x and y movement
+  private final double BASE_SPEED = 2.0; // for x and y movement - measured in tiles per second
   private final double DIRECTION = 1.0;
-  private double speedX = SPEED; // not moving at first
+  private double speedX = BASE_SPEED; // not moving at first
   private double speedY = 0.0; // not moving at first
   private double directionX = DIRECTION;
   private double directionY = DIRECTION;
@@ -24,7 +24,8 @@ public class Zombie extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    setLocation(getLocation().getX() + speedX * directionX, getLocation().getY() + speedY * directionY);
+    setLocation(getLocation().getX() + deltaSeconds * speedX * directionX,
+                getLocation().getY() + deltaSeconds * speedY * directionY);
     if (rand.nextInt(1000) > 970) directionX = -directionX;
     if (rand.nextInt(1000) > 970) directionY = -directionY;
     if (rand.nextInt(1000) > 970)
