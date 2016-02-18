@@ -51,15 +51,24 @@ public class ZombieHouseRenderer implements Renderer
   private class Texture
   {
     private Image texture;
+    private PhongMaterial material;
 
     public Texture(Image texture)
     {
       this.texture = texture;
+      material = new PhongMaterial(Color.BEIGE);
+      material.setDiffuseColor(Color.BEIGE);
+      material.setSpecularColor(Color.WHITE);
     }
 
     public Image getTexture()
     {
       return texture;
+    }
+
+    public PhongMaterial getMaterial()
+    {
+      return material;
     }
   }
 
@@ -280,7 +289,7 @@ public class ZombieHouseRenderer implements Renderer
   public void registerActor(Actor actor, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor)
   {
     Model model = generateModel(actor, shape, diffuseColor, specularColor, ambientColor);
-    // renderer uess largestWall to calculate where it should put the ceiling
+    // renderer uses largestWall to calculate where it should put the ceiling
     if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
     ACTOR_MODEL_MAP.put(actor, model);
     renderSceneGraph.getChildren().addAll(model.shape);
@@ -297,6 +306,10 @@ public class ZombieHouseRenderer implements Renderer
     // register the texture with the renderer and then set the diffuse map of the model's material
     // to the newly-registered texture
     model.diffuseTexture = registerTexture(textureFile);
+    // update the model's material to use the material created during
+    // the texture loading/creation process
+    model.material = model.diffuseTexture.getMaterial();
+    model.shape.setMaterial(model.material);
     model.material.setDiffuseMap(model.diffuseTexture.getTexture());
   }
 
