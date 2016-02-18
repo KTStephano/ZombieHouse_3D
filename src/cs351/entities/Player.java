@@ -10,8 +10,7 @@ import javafx.scene.input.KeyEvent;
  */
 public class Player extends Actor
 {
-  private final double SPEED = 1.0; // for x and y movement
-  private final double DIRECTION = 1.0;
+  private final double BASE_SPEED = 10.0; // for x and y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
@@ -19,16 +18,19 @@ public class Player extends Actor
   private Point2D forwardDirection;
   private Point2D rightDirection;
 
-  public Player(double x, double y)
+  public Player(double x, double y, int height)
   {
+    super(""); // player does not need a texture
     setLocation(x, y);
-    setWidthHeightDepth(5, 5, 5);
+    setWidthHeightDepth(1, height, 1);
   }
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    setLocation(getLocation().getX() + forwardX * forwardDirection.getX(), getLocation().getY() + forwardY * forwardDirection.getY());
-    setLocation(getLocation().getX() + rightX * rightDirection.getX(), getLocation().getY() + rightY * rightDirection.getY());
+    setLocation(getLocation().getX() + BASE_SPEED * forwardX * deltaSeconds * forwardDirection.getX(),
+                getLocation().getY() + BASE_SPEED * forwardY * deltaSeconds * forwardDirection.getY());
+    setLocation(getLocation().getX() + BASE_SPEED * rightX * deltaSeconds * rightDirection.getX(),
+                getLocation().getY() + BASE_SPEED * rightY * deltaSeconds * rightDirection.getY());
     return UpdateResult.UPDATE_COMPLETED;
   }
 

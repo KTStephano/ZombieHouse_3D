@@ -10,8 +10,9 @@ import cs351.core.Engine;
  */
 public class Blocks extends Actor 
 {
-  public Blocks(){
-    
+  public Blocks(String textureFile)
+  {
+    super(textureFile);
   }
 
   @Override

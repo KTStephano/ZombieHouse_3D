@@ -62,8 +62,13 @@ public class LevelTest implements Level
 
   private void initPlayer()
   {
+<<<<<<< HEAD
     System.out.println("init player");
     player = new Player(100.0, 50.0);
+=======
+    Player player = new Player(100.0, 0.0, 5);
+    renderer.registerPlayer(player, 90.0);
+>>>>>>> df766e00ddee3e8f60d6bf064c3b5c39eec1247a
     actors.add(player);
   }
 
@@ -71,11 +76,30 @@ public class LevelTest implements Level
   {
     System.out.println(" initZombies");
     Random rand = new Random();
+<<<<<<< HEAD
     int numZombies = 100;
     for (int i = 0; i < numZombies; i++)
     {
       Zombie wall = new Zombie(rand.nextInt(numZombies), rand.nextInt(numZombies), 5, 5, 5);
+=======
+    Color[] colors = { Color.RED, Color.ORANGE, Color.BLACK, Color.BLUE, Color.BEIGE, Color.AZURE, Color.BROWN };
+    int currColor = 0;
+    int currTexture = 0;
+    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
+            "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
+            "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
+
+    for (int i = 0; i < 100; i++)
+    {
+      Zombie wall = new Zombie(textures[currTexture], rand.nextInt(100), rand.nextInt(100), 5, 5, 5);
+      renderer.registerActor(wall, new Box(1, 1, 1),
+                             colors[currColor], colors[currColor], Color.WHITE);
+      currColor++;
+      if (currColor >= colors.length) currColor = 0;
+>>>>>>> df766e00ddee3e8f60d6bf064c3b5c39eec1247a
       actors.add(wall);
+      currTexture++;
+      if (currTexture >= textures.length) currTexture = 0;
     }
   }
   

@@ -12,9 +12,10 @@ public class Tiles extends Actor
   private int pixelHeight;
   
   public Tiles(){
-    
+    super("");
   }
-  public Tiles(int pixelWidth, int pixelHeight){
+  public Tiles(String textureFile, int pixelWidth, int pixelHeight){
+    super(textureFile);
     this.pixelWidth = pixelWidth;
     this.pixelHeight = pixelHeight;
   }

@@ -13,8 +13,6 @@ public class ZombieLevel implements Level
   private Actor player;
   
   private LinkedList<Actor> actors;
-  private LinkedList<Block> block;
-  private LinkedList<Tile>  tile;
   
   /**
    * This should clear out the contents of the given World and then

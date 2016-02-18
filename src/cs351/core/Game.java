@@ -1,11 +1,6 @@
 package cs351.core;
 
-import cs351.project1.LevelTest;
-import cs351.project1.NotTheRealWorld;
-import cs351.project1.ZombieHouseEngine;
-import cs351.project1.ZombieHouseRenderer;
-import cs351.project1.ZombieHouseSoundEngine;
-import cs351.project1.ZombieWorld;
+import cs351.project1.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -62,15 +57,14 @@ public class Game extends Application {
 
   // Quit handler
   @FXML protected void handleSubmitButtonAction(ActionEvent event) {
+    engine.shutdown();
     System.exit(0);
   }
 
 
   private void initEngine(Stage stage)
   {
-    ZombieWorld zomThingy = new ZombieWorld();
-    zomThingy.add(new LevelTest(1000, 1000, 50));
-    engine.init(stage, zomThingy, new ZombieHouseSoundEngine(), renderer);
+    engine.init(stage, new EnvironmentDemo(), new ZombieHouseSoundEngine(), renderer);
   }
 
   private void initGameLoop()
