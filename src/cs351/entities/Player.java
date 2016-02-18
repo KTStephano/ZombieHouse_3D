@@ -19,11 +19,11 @@ public class Player extends Actor
   private Point2D forwardDirection;
   private Point2D rightDirection;
 
-  public Player(double x, double y)
+  public Player(double x, double y, int height)
   {
     super(""); // player does not need a texture
     setLocation(x, y);
-    setWidthHeightDepth(5, 5, 5);
+    setWidthHeightDepth(1, height, 1);
   }
 
   public UpdateResult update(Engine engine, double deltaSeconds)

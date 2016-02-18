@@ -33,6 +33,7 @@ public class ZombieHouseRenderer implements Renderer
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
   private final HashMap<String, Texture> TEXTURE_LOOKUP = new HashMap<>(50);
+  private double largestWall = 0.0; // used to calculate where the ceiling should be
   private Group renderSceneGroup;
 
   private class Model
@@ -45,7 +46,6 @@ public class ZombieHouseRenderer implements Renderer
     public ArrayList<PointLight> lights;
     public Translate translation; // this is used to position the model within the scene
     public Rotate rotation; // this is used to rotate the model about the origin within the scene
-    public Scale scale; // this is used to increase/decrease the object's size
   }
 
   private class Texture
@@ -225,7 +225,7 @@ public class ZombieHouseRenderer implements Renderer
   {
     renderSceneGraph = new Group();
     renderScene = new SubScene(renderSceneGraph, width, height, true, SceneAntialiasing.BALANCED);
-    renderScene.setFill(Color.GRAY);
+    renderScene.setFill(Color.BLACK);
     renderSceneGroup = new Group();
     renderSceneGroup.getChildren().add(renderScene);
   }
@@ -246,6 +246,7 @@ public class ZombieHouseRenderer implements Renderer
     camera = null;
     player = null;
     controller = null;
+    largestWall = 0.0;
     ACTOR_MODEL_MAP.clear();
     // doesn't clear textures in case they're needed again for the next frame
     renderSceneGraph.getChildren().clear();
@@ -258,6 +259,7 @@ public class ZombieHouseRenderer implements Renderer
   {
     this.player = (Player)player;
     camera = new PerspectiveCamera(true);
+    //camera.setFarClip(1000);
     controller = new PlayerController(this.player);
     camera.setFieldOfView(fieldOfView);
     renderSceneGraph.getChildren().add(camera);
@@ -266,7 +268,7 @@ public class ZombieHouseRenderer implements Renderer
     playerLight.setLightOn(true);
     renderSceneGraph.getChildren().add(playerLight);
     controller.getTranslation().setX(this.player.getLocation().getX());
-    controller.getTranslation().setY(0.0);
+    controller.getTranslation().setY(-this.player.getHeight() / 2.0);
     controller.getTranslation().setZ(this.player.getLocation().getY());
     playerLight.getTransforms().addAll(controller.getTranslation(), controller.getRotation());
     camera.getTransforms().addAll(controller.getTranslation(), controller.getRotation());
@@ -277,10 +279,9 @@ public class ZombieHouseRenderer implements Renderer
   @Override
   public void registerActor(Actor actor, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor)
   {
-    if (actor.isPartOfCeiling() || actor.isPartOfFloor() || actor.isStatic())
-    {
-    }
-    Model model = generateModel(shape, diffuseColor, specularColor, ambientColor);
+    Model model = generateModel(actor, shape, diffuseColor, specularColor, ambientColor);
+    // renderer uess largestWall to calculate where it should put the ceiling
+    if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
     ACTOR_MODEL_MAP.put(actor, model);
     renderSceneGraph.getChildren().addAll(model.shape);
   }
@@ -299,7 +300,7 @@ public class ZombieHouseRenderer implements Renderer
     model.material.setDiffuseMap(model.diffuseTexture.getTexture());
   }
 
-  private Model generateModel(Shape3D shape, Color ambientColor, Color diffuseColor, Color specularColor)
+  private Model generateModel(Actor actor, Shape3D shape, Color ambientColor, Color diffuseColor, Color specularColor)
   {
     Model model = new Model();
     model.shape = shape;
@@ -309,18 +310,20 @@ public class ZombieHouseRenderer implements Renderer
     model.material = material;
     shape.setMaterial(material);
     model.lights = new ArrayList<>(5);
-    model.translation = new Translate(0.0, 0.0, 0.0);
+    model.translation = new Translate(actor.getLocation().getX(),
+                                      0.0,
+                                      actor.getLocation().getY());
     model.rotation = new Rotate(0.0, 0.0, 0.0);
-    model.scale = new Scale();
-    shape.getTransforms().addAll(model.scale, model.rotation, model.translation);
+    shape.getTransforms().addAll(model.rotation, model.translation);
 
     return model;
   }
 
   private void renderActors(Engine engine, DrawMode mode)
   {
-    int floorDepthOffset = -engine.getWorld().getTilePixelHeight();
-    int floorHeightOffset = -floorDepthOffset;
+    //double floorDepthOffset = engine.getWorld().getTilePixelHeight();
+    double floorDepthOffset = 0.0;
+    double floorHeightOffset = largestWall;
     for (Map.Entry<Actor, Model> entry : ACTOR_MODEL_MAP.entrySet())
     {
       Actor actor = entry.getKey();
@@ -332,14 +335,15 @@ public class ZombieHouseRenderer implements Renderer
       //model.shape.getTransforms().clear();
       //model.shape.getTransforms().addAll(translate);
       // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
-      if (player != null) model.translation.setY(player.getHeight() / 3.0);
       if (actor.isPartOfFloor()) setTranslationValuesForModel(model, actor.getLocation().getX(),
                                                               floorDepthOffset,
                                                               actor.getLocation().getY());
       else if (actor.isPartOfCeiling()) setTranslationValuesForModel(model, actor.getLocation().getX(),
                                                                      floorHeightOffset,
                                                                      actor.getLocation().getY());
-      else setTranslationValuesForModel(model, actor.getLocation().getX(), model.translation.getY(), actor.getLocation().getY());
+      else setTranslationValuesForModel(model, actor.getLocation().getX(),
+                                        -actor.getHeight() / 2.0,
+                                        actor.getLocation().getY());
       model.shape.setDrawMode(mode);
     }
   }

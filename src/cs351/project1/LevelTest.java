@@ -81,7 +81,7 @@ public class LevelTest extends Application
   
   private void initPlayer()
   {
-    Player player = new Player(100.0, 0.0);
+    Player player = new Player(100.0, 0.0, 5);
     renderer.registerPlayer(player, 90.0);
     actors.add(player);
   }
@@ -99,7 +99,7 @@ public class LevelTest extends Application
     for (int i = 0; i < 100; i++)
     {
       Zombie wall = new Zombie(textures[currTexture], rand.nextInt(100), rand.nextInt(100), 5, 5, 5);
-      renderer.registerActor(wall, new Box(wall.getWidth(), wall.getHeight(), wall.getDepth()),
+      renderer.registerActor(wall, new Box(1, 1, 1),
                              colors[currColor], colors[currColor], Color.WHITE);
       currColor++;
       if (currColor >= colors.length) currColor = 0;

@@ -98,7 +98,7 @@ public class ZombieHouseEngine implements Engine
     millisecondsSinceLastFrame = 0;
     togglePause(false);
     stage.setOnCloseRequest(this::windowClosed);
-    initEngineFromWorld(true); // init the initial engine state from the world
+    initEngineState(); // init the initial engine state from the world
   }
 
   @Override

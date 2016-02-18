@@ -25,8 +25,8 @@ public class PlayASoundThingy extends Actor
   @Override
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    elapsedSeconds+= deltaSeconds;
-    if (elapsedSeconds >= 3.0)
+    elapsedSeconds += deltaSeconds;
+    if (elapsedSeconds >= 5.0)
     {
       elapsedSeconds = 0.0;
       final URL resource = getClass().getClassLoader().getResource("cs351/entities/sound/zombie.mp3");
@@ -38,7 +38,7 @@ public class PlayASoundThingy extends Actor
   }
 
   @Override
-  public void collided(Engine engine, Actor actor) {
-
+  public void collided(Engine engine, Actor actor)
+  {
   }
 }
