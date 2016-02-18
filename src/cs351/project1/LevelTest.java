@@ -1,87 +1,94 @@
 package cs351.project1;
 
-import cs351.core.Actor;
-import cs351.core.Level;
+
+import cs351.core.Game;
 import cs351.core.World;
-import cs351.core.Tile;
-import cs351.core.Block;
-import cs351.entities.Blocks;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+import cs351.core.Actor;
+import cs351.core.Engine;
 import cs351.entities.Player;
-import cs351.entities.Tiles;
 import cs351.entities.Zombie;
+import javafx.animation.AnimationTimer;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
 
 import java.util.LinkedList;
 import java.util.Random;
 
-//implements interface Level
-public class LevelTest implements Level
+//All of this will go into Game.java, LevelTest.java is only to create an environment
+
+public class LevelTest extends Application
 {
   
-  private LinkedList<Actor> actors            = new LinkedList<>();
-  private Actor player;
+  private ZombieHouseRenderer renderer;
+  // real Game class won't have this
+  private LinkedList<Actor> actors = new LinkedList<Actor>();
+  private Engine engine = new ZombieHouseEngine(); // need this to update the actors
+  private World world;
 
-  private  int pixelTileWidthHeight;
-  private  int pixelHeight;
-  private  int pixelWidth;
-
- 
-  public LevelTest(int pixelWidth, int pixelHeight, int pixelTileWidthHeight)
+  @Override
+  public void start(Stage primaryStage) throws Exception
   {
-    this.pixelWidth           = pixelWidth;
-    this.pixelHeight          = pixelHeight;
-    this.pixelTileWidthHeight = pixelTileWidthHeight;
-
+    // TODO Auto-generated method stub
+    try
+    {
+     
+      // System.out.println("level test");
+      new Game().start(primaryStage);
+    }
+    catch (Exception e)
+    {
+      System.exit(-1);
+    }
     
-    // initialize all of the actors/geometry/player for the level and
-    // never reinitialize it
+    
+    int widthHeight = 700;
+    renderer = new ZombieHouseRenderer(primaryStage, widthHeight, widthHeight);
+
+    /****************/
+      initWorld();
+    /***************/
+    
     initPlayer();
     initZombies();
+    primaryStage.show();
+
+    // stole this from Scott's code
+    new AnimationTimer()
+    {
+      @Override
+      public void handle(long now)
+      {
+        engine.frame(); // run the next frame
+      }
+    }.start();
+
+  
   }
 
-  /*
-   ==================================================
-   callback zombie world
-   iterate through each collection then add to world
-   ==================================================
-   */
-  @Override
-  public void initWorld(World world)
+  //TODO THIS INITIALIZES THE WORLD
+  private void initWorld()
   {
-    // init the world's pixel width and pixel height
-    world.setPixelWidthHeight(pixelWidth, pixelHeight);
-
-    // init the world's tile width and tile height
-    world.setTilePixelWidthHeight(pixelTileWidthHeight, pixelTileWidthHeight);
-    
-    // set the player for the world
-    world.setPlayer(player);
-    
-    // init the starting actors for the world
-    for (Actor actor : actors) world.add(actor);
+    //calls constructor of Zombieworld
+   // ZombieLevel l = new ZombieLevel(2, 3, 3, 2);
+    ZombieLevel z = new ZombieLevel(0, 0, 0, 0);
+  //  z.initWorld(world);
   }
-
+  
+  
   private void initPlayer()
   {
-<<<<<<< HEAD
-    System.out.println("init player");
-    player = new Player(100.0, 50.0);
-=======
     Player player = new Player(100.0, 0.0, 5);
     renderer.registerPlayer(player, 90.0);
->>>>>>> df766e00ddee3e8f60d6bf064c3b5c39eec1247a
     actors.add(player);
   }
 
   private void initZombies()
   {
-    System.out.println(" initZombies");
     Random rand = new Random();
-<<<<<<< HEAD
-    int numZombies = 100;
-    for (int i = 0; i < numZombies; i++)
-    {
-      Zombie wall = new Zombie(rand.nextInt(numZombies), rand.nextInt(numZombies), 5, 5, 5);
-=======
     Color[] colors = { Color.RED, Color.ORANGE, Color.BLACK, Color.BLUE, Color.BEIGE, Color.AZURE, Color.BROWN };
     int currColor = 0;
     int currTexture = 0;
@@ -96,19 +103,17 @@ public class LevelTest implements Level
                              colors[currColor], colors[currColor], Color.WHITE);
       currColor++;
       if (currColor >= colors.length) currColor = 0;
->>>>>>> df766e00ddee3e8f60d6bf064c3b5c39eec1247a
       actors.add(wall);
       currTexture++;
       if (currTexture >= textures.length) currTexture = 0;
     }
   }
   
-  /*
-   ================================================
-   Addes these initializers as test cases
-   
-   ================================================
-   */
-
-
+    
+    
+    
+  public static void main(String[] args)
+  {
+    launch(args);
+  }
 }
