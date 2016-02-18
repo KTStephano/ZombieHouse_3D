@@ -29,8 +29,8 @@ public class ZombieHouseEngine implements Engine
 
   public ZombieHouseEngine()
   {
-    ALL_ACTORS = new HashSet<Actor>(500);
-    UPDATE_ACTORS = new HashSet<Actor>(500);
+    ALL_ACTORS = new HashSet<>(500);
+    UPDATE_ACTORS = new HashSet<>(500);
   }
 
   @Override
@@ -160,7 +160,7 @@ public class ZombieHouseEngine implements Engine
   {
     if (pendingNextLevel && getWorld().hasNextLevel())
     {
-      getWorld().nextLevel(this);
+      //getWorld().nextLevel(this);
       initEngineFromWorld(true);
       pendingNextLevel = false;
     }
