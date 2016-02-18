@@ -184,6 +184,27 @@ public class EnvironmentDemo implements World
                                 getTilePixelHeight()); // sets the depth to be 1 tile
           actors.add(wall);
         }
+        
+        /*
+         ========================================================
+         adding creating new wall objects to make an inside room
+                
+         ========================================================       
+         */
+        if ((x == 10 || x == 15) && y < 15)
+        {
+          Actor wall = new Wall("textures/bikiniBabe.jpg",
+                                x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                                y * getTilePixelHeight(), // same as above but for y
+                                getTilePixelWidth(), // sets the width to be 1 tile
+                                2 * getTilePixelHeight(), // sets the height to be 2 tiles
+                                getTilePixelHeight()); // sets the depth to be 1 tile
+          actors.add(wall);
+        }
+
+        
+        /***************************************************************************************/
+        
         // add a floor and ceiling tile
         FloorCeilingTile floor = new FloorCeilingTile("textures/block_texture_dark.jpg",
                                                       true, // is part of floor
