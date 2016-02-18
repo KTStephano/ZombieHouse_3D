@@ -19,12 +19,13 @@ public class ZombieWorld implements World
 {
   private int pixelWidth;
   private int pixelHeight;
+  private int tilePixelWidth;
+  private int tilePixelHeight;
   private Actor player;
   private HashSet<Actor> changeList = new HashSet<Actor>(50);
   private ArrayList<Actor> actors = new ArrayList<>();
-  private ArrayList<Level> levels = new ArrayList<>();
-  private LinkedList<Integer> currentLevel;
-  private int currLevel;
+  private LinkedList<Level> levels = new LinkedList<>(); //maintain order
+  private Level currLevel;
   private Stage stage;
   private SoundEngine soundEngine;
   private Renderer renderer;
@@ -98,6 +99,7 @@ public class ZombieWorld implements World
    */
   public int getWorldPixelWidth()
   {
+    System.out.println(" pixel " + pixelWidth);
     return pixelWidth;
   }
 
@@ -108,6 +110,7 @@ public class ZombieWorld implements World
    */
   public int getWorldPixelHeight()
   {
+    System.out.println(" pixel " + pixelHeight);
     return pixelHeight;
   }
 
@@ -131,7 +134,7 @@ public class ZombieWorld implements World
    */
   public int getTilePixelWidth()
   {
-    return pixelWidth;
+    return tilePixelWidth;
   }
 
   /**
@@ -141,7 +144,7 @@ public class ZombieWorld implements World
    */
   public int getTilePixelHeight()
   {
-    return pixelHeight;
+    return tilePixelHeight;
   }
 
   /**
@@ -150,10 +153,11 @@ public class ZombieWorld implements World
    * @param pixelWidth tile width in pixels
    * @param pixelHeight tile height in pixels
    */
-  public void setTilePixelWidthHeight(int pixelWidth, int pixelHeight)
+  public void setTilePixelWidthHeight(int tilePixelWidth, int tilePixelHeight)
   {
-    this.pixelWidth = pixelWidth;
-    this.pixelHeight = pixelHeight;
+    System.out.println("width " + tilePixelWidth +"height"+ tilePixelHeight);
+    this.tilePixelWidth = tilePixelWidth;
+    this.tilePixelHeight = tilePixelHeight;
   }
 
   /**
@@ -199,11 +203,7 @@ public class ZombieWorld implements World
    */
   public void initializeLevels(int numberOfLevels)
   {
-    System.out.println("init levels");
-    for(int i = 0; i < numberOfLevels; i++)
-    {
-      currentLevel.add(i);
-    }
+
   }
   /**
    * Checks to see if there is another Level that can be loaded. The Engine
@@ -215,8 +215,7 @@ public class ZombieWorld implements World
   {
     //Retrieves and removes the first element of this 
     //list, or returns null if this list is empty.
-    if(currentLevel.pollFirst() != null) return true;
-    else return false;
+    return levels.size()> 0;
   }
 
   /**
@@ -236,10 +235,10 @@ public class ZombieWorld implements World
     if (hasNextLevel() == true)
     {
       // There is another level, the world will load it
-      currLevel = currentLevel.poll(); 
-      System.out.println("level" + currLevel);
-             
+      currLevel = levels.poll();
+      currLevel.initWorld(this);
     }
+    
   }
 
   /**
@@ -253,7 +252,8 @@ public class ZombieWorld implements World
    */
   public void restartLevel(Engine engine)
   {
-    engine.init(stage, this, soundEngine, renderer);
+    
+    
   }
 }
 

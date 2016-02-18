@@ -1,9 +1,11 @@
 package cs351.core;
 
+import cs351.project1.LevelTest;
 import cs351.project1.NotTheRealWorld;
 import cs351.project1.ZombieHouseEngine;
 import cs351.project1.ZombieHouseRenderer;
 import cs351.project1.ZombieHouseSoundEngine;
+import cs351.project1.ZombieWorld;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -66,7 +68,9 @@ public class Game extends Application {
 
   private void initEngine(Stage stage)
   {
-    engine.init(stage, new NotTheRealWorld(), new ZombieHouseSoundEngine(), renderer);
+    ZombieWorld zomThingy = new ZombieWorld();
+    zomThingy.add(new LevelTest(1000, 1000, 50));
+    engine.init(stage, zomThingy, new ZombieHouseSoundEngine(), renderer);
   }
 
   private void initGameLoop()

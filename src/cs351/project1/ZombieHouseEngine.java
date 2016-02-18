@@ -160,7 +160,7 @@ public class ZombieHouseEngine implements Engine
   {
     if (pendingNextLevel && getWorld().hasNextLevel())
     {
-      getWorld().nextLevel(this);
+//      getWorld().nextLevel(this);
       initEngineFromWorld(true);
       pendingNextLevel = false;
     }
