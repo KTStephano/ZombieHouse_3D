@@ -11,18 +11,18 @@ import java.awt.Point;
  */
 public class ZombieHouseSoundEngine implements SoundEngine {
   private Point centralPoint = new Point();
-  private final int GREATEST_DISTANCE_ACROSS_ROOM = 50;
+  private final int GREATEST_DISTANCE_ACROSS_ROOM = 100;
   private Stack<SoundStackItem> soundStack = new Stack<>();
   
   @Override
-  public void setCentralPoint(int x, int y) 
+  public void setCentralPoint(double x, double y) 
   {
-    centralPoint.x = x;
-    centralPoint.y = y;
+    centralPoint.x = (int)x;
+    centralPoint.y = (int)y;
   }
 
   @Override
-  public void queueSoundAtLocation(AudioClip sound, int x, int y) 
+  public void queueSoundAtLocation(AudioClip sound, double x, double y) 
   {
     soundStack.push(new SoundStackItem(sound,x,y));   
   }
@@ -44,8 +44,12 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     while (!soundStack.isEmpty()) 
     {
       tmpSoundStackItem = soundStack.pop();
-      /*
-      tmpSoundStackItem.sound.setVolume(1-Math.sqrt(  (tmpSoundStackItem.x-centralPoint.x)*(tmpSoundStackItem.x-centralPoint.x)+(tmpSoundStackItem.y-centralPoint.y)*(tmpSoundStackItem.y-centralPoint.y) ) / GREATEST_DISTANCE_ACROSS_ROOM);
+      
+          
+          double soundVolume = 1- Math.sqrt(  (tmpSoundStackItem.x-centralPoint.x)*(tmpSoundStackItem.x-centralPoint.x)+(tmpSoundStackItem.y-centralPoint.y)*(tmpSoundStackItem.y-centralPoint.y) ) / GREATEST_DISTANCE_ACROSS_ROOM;
+          System.out.println("vol: "+soundVolume);
+          
+      tmpSoundStackItem.sound.setVolume(soundVolume);  
           
       if ((tmpSoundStackItem.x-centralPoint.x)!=0)
       {
@@ -54,7 +58,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       {
         tmpSoundStackItem.sound.setBalance(0);
       }
-        */    
+           
   
       
      tmpSoundStackItem.sound.play();

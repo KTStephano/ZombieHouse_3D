@@ -20,7 +20,7 @@ public interface SoundEngine
    * @param x center x-coordinate
    * @param y center y-coordinate
    */
-  void setCentralPoint(int x, int y);
+  void setCentralPoint(double x, double y);
 
   /**
    * This function should not immediately play the sound at location
@@ -35,7 +35,7 @@ public interface SoundEngine
    * @param x x-coordinate where the sound started
    * @param y y-coordinate where the sound started
    */
-  void queueSoundAtLocation(AudioClip sound, int x, int y);
+  void queueSoundAtLocation(AudioClip sound, double x, double y);
 
   /**
    * When this function is called, all sounds that were added to the sound queue

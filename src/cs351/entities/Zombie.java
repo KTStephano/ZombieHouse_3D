@@ -2,7 +2,9 @@ package cs351.entities;
 
 import cs351.core.Actor;
 import cs351.core.Engine;
+import javafx.scene.media.AudioClip;
 
+import java.net.URL;
 import java.util.Random;
 
 public class Zombie extends Actor
@@ -14,6 +16,7 @@ public class Zombie extends Actor
   private double speedY = 0.0; // not moving at first
   private double directionX = DIRECTION;
   private double directionY = DIRECTION;
+  private double elapsedSeconds=0.0;
 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -35,11 +38,25 @@ public class Zombie extends Actor
       double temp = speedX;
       speedX = speedY;
       speedY = temp;
+      checkPlaySound(engine, deltaSeconds);
       //engine.getSoundEngine().queueSoundAtLocation(null\, (int)getLocation().getX(), (int)getLocation().getY());
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
 
+  private void checkPlaySound(Engine engine, double deltaSeconds)
+  {
+    elapsedSeconds+= deltaSeconds;
+    if (elapsedSeconds >= 3.0)
+    {
+      elapsedSeconds = 0.0;
+      final URL resource = getClass().getClassLoader().getResource("cs351/entities/sound/zombie.mp3");
+      final AudioClip media = new AudioClip(resource.toString());
+
+      engine.getSoundEngine().queueSoundAtLocation(media, getLocation().getX(), getLocation().getY());
+    }
+    
+  }
   public void collided(Engine engine, Actor actor)
   {
 

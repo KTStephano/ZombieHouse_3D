@@ -8,9 +8,9 @@ import javafx.scene.media.AudioClip;
  */
 public class SoundStackItem {
   AudioClip sound;
-  int x;
-  int y;
-  public SoundStackItem(AudioClip sound, int x, int y)
+  double x;
+  double y;
+  public SoundStackItem(AudioClip sound, double x, double y)
   {
     this.sound = sound;
     this.x = x;
