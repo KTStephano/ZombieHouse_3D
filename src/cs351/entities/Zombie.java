@@ -32,6 +32,7 @@ public class Zombie extends Actor
       double temp = speedX;
       speedX = speedY;
       speedY = temp;
+      //engine.getSoundEngine().queueSoundAtLocation(null\, (int)getLocation().getX(), (int)getLocation().getY());
     }
     return UpdateResult.UPDATE_COMPLETED;
   }
