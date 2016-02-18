@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
@@ -31,7 +32,6 @@ public class ZombieHouseRenderer implements Renderer
   private Group renderSceneGraph; // camera and all actors are added to this
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
-  private final HashMap<Actor, Model> TILE_MODEL_MAP = new HashMap<>(50);
   private final HashMap<String, Texture> TEXTURE_LOOKUP = new HashMap<>(50);
   private Group renderSceneGroup;
 
@@ -45,6 +45,7 @@ public class ZombieHouseRenderer implements Renderer
     public ArrayList<PointLight> lights;
     public Translate translation; // this is used to position the model within the scene
     public Rotate rotation; // this is used to rotate the model about the origin within the scene
+    public Scale scale; // this is used to increase/decrease the object's size
   }
 
   private class Texture
@@ -235,11 +236,8 @@ public class ZombieHouseRenderer implements Renderer
     // orient the player to their rotation/location
     orientPlayerToScene();
 
-    // render the tiles
-    renderFloorAndCeiling(mode);
-
     // render the actors
-    renderActors(mode);
+    renderActors(engine, mode);
   }
 
   @Override
@@ -249,7 +247,6 @@ public class ZombieHouseRenderer implements Renderer
     player = null;
     controller = null;
     ACTOR_MODEL_MAP.clear();
-    TILE_MODEL_MAP.clear();
     // doesn't clear textures in case they're needed again for the next frame
     renderSceneGraph.getChildren().clear();
     // clearing the scene graph kills the lighting
@@ -280,27 +277,22 @@ public class ZombieHouseRenderer implements Renderer
   @Override
   public void registerActor(Actor actor, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor)
   {
+    if (actor.isPartOfCeiling() || actor.isPartOfFloor() || actor.isStatic())
+    {
+    }
     Model model = generateModel(shape, diffuseColor, specularColor, ambientColor);
     ACTOR_MODEL_MAP.put(actor, model);
     renderSceneGraph.getChildren().addAll(model.shape);
   }
 
   @Override
-  public void registerStaticTile(Tile tile, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor)
+  public void mapTextureToActor(String textureFile, Actor actor)
   {
-    Model model = generateModel(shape, diffuseColor, specularColor, ambientColor);
-    TILE_MODEL_MAP.put(tile, model);
-    renderSceneGraph.getChildren().add(model.shape);
-  }
-
-  @Override
-  public void associateDiffuseTextureWithActor(Actor actor, String textureFile)
-  {
-    if (!ACTOR_MODEL_MAP.containsKey(actor) && !TILE_MODEL_MAP.containsKey(actor))
+    if (!ACTOR_MODEL_MAP.containsKey(actor))
     {
       throw new RuntimeException("Actor not registered with renderer before call to associateTextureWithActor");
     }
-    Model model = ACTOR_MODEL_MAP.containsKey(actor) ? ACTOR_MODEL_MAP.get(actor) : TILE_MODEL_MAP.get(actor);
+    Model model = ACTOR_MODEL_MAP.get(actor);
     // register the texture with the renderer and then set the diffuse map of the model's material
     // to the newly-registered texture
     model.diffuseTexture = registerTexture(textureFile);
@@ -319,37 +311,16 @@ public class ZombieHouseRenderer implements Renderer
     model.lights = new ArrayList<>(5);
     model.translation = new Translate(0.0, 0.0, 0.0);
     model.rotation = new Rotate(0.0, 0.0, 0.0);
-    shape.getTransforms().addAll(model.rotation, model.translation);
+    model.scale = new Scale();
+    shape.getTransforms().addAll(model.scale, model.rotation, model.translation);
 
     return model;
   }
 
-  private void renderFloorAndCeiling(DrawMode mode)
+  private void renderActors(Engine engine, DrawMode mode)
   {
-    int floorHeightOffset = 0;
-    int ceilingHeightOffset = 0;
-    if (player != null)
-    {
-      floorHeightOffset = player.getHeight();
-      ceilingHeightOffset = -floorHeightOffset;
-    }
-
-    for (Map.Entry<Actor, Model> entry : TILE_MODEL_MAP.entrySet())
-    {
-      Tile tile = (Tile)entry.getKey();
-      Model model = entry.getValue();
-      if (model.shape == null) continue;
-      setTranslationValuesForModel(model, tile.getLocation().getX(),
-                                   tile.isPartOfFloor() ? floorHeightOffset : ceilingHeightOffset,
-                                   tile.getLocation().getY());
-      model.shape.getTransforms().add(model.translation);
-      model.shape.setDrawMode(mode);
-    }
-  }
-
-  private void renderActors(DrawMode mode)
-  {
-    Translate translate = new Translate(0.0, 0.0, 0.0);
+    int floorDepthOffset = -engine.getWorld().getTilePixelHeight();
+    int floorHeightOffset = -floorDepthOffset;
     for (Map.Entry<Actor, Model> entry : ACTOR_MODEL_MAP.entrySet())
     {
       Actor actor = entry.getKey();
@@ -362,7 +333,13 @@ public class ZombieHouseRenderer implements Renderer
       //model.shape.getTransforms().addAll(translate);
       // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
       if (player != null) model.translation.setY(player.getHeight() / 3.0);
-      setTranslationValuesForModel(model, actor.getLocation().getX(), model.translation.getY(), actor.getLocation().getY());
+      if (actor.isPartOfFloor()) setTranslationValuesForModel(model, actor.getLocation().getX(),
+                                                              floorDepthOffset,
+                                                              actor.getLocation().getY());
+      else if (actor.isPartOfCeiling()) setTranslationValuesForModel(model, actor.getLocation().getX(),
+                                                                     floorHeightOffset,
+                                                                     actor.getLocation().getY());
+      else setTranslationValuesForModel(model, actor.getLocation().getX(), model.translation.getY(), actor.getLocation().getY());
       model.shape.setDrawMode(mode);
     }
   }

@@ -20,8 +20,11 @@ public abstract class Actor
   protected int width, height, depth; // width, height and depth are measured in tiles instead of pixels
   protected Point2D location = new Point2D(0.0, 0.0); // location of the object in 2D space
   protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn and collide with stuff, though)
-  protected boolean isStatic = false; // if true, collision events won't cause the Actor to move at all
+  protected boolean isStatic = false; // if true, collision events won't cause the Actor to move at all - renderer also uses this to figure out which are walls and stuff
   protected boolean noClip = false; // if true the object will not collide with anything (phase through walls, zombies, etc.)
+  protected boolean isPartOfFloor; // true if floor tile
+  protected boolean isPartOfCeiling; // true if ceiling
+  protected final String TEXTURE_FILE;
 
   /**
    * UpdateResult contains a few different enum values that each Actor can use
@@ -32,6 +35,16 @@ public abstract class Actor
     UPDATE_COMPLETED, // Engine interprets this as normal and does nothing
     PLAYER_VICTORY, // Engine will now ask the current world to load the next level
     PLAYER_DEFEAT // Engine will now ask the current world to restart the same level
+  }
+
+  /**
+   * Creates a new actor with the specified texture file.
+   *
+   * @param textureFile texture file (to be used with renderer)
+   */
+  public Actor(String textureFile)
+  {
+    TEXTURE_FILE = textureFile;
   }
 
   /**
@@ -71,6 +84,38 @@ public abstract class Actor
    * @param actor reference to the Actor object that collided with this object
    */
   public abstract void collided(Engine engine, Actor actor);
+
+  /**
+   * The renderer will use this function to figure out whether the tile is part of
+   * the floor so it can draw it properly.
+   *
+   * @return true if it is part of the floor and false if not
+   */
+  public boolean isPartOfFloor()
+  {
+    return isPartOfFloor;
+  }
+
+  /**
+   * The renderer will use this function to figure out whether the tile is part of
+   * the ceiling so it can draw it properly.
+   *
+   * @return true if it is part of the floor and false if not
+   */
+  public boolean isPartOfCeiling()
+  {
+    return isPartOfCeiling;
+  }
+
+  /**
+   * Gets the texture file associated with this actor.
+   *
+   * @return texture file
+   */
+  public String getTexture()
+  {
+    return TEXTURE_FILE;
+  }
 
   /**
    * Allows for the Actor's width and height to be set.

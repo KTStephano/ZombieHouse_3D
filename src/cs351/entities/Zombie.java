@@ -1,7 +1,6 @@
 package cs351.entities;
 
 import cs351.core.Actor;
-import cs351.core.Block;
 import cs351.core.Engine;
 
 import java.util.Random;
@@ -16,8 +15,9 @@ public class Zombie extends Actor
   private double directionX = DIRECTION;
   private double directionY = DIRECTION;
 
-  public Zombie(double x, double y, int width, int height, int depth)
+  public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
+    super(textureFile);
     setLocation(x, y);
     setWidthHeightDepth(width, height, depth);
   }

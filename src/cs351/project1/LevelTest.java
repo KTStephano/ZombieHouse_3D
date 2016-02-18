@@ -91,15 +91,21 @@ public class LevelTest extends Application
     Random rand = new Random();
     Color[] colors = { Color.RED, Color.ORANGE, Color.BLACK, Color.BLUE, Color.BEIGE, Color.AZURE, Color.BROWN };
     int currColor = 0;
+    int currTexture = 0;
+    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
+            "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
+            "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
 
     for (int i = 0; i < 100; i++)
     {
-      Zombie wall = new Zombie(rand.nextInt(100), rand.nextInt(100), 5, 5, 5);
+      Zombie wall = new Zombie(textures[currTexture], rand.nextInt(100), rand.nextInt(100), 5, 5, 5);
       renderer.registerActor(wall, new Box(wall.getWidth(), wall.getHeight(), wall.getDepth()),
                              colors[currColor], colors[currColor], Color.WHITE);
       currColor++;
       if (currColor >= colors.length) currColor = 0;
       actors.add(wall);
+      currTexture++;
+      if (currTexture >= textures.length) currTexture = 0;
     }
   }
   

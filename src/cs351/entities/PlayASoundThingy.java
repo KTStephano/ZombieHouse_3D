@@ -15,6 +15,13 @@ public class PlayASoundThingy extends Actor
 {
   private Random rand = new Random();
   private double elapsedSeconds = 0.0;
+
+  public PlayASoundThingy()
+  {
+    // this thingy doesn't need a texture
+    super("");
+  }
+
   @Override
   public UpdateResult update(Engine engine, double deltaSeconds)
   {

@@ -38,10 +38,16 @@ public class NotTheRealWorld implements World
   {
     Random rand = new Random();
     int numZombies = 100;
+    int currTexture = 0;
+    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
+            "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
+            "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
     for (int i = 0; i < numZombies; i++)
     {
-      Zombie wall = new Zombie(rand.nextInt(numZombies), rand.nextInt(numZombies), 5, 5, 5);
+      Zombie wall = new Zombie(textures[currTexture], rand.nextInt(numZombies), rand.nextInt(numZombies), 5, 5, 5);
       changeList.add(wall);
+      currTexture++;
+      if (currTexture >= textures.length) currTexture = 0;
     }
   }
 
@@ -125,11 +131,7 @@ public class NotTheRealWorld implements World
   public void nextLevel(Engine engine) {
     changeList.clear();
     Color[] colors = { Color.BEIGE };
-    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
-                          "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
-                          "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
     int currColor = 0;
-    int currTexture = 0;
     initZombies();
     for (Actor actor : changeList)
     {
@@ -138,11 +140,9 @@ public class NotTheRealWorld implements World
       engine.getRenderer().registerActor(actor, new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
                                          colors[currColor], colors[currColor], Color.WHITE);
       // associate the texture with the actor
-      engine.getRenderer().associateDiffuseTextureWithActor(actor, textures[currTexture]);
+      engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
       currColor++;
-      currTexture++;
       if (currColor >= colors.length) currColor = 0;
-      if (currTexture >= textures.length) currTexture = 0;
     }
     // set up the player with the renderer
     initPlayer();

@@ -21,6 +21,7 @@ public class Player extends Actor
 
   public Player(double x, double y)
   {
+    super(""); // player does not need a texture
     setLocation(x, y);
     setWidthHeightDepth(5, 5, 5);
   }

@@ -42,6 +42,8 @@ public interface Renderer
    * an object that should be rendered in the world. Shape3D can be things like a sphere, box, etc. (any
    * valid Shape3D from JavaFX).
    *
+   * This should be used for all Actor objects, whether they move or don't move.
+   *
    * @param actor object to add to the scene
    * @param shape shape of the object
    * @param diffuseColor this is the color the object scatters in all directions when light hits it
@@ -52,22 +54,10 @@ public interface Renderer
   void registerActor(Actor actor, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor);
 
   /**
-   * To add a tile to the scene which is either part of the floor or part of the ceiling, use this function.
+   * This should be used for all Actor objects that need to be textured.
    *
-   * @param tile object to add as a floor/ceiling object
-   * @param shape shape of the object
-   * @param diffuseColor this is the color the object scatters in all directions when light hits it
-   * @param specularColor this is the color the object reflects in one direction when light hits it -
-   *                      results in a shiny circles on the surface
-   * @param ambientColor base color of the object
-   */
-  void registerStaticTile(Tile tile, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor);
-
-  /**
-   * This should be used for both Actor and Tile objects.
-   *
-   * @param actor object to associate the texture with when rendering
    * @param textureFile name of the texture file to be loaded
+   * @param actor object to associate the texture with when rendering
    */
-  void associateDiffuseTextureWithActor(Actor actor, String textureFile);
+  void mapTextureToActor(String textureFile, Actor actor);
 }
