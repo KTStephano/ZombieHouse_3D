@@ -26,8 +26,6 @@ public class EnvironmentDemo implements World
   private int worldPixelWidth = 500;
   private int worldPixelHeight = 500;
   private int tileWidthHeight = 10; // measured in pixels
-  // the 2 * tileWidthHeight is because each tile is 10 pixels and I want
-  // the player to be 2 tiles high
   private Actor player;
 
   @Override
@@ -157,6 +155,9 @@ public class EnvironmentDemo implements World
   {
     // the getWorldPixelWidth() / 2.0 and getWorldPixelHeight() / 2.0 make it so the player is
     // in the middle of the map
+    //
+    // the 2 * tileWidthHeight is because each tile is 10 pixels and I want
+    // the player to be 2 tiles high
     player = new Player(getWorldPixelWidth() / 2.0, getWorldPixelHeight() / 2.0, 2 * tileWidthHeight);
     actors.add(player);
   }
@@ -190,7 +191,7 @@ public class EnvironmentDemo implements World
                                                       x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
                                                       y * getTilePixelHeight(), // same as above but for y
                                                       getTilePixelWidth(), // sets the width to be 1 tile
-                                                      1, // sets the height to be 1 tile - this is a good idea to do for all floor and ceiling tiles
+                                                      1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
                                                       getTilePixelHeight()); // sets the depth to be 1 tile
 
         FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
@@ -199,7 +200,7 @@ public class EnvironmentDemo implements World
                                                         x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
                                                         y * getTilePixelHeight(), // sets the width to be 1 tile
                                                         getTilePixelWidth(), // sets the width to be the whole width of the map (covers the entire space)
-                                                        1, // sets the height to be 1 tile - this is a good idea to do for all floor and ceiling tiles
+                                                        1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
                                                         getTilePixelHeight()); // sets the depth to be 1 tile
 
         actors.add(floor);
