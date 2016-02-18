@@ -24,8 +24,10 @@ public class Zombie extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    setLocation(getLocation().getX() + deltaSeconds * speedX * directionX,
-                getLocation().getY() + deltaSeconds * speedY * directionY);
+    // totalSpeed represents the movement speed offset in tiles per second
+    double totalSpeed = deltaSeconds * engine.getWorld().getTilePixelWidth();
+    setLocation(getLocation().getX() + totalSpeed * speedX * directionX,
+                getLocation().getY() + totalSpeed * speedY * directionY);
     if (rand.nextInt(1000) > 970) directionX = -directionX;
     if (rand.nextInt(1000) > 970) directionY = -directionY;
     if (rand.nextInt(1000) > 970)

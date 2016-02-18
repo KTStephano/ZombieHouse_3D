@@ -27,10 +27,12 @@ public class Player extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    setLocation(getLocation().getX() + BASE_SPEED * forwardX * deltaSeconds * forwardDirection.getX(),
-                getLocation().getY() + BASE_SPEED * forwardY * deltaSeconds * forwardDirection.getY());
-    setLocation(getLocation().getX() + BASE_SPEED * rightX * deltaSeconds * rightDirection.getX(),
-                getLocation().getY() + BASE_SPEED * rightY * deltaSeconds * rightDirection.getY());
+    // totalSpeed represents the total speed per second in pixels
+    double totalSpeed = BASE_SPEED * deltaSeconds * engine.getWorld().getTilePixelWidth();
+    setLocation(getLocation().getX() + totalSpeed * forwardX * forwardDirection.getX(),
+                getLocation().getY() + totalSpeed * forwardY * forwardDirection.getY());
+    setLocation(getLocation().getX() + totalSpeed * rightX * rightDirection.getX(),
+                getLocation().getY() + totalSpeed * rightY * rightDirection.getY());
     return UpdateResult.UPDATE_COMPLETED;
   }
 
