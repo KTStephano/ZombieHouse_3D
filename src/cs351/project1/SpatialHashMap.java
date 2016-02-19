@@ -27,6 +27,11 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
   private final int CELL_SIZE_X, CELL_SIZE_Y;
   private final int NUM_BUCKETS_X, NUM_BUCKETS_Y;
 
+  /**
+   * Each bucket represents a piece of space within a 2D grid. Think of it as a room,
+   * and if any piece of an object falls inside of the bounds of the room, it is considered
+   * to be fully inside (this is what makes the collision detection work from the CollisionDetection class).
+   */
   private class Bucket
   {
     private final HashSet<Actor> ACTORS = new HashSet<>(50);
@@ -55,8 +60,8 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
   public SpatialHashMap(int worldPixelWidth, int worldPixelHeight,
                         int tilePixelWidth, int tilePixelHeight)
   {
-    CELL_SIZE_X = tilePixelWidth;
-    CELL_SIZE_Y = tilePixelHeight;
+    CELL_SIZE_X = tilePixelWidth; // size of each cell (bucket) in the x direction
+    CELL_SIZE_Y = tilePixelHeight; // size of each cell (bucket) in the y direction
     NUM_BUCKETS_X = worldPixelWidth / tilePixelWidth + 1; // add some padding
     NUM_BUCKETS_Y = worldPixelHeight / tilePixelHeight + 1; // add some padding
     BUCKETS = new Bucket[NUM_BUCKETS_X][NUM_BUCKETS_Y];
@@ -64,6 +69,11 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
     initBuckets();
   }
 
+  /**
+   * Iterates over the buckets and returns the actors they contain.
+   *
+   * @return iterator over collections of actors that are close by each other in space
+   */
   @Override
   public Iterator<Collection<Actor>> iterator()
   {
@@ -85,6 +95,9 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
     };
   }
 
+  /**
+   * Wipes all buckets.
+   */
   public void clear()
   {
     for (int x = 0; x < NUM_BUCKETS_X; x++)
@@ -96,6 +109,14 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
     }
   }
 
+  /**
+   * Calculates the starting bucket and ending bucket in 2-dimensions and places the actor
+   * into *ALL* the buckets it overlaps with. Even if it only overlaps a bucket by 1 pixel
+   * it is placed into that bucket as it might potentially collide with other actors in that
+   * bucket.
+   *
+   * @param actor actor to insert
+   */
   public void insert(Actor actor)
   {
     int hashedX = hashX(actor.getLocation().getX());
@@ -118,16 +139,42 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
     }
   }
 
+  /**
+   * Takes the x-location of an actor and converts it to a hash value. It always keeps
+   * the location within the number of buckets.
+   *
+   * Example: if there is a 1000 x 1000 pixel board where each tile is 50 x 50 pixels,
+   * the spacial hash map will be 1000 / 50 x 1000 / 50 = 20 x 20 buckets large.
+   *
+   * If an object is located at point (787, 562) on the board, 787 / 50 = (int)15.74 = 15
+   * and 562 / 50 = (int)11.24 = 11, so the object will at the minimum be placed into the bucket
+   * at the location BUCKETS[15][11].
+   *
+   * @param x x value
+   * @return hashed code of the given x value
+   */
   private int hashX(double x)
   {
     return (int)x / CELL_SIZE_X;
   }
 
+  /**
+   * Takes the y-location of an actor and converts it to a hash value. It always keeps
+   * the location within the number of buckets.
+   *
+   * See hashX's example for more information.
+   *
+   * @param y y value
+   * @return hashed code of the given y value
+   */
   private int hashY(double y)
   {
     return (int)y / CELL_SIZE_Y;
   }
 
+  /**
+   * Sets up the buckets.
+   */
   private void initBuckets()
   {
     for (int x = 0; x < NUM_BUCKETS_X; x++)
