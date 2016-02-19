@@ -13,6 +13,7 @@ public class RandomWalkZombie extends Zombie {
   Random rand = new Random();
   double xDirection = 1;
   double yDirection = 1;
+  double zombieDecisionRate = 2.0;
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -25,7 +26,7 @@ public class RandomWalkZombie extends Zombie {
     double totalSpeed = deltaSeconds * engine.getWorld().getTilePixelWidth();
     elapsedSeconds += deltaSeconds;
     // every 5 seconds, switch direction
-    if (elapsedSeconds > 10.0)
+    if (elapsedSeconds > zombieDecisionRate)
     {
       elapsedSeconds = 0.0;
       // -5.0 to 5.0
