@@ -75,10 +75,10 @@ public class CollisionDetection
 
     private boolean collided(Actor other)
     {
-      actorX = ACTOR.getLocation().getX();
-      actorY = ACTOR.getLocation().getY();
-      otherActorX = other.getLocation().getX();
-      otherActorY = other.getLocation().getY();
+      actorX = ACTOR.getLocation().getX() + ACTOR.getWidth() / 2.0;
+      actorY = ACTOR.getLocation().getY() + ACTOR.getDepth() / 2.0;
+      otherActorX = other.getLocation().getX() + other.getWidth() / 2.0;
+      otherActorY = other.getLocation().getY() + other.getDepth() / 2.0;
       otherActorRadius = other.getWidth() / 2.0;
 
       double dx = actorX - otherActorX;
