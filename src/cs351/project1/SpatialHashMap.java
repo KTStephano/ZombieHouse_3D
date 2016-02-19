@@ -2,10 +2,7 @@ package cs351.project1;
 
 import cs351.core.Actor;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Citation: http://www.gamedev.net/page/resources/_/technical/game-programming/spatial-hashing-r2697
@@ -34,7 +31,7 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
    */
   private class Bucket
   {
-    private final HashSet<Actor> ACTORS = new HashSet<>(50);
+    private final ArrayList<Actor> ACTORS = new ArrayList<>(50);
 
     public boolean contains(Actor actor)
     {
@@ -46,7 +43,7 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
       ACTORS.clear();
     }
 
-    public HashSet<Actor> contents()
+    public ArrayList<Actor> contents()
     {
       return ACTORS;
     }

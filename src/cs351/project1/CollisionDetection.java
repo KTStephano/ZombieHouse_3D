@@ -27,17 +27,19 @@ public class CollisionDetection
   {
     private final Actor ACTOR;
     private final double RADIUS;
+    private final double RADIUS_SQUARED;
     private double actorX;
     private double actorY;
     private double otherActorX;
     private double otherActorY;
     private double otherActorRadius;
-    private double roughDistanceBetweenThisAndOther;
+    private double distance;
 
     public BoundingCircle(Actor actor)
     {
       ACTOR = actor;
       RADIUS = actor.getWidth() / 2.0;
+      RADIUS_SQUARED = RADIUS * RADIUS;
     }
 
     /**
@@ -55,7 +57,7 @@ public class CollisionDetection
       double dy = actorY - otherActorY;
       double xOffsetDirection = dx;// < 0 ? -1 : 1;
       double yOffsetDirection = dy;// < 0 ? -1 : 1;
-      double roughOffset = (RADIUS + otherActorRadius - roughDistanceBetweenThisAndOther);
+      double roughOffset = (RADIUS + otherActorRadius - distance);
       // if either is static, add the total offset to just one of the actors
       if (ACTOR.isStatic()) other.setLocation(other.getLocation().getX() + roughOffset * -xOffsetDirection,
                                               other.getLocation().getY() + roughOffset * -yOffsetDirection);
@@ -81,12 +83,8 @@ public class CollisionDetection
 
       double dx = actorX - otherActorX;
       double dy = actorY - otherActorY;
-      roughDistanceBetweenThisAndOther = Math.sqrt(dx * dx + dy * dy);
-      if (roughDistanceBetweenThisAndOther < RADIUS + otherActorRadius)
-      {
-        return true; // the two have collided
-      }
-      return false;
+      distance = Math.sqrt(dx * dx + dy * dy);
+      return distance < RADIUS + otherActorRadius;
     }
   }
 
@@ -99,7 +97,7 @@ public class CollisionDetection
 
     ENGINE = engine;
     MOVING_ENTITIES = new SpatialHashMap(worldPixelWidth, worldPixelHeight,
-                              tilePixelWidth, tilePixelHeight);
+                                         tilePixelWidth, tilePixelHeight);
     STATIC_ENTITIES = new SpatialHashMap(worldPixelWidth, worldPixelHeight,
                                          tilePixelWidth, tilePixelHeight);
     ACTOR_CIRCLE_MAP = new HashMap<>(50);
