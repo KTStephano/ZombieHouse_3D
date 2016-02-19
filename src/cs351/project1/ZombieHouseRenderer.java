@@ -324,8 +324,8 @@ public class ZombieHouseRenderer implements Renderer
     shape.setMaterial(material);
     model.lights = new ArrayList<>(5);
     model.translation = new Translate(actor.getLocation().getX(),
-                                      0.0,
-                                      actor.getLocation().getY());
+            0.0,
+            actor.getLocation().getY());
     model.rotation = new Rotate(0.0, 0.0, 0.0);
     shape.getTransforms().addAll(model.rotation, model.translation);
 
@@ -349,14 +349,14 @@ public class ZombieHouseRenderer implements Renderer
       //model.shape.getTransforms().addAll(translate);
       // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
       if (actor.isPartOfFloor()) setTranslationValuesForModel(model, actor.getLocation().getX(),
-                                                              floorDepthOffset,
-                                                              actor.getLocation().getY());
+              floorDepthOffset,
+              actor.getLocation().getY());
       else if (actor.isPartOfCeiling()) setTranslationValuesForModel(model, actor.getLocation().getX(),
                                                                      floorHeightOffset - actor.getHeight() / 2.0,
                                                                      actor.getLocation().getY());
       else setTranslationValuesForModel(model, actor.getLocation().getX(),
-                                        -actor.getHeight() / 2.0,
-                                        actor.getLocation().getY());
+                -actor.getHeight() / 2.0,
+                actor.getLocation().getY());
       model.shape.setDrawMode(mode);
     }
   }
@@ -368,7 +368,7 @@ public class ZombieHouseRenderer implements Renderer
     // it's at versus the actual location of the player
     //camera.getTransforms().clear();
     //Translate translate = new Translate(player.getLocation().getX() - cameraTranslation.getX(),
-                                        //0.0, player.getLocation().getY() - cameraTranslation.getZ());
+    //0.0, player.getLocation().getY() - cameraTranslation.getZ());
     //camera.getTransforms().addAll(translate);
     controller.getTranslation().setX(player.getLocation().getX());
     controller.getTranslation().setZ(player.getLocation().getY());
