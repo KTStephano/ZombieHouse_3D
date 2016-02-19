@@ -239,7 +239,7 @@ public class EnvironmentDemo implements World
                           "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
     for (int i = 0; i < numZombies; i++)
     {
-      Zombie wall = new Zombie(textures[currTexture],
+      Zombie wall = new RandomWalkZombie(textures[currTexture],
                                rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
                                rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
                                getTilePixelWidth(), // sets width to be 1 tile

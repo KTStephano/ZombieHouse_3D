@@ -2,8 +2,8 @@ package cs351.entities;
 
 import cs351.core.Actor;
 import cs351.core.Engine;
-import javafx.scene.media.AudioClip;
-import java.net.URL;
+//import javafx.scene.media.AudioClip;
+//import java.net.URL;
 
 
 /**
@@ -11,7 +11,7 @@ import java.net.URL;
  */
 public class PlayASoundThingy extends Actor
 {
-  private double elapsedSeconds = 0.0;
+//  private double elapsedSeconds = 0.0;
 
   public PlayASoundThingy()
   {
