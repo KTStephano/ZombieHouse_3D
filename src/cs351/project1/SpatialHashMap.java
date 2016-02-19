@@ -15,7 +15,7 @@ import java.util.*;
  * In order to decide which bucket(s) an object goes in, the hashX and hashY functions are used.
  * These functions convert an (x, y) coordinate into a hashed pair representing an index
  * into a 2D array of buckets. From there the ending x and y are calculated by adding the
- * object's
+ * object's width and height (converted to tiles) to the hashed (x, y) coordinate pair.
  */
 public class SpatialHashMap implements Iterable<Collection<Actor>>
 {
