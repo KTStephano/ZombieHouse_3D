@@ -349,14 +349,14 @@ public class ZombieHouseRenderer implements Renderer
       //model.shape.getTransforms().addAll(translate);
       // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
       if (actor.isPartOfFloor()) setTranslationValuesForModel(model, actor.getLocation().getX(),
-              floorDepthOffset,
-              actor.getLocation().getY());
+                                                              floorDepthOffset,
+                                                              actor.getLocation().getY());
       else if (actor.isPartOfCeiling()) setTranslationValuesForModel(model, actor.getLocation().getX(),
                                                                      floorHeightOffset - actor.getHeight() / 2.0,
                                                                      actor.getLocation().getY());
       else setTranslationValuesForModel(model, actor.getLocation().getX(),
-                -actor.getHeight() / 2.0,
-                actor.getLocation().getY());
+                                        -actor.getHeight() / 2.0,
+                                        actor.getLocation().getY());
       model.shape.setDrawMode(mode);
     }
   }
