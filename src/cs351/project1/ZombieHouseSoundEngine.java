@@ -45,10 +45,11 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     {
       tmpSoundStackItem = soundStack.pop();
       
-          
-          double soundVolume = 1- Math.sqrt(  (tmpSoundStackItem.x-centralPoint.x)*(tmpSoundStackItem.x-centralPoint.x)+(tmpSoundStackItem.y-centralPoint.y)*(tmpSoundStackItem.y-centralPoint.y) ) / GREATEST_DISTANCE_ACROSS_ROOM;
-          System.out.println("vol: "+soundVolume);
-          
+      double relativeDistance = (tmpSoundStackItem.x-centralPoint.x)*(tmpSoundStackItem.x-centralPoint.x)+(tmpSoundStackItem.y-centralPoint.y)*(tmpSoundStackItem.y-centralPoint.y);
+      
+      double soundVolume = 30/relativeDistance;
+      System.out.println("vol: "+soundVolume);
+    
       tmpSoundStackItem.sound.setVolume(soundVolume);  
           
       if ((tmpSoundStackItem.x-centralPoint.x)!=0)
@@ -59,9 +60,10 @@ public class ZombieHouseSoundEngine implements SoundEngine {
         tmpSoundStackItem.sound.setBalance(0);
       }
            
-  
-      
-     tmpSoundStackItem.sound.play();
+      if (soundVolume > 0.7)
+      {      
+         tmpSoundStackItem.sound.play();
+      }
     }
     
     

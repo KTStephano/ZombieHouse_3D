@@ -38,21 +38,25 @@ public class Zombie extends Actor
       double temp = speedX;
       speedX = speedY;
       speedY = temp;
-      checkPlaySound(engine, deltaSeconds);
+      
       //engine.getSoundEngine().queueSoundAtLocation(null\, (int)getLocation().getX(), (int)getLocation().getY());
     }
+    checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;
   }
 
   private void checkPlaySound(Engine engine, double deltaSeconds)
   {
     elapsedSeconds+= deltaSeconds;
+
+    //System.out.println("delta "+deltaSeconds);    
+    //System.out.println("elapsed  "+elapsedSeconds);    
     if (elapsedSeconds >= 3.0)
     {
       elapsedSeconds = 0.0;
       final URL resource = getClass().getClassLoader().getResource("cs351/entities/sound/zombie.mp3");
       final AudioClip media = new AudioClip(resource.toString());
-
+      //System.out.println("adding zombie sound");
       engine.getSoundEngine().queueSoundAtLocation(media, getLocation().getX(), getLocation().getY());
     }
     
