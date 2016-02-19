@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
  */
 public class Player extends Actor
 {
-  private final double BASE_SPEED = 10.0; // for x and y movement - measured in tiles per second
+  private final double BASE_SPEED = 5.0; // for x and y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
@@ -23,6 +23,7 @@ public class Player extends Actor
     super(""); // player does not need a texture
     setLocation(x, y);
     setWidthHeightDepth(1, height, 1);
+    noClip = false; // if this is true the player can run through everything but the floor/ceiling
   }
 
   public UpdateResult update(Engine engine, double deltaSeconds)

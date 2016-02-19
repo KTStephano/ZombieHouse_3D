@@ -55,7 +55,13 @@ public abstract class Actor
   @Override
   public int hashCode()
   {
-    return location.hashCode();
+    return TEXTURE_FILE.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object other)
+  {
+    return this == other;
   }
 
   /**

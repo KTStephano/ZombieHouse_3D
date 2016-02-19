@@ -17,6 +17,7 @@ public class PlayASoundThingy extends Actor
   {
     // this thingy doesn't need a texture
     super("");
+    noClip = true;
   }
 
   @Override

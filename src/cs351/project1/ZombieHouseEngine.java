@@ -7,14 +7,14 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 public class ZombieHouseEngine implements Engine
 {
   private World world;
   private SoundEngine soundEngine;
   private Renderer renderer;
+  private CollisionDetection collision;
   private int worldWidth, worldHeight; // measured in tiles
   private final HashSet<Actor> ALL_ACTORS;
   private final HashSet<Actor> UPDATE_ACTORS; // only the actors that want to be updated each frame
@@ -99,6 +99,7 @@ public class ZombieHouseEngine implements Engine
     millisecondsSinceLastFrame = 0;
     togglePause(false);
     stage.setOnCloseRequest(this::windowClosed);
+    collision = new CollisionDetection(this); // init the collision detection system
     initEngineState(); // init the initial engine state from the world
   }
 
@@ -123,17 +124,35 @@ public class ZombieHouseEngine implements Engine
   {
     //System.out.println("called");
     if (!isInitialized || isPaused || isPendingShutdown) return;
-    // TODO add collision detection/collision event pushing
+    // start the collision detection system's new frame
+    collision.initFrame();
     millisecondsSinceLastFrame = System.currentTimeMillis() - millisecondTimeStamp;
     millisecondTimeStamp = System.currentTimeMillis(); // mark the time when this frame started
     double deltaSeconds = millisecondsSinceLastFrame / 1000.0; // used for the actors
     // update all actors and process their return statements
-    for (Actor actor : UPDATE_ACTORS) processActorReturnStatement(actor.update(this, deltaSeconds));
+    for (Actor actor : UPDATE_ACTORS)
+    {
+      processActorReturnStatement(actor.update(this, deltaSeconds));
+      collision.insert(actor); // insert the actor into the collision detection system
+    }
     getSoundEngine().update();
     getRenderer().render(this, DrawMode.FILL);
     // set the center point for the sound engine
     getSoundEngine().setCentralPoint((int)getWorld().getPlayer().getLocation().getX(),
                                      (int)getWorld().getPlayer().getLocation().getY());
+    // now that the frame is nearly complete, see if anything collided during
+    // the actor update phase
+    HashMap<Actor, LinkedList<Actor>> collisionEvents = collision.detectCollisions();
+    // push all collision events to the appropriate actors
+    for (Map.Entry<Actor, LinkedList<Actor>> entry : collisionEvents.entrySet())
+    {
+      Actor entryActor = entry.getKey();
+      for (Actor actor : entry.getValue())
+      {
+        entryActor.collided(this, actor);
+        actor.collided(this, entryActor);
+      }
+    }
     // if during the frame an actor(s) were added to the world, pull them now
     pullLatestActorsFromWorld();
     // with the frame complete, call initEngineState to see if anything needs to change
@@ -199,6 +218,7 @@ public class ZombieHouseEngine implements Engine
     for (Actor actor : changeList)
     {
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
+      if (actor.isStatic()) collision.insert(actor);
     }
   }
 }
