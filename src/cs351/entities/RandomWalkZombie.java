@@ -23,7 +23,6 @@ public class RandomWalkZombie extends Zombie {
   public UpdateResult update(Engine engine, double deltaSeconds)
   { 
     // totalSpeed represents the movement speed offset in tiles per second
-    double totalSpeed = deltaSeconds * engine.getWorld().getTilePixelWidth();
     elapsedSeconds += deltaSeconds;
     // every 5 seconds, switch direction
     if (elapsedSeconds > zombieDecisionRate)

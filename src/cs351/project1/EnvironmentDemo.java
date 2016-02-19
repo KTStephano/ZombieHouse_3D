@@ -235,20 +235,32 @@ public class EnvironmentDemo implements World
     int numZombies = 50;
     int currTexture = 0;
     String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
-                          "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
-                          "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
-    for (int i = 0; i < numZombies; i++)
+        "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
+        "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
+    String[] lineWalker = { "textures/zombie.jpg" };
+    for (int i = 0; i < numZombies/2; i++)
     {
-      Zombie wall = new RandomWalkZombie(textures[currTexture],
+      Zombie wall1 = new RandomWalkZombie(textures[currTexture],
                                rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
                                rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
                                getTilePixelWidth(), // sets width to be 1 tile
                                getTilePixelWidth(), // sets height to be 1 tile
                                getTilePixelWidth()); // sets depth to be 1 tile
-      actors.add(wall);
+      actors.add(wall1);
+
+
+      Zombie wall2 = new LineWalkZombie(lineWalker[0],
+                               rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
+                               rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
+                               getTilePixelWidth(), // sets width to be 1 tile
+                               getTilePixelWidth(), // sets height to be 1 tile
+                               getTilePixelWidth()); // sets depth to be 1 tile
+      actors.add(wall2);
       currTexture++;
       if (currTexture >= textures.length) currTexture = 0;
     }
+    
+    
   }
 
   private void initPlayASoundThingy()
