@@ -2,7 +2,7 @@ package cs351.project1;
 
 
 import cs351.core.*;
-import cs351.entities.Player;
+import cs351.entities.FloorCeilingTile;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -136,7 +136,6 @@ public class ZombieHouseEngine implements Engine
       collision.insert(actor); // insert the actor into the collision detection system
     }
     getSoundEngine().update();
-    getRenderer().render(this, DrawMode.FILL);
     // set the center point for the sound engine
     getSoundEngine().setCentralPoint((int)getWorld().getPlayer().getLocation().getX(),
                                      (int)getWorld().getPlayer().getLocation().getY());
@@ -153,6 +152,8 @@ public class ZombieHouseEngine implements Engine
         actor.collided(this, entryActor);
       }
     }
+    // render the world
+    getRenderer().render(this, DrawMode.FILL);
     // if during the frame an actor(s) were added to the world, pull them now
     pullLatestActorsFromWorld();
     // with the frame complete, call initEngineState to see if anything needs to change

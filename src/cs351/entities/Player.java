@@ -28,7 +28,6 @@ public class Player extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    System.out.println(deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
     double totalSpeed = BASE_SPEED * deltaSeconds * engine.getWorld().getTilePixelWidth();
     setLocation(getLocation().getX() + totalSpeed * forwardX * forwardDirection.getX(),
