@@ -2,6 +2,7 @@ package cs351.project1;
 
 
 import cs351.core.*;
+import cs351.entities.Player;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -193,8 +194,9 @@ public class ZombieHouseEngine implements Engine
   private void pullLatestActorsFromWorld()
   {
     if (getWorld().getChangeList(false).size() == 0) return;
-    ALL_ACTORS.addAll(getWorld().getChangeList(true)); // this should contain all actors since nextLevel was called
-    for (Actor actor : ALL_ACTORS)
+    Collection<Actor> changeList = getWorld().getChangeList(true);
+    ALL_ACTORS.addAll(changeList); // this should contain all actors since nextLevel was called
+    for (Actor actor : changeList)
     {
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
     }
