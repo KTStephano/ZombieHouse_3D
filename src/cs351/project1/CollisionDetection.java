@@ -40,6 +40,14 @@ public class CollisionDetection
       RADIUS = actor.getWidth() / 2.0;
     }
 
+    /**
+     * The idea with this function is that it first checks to see if
+     * the actor stored in the class has overlapped with the given actor. If it has
+     * it calculates x and y offsets and pushes this actor away from the other.
+     *
+     * @param other actor to check for collision with
+     * @return true if the given actor collided with the stored actor and false if not
+     */
     public boolean processCollision(Actor other)
     {
       if (!collided(other) || ACTOR.noClipActive() || other.noClipActive()) return false;
