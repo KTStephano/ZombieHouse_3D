@@ -1,4 +1,4 @@
-package cs351.project1;
+package cs351.entities;
 
 import cs351.core.Engine;
 import cs351.entities.Zombie;
