@@ -136,10 +136,10 @@ public class EnvironmentDemo implements World
     {
       // register the actor with the renderer so it can render it each frame
       engine.getRenderer().registerActor(actor,
-                                         new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
-                                         Color.BEIGE, // diffuse
-                                         Color.BEIGE, // specular
-                                         Color.WHITE); // ambient
+          new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
+          Color.BEIGE, // diffuse
+          Color.BEIGE, // specular
+          Color.WHITE); // ambient
       // sets the actor's texture so the renderer knows to load it and use it
       engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
     }
@@ -177,52 +177,52 @@ public class EnvironmentDemo implements World
         if (x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
         {
           Actor wall = new Wall("textures/block_texture_dark.jpg",
-                                x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-                                y * getTilePixelHeight(), // same as above but for y
-                                getTilePixelWidth(), // sets the width to be 1 tile
-                                2 * getTilePixelHeight(), // sets the height to be 2 tiles
-                                getTilePixelHeight()); // sets the depth to be 1 tile
+              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for y
+              getTilePixelWidth(), // sets the width to be 1 tile
+              2 * getTilePixelHeight(), // sets the height to be 2 tiles
+              getTilePixelHeight()); // sets the depth to be 1 tile
           actors.add(wall);
         }
-        
+
         /*
          ========================================================
          adding creating new wall objects to make an inside room
-                
+
          ========================================================       
          */
         if ((x == 10 || x == 15) && y < 15)
         {
           Actor wall = new Wall("textures/bikiniBabe.jpg",
-                                x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-                                y * getTilePixelHeight(), // same as above but for y
-                                getTilePixelWidth(), // sets the width to be 1 tile
-                                2 * getTilePixelHeight(), // sets the height to be 2 tiles
-                                getTilePixelHeight()); // sets the depth to be 1 tile
+              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for y
+              getTilePixelWidth(), // sets the width to be 1 tile
+              2 * getTilePixelHeight(), // sets the height to be 2 tiles
+              getTilePixelHeight()); // sets the depth to be 1 tile
           actors.add(wall);
         }
 
-        
+
         /***************************************************************************************/
-        
+
         // add a floor and ceiling tile
         FloorCeilingTile floor = new FloorCeilingTile("textures/block_texture_dark.jpg",
-                                                      true, // is part of floor
-                                                      false, // is not part of ceiling
-                                                      x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-                                                      y * getTilePixelHeight(), // same as above but for y
-                                                      getTilePixelWidth(), // sets the width to be 1 tile
-                                                      1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-                                                      getTilePixelHeight()); // sets the depth to be 1 tile
+            true, // is part of floor
+            false, // is not part of ceiling
+            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // same as above but for y
+            getTilePixelWidth(), // sets the width to be 1 tile
+            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+            getTilePixelHeight()); // sets the depth to be 1 tile
 
         FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
-                                                        false, // is not part of floor
-                                                        true, // is part of ceiling
-                                                        x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-                                                        y * getTilePixelHeight(), // sets the width to be 1 tile
-                                                        getTilePixelWidth(), // sets the width to be the whole width of the map (covers the entire space)
-                                                        1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-                                                        getTilePixelHeight()); // sets the depth to be 1 tile
+            false, // is not part of floor
+            true, // is part of ceiling
+            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // sets the width to be 1 tile
+            getTilePixelWidth(), // sets the width to be the whole width of the map (covers the entire space)
+            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+            getTilePixelHeight()); // sets the depth to be 1 tile
 
         actors.add(floor);
         actors.add(ceiling);
@@ -241,26 +241,24 @@ public class EnvironmentDemo implements World
     for (int i = 0; i < numZombies/2; i++)
     {
       Zombie wall1 = new RandomWalkZombie(textures[currTexture],
-                               rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
-                               rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
-                               getTilePixelWidth(), // sets width to be 1 tile
-                               getTilePixelWidth(), // sets height to be 1 tile
-                               getTilePixelWidth()); // sets depth to be 1 tile
+          rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
+          rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
+          getTilePixelWidth(), // sets width to be 1 tile
+          getTilePixelWidth(), // sets height to be 1 tile
+          getTilePixelWidth()); // sets depth to be 1 tile
       actors.add(wall1);
 
 
       Zombie wall2 = new LineWalkZombie(lineWalker[0],
-                               rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
-                               rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
-                               getTilePixelWidth(), // sets width to be 1 tile
-                               getTilePixelWidth(), // sets height to be 1 tile
-                               getTilePixelWidth()); // sets depth to be 1 tile
+          rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
+          rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
+          getTilePixelWidth(), // sets width to be 1 tile
+          getTilePixelWidth(), // sets height to be 1 tile
+          getTilePixelWidth()); // sets depth to be 1 tile
       actors.add(wall2);
       currTexture++;
       if (currTexture >= textures.length) currTexture = 0;
     }
-    
-    
   }
 
   private void initPlayASoundThingy()

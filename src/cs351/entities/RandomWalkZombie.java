@@ -5,7 +5,6 @@ import cs351.entities.Zombie;
 
 import java.util.Random;
 
-import cs351.core.Actor.UpdateResult;
 
 public class RandomWalkZombie extends Zombie {
   // initialize to something we set
