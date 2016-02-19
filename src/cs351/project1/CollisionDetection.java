@@ -9,7 +9,7 @@ import java.util.*;
  * See https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
  * for more information.
  *
- * This class is used to detect and respond to collision events between two actors. Makes
+ * This class is used to detect and respond to collision events between two actors. It makes
  * heavy use of two spatial hash maps (one for moving objects and one for static objects)
  * to cut down on the number of collision checks it has to do each frame.
  */
