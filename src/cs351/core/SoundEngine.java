@@ -1,5 +1,7 @@
 package cs351.core;
 
+import java.net.URL;
+
 import javafx.scene.media.AudioClip;
 
 /**
@@ -31,15 +33,17 @@ public interface SoundEngine
    * The reason for this delay is so that the SoundEngine can blend/merge/etc. the
    * sounds it gets so that they sound better to the user.
    *
-   * @param sound Media object to play
+   * @param URL of sound to play
    * @param x x-coordinate where the sound started
    * @param y y-coordinate where the sound started
    */
-  void queueSoundAtLocation(AudioClip sound, double x, double y);
+  void queueSoundAtLocation(URL url, double x, double y);
 
   /**
    * When this function is called, all sounds that were added to the sound queue
    * through the queueSoundAtLocation function should be played appropriately.
    */
   void update();
+
+
 }
