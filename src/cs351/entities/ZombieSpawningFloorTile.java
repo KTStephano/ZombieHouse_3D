@@ -17,6 +17,7 @@ import cs351.core.Actor;
 
 public class ZombieSpawningFloorTile extends FloorCeilingTile  {
   private double elapsedTime;
+  private double lastCollisionTime = 0;
   private Random rand;
   public ZombieSpawningFloorTile(String textureFile, double x, double y, int width,
       int height, int depth) {
@@ -27,11 +28,10 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
     rand = new Random(); 
   }
   
-  /*  be aware -- this hard coding needs to be replaced */
-  /*  waiting on collision detection                    */ 
+
   private boolean tileIsEmpty()
   {
-    return true;
+    return lastCollisionTime + 1000 < System.currentTimeMillis();
   }
   @Override
   public UpdateResult update(Engine engine, double deltaSeconds)
@@ -45,12 +45,10 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
         number on the interval [0.0, 1.0) is less than zombieSpawn
 
      */
-  //  System.out.println("00zombie floor tile - add actor ELAPSED: "+elapsedTime+"   DELTA:"+deltaSeconds);
-    elapsedTime += deltaSeconds;
+   elapsedTime += deltaSeconds;
     if ( (elapsedTime > 2.0)  && (this.tileIsEmpty())&&(rand.nextInt(100000)/1000.0< GlobalConstants.zombieSpawn))
     {
       elapsedTime = 0;
-  //    System.out.println("1zombie floor tile - add actor");
       spawnZombie();
     }
     
@@ -69,8 +67,7 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
     {
       wall = new RandomWalkZombie(lineWalker[0],
           this.getLocation().getX(),
-          this.getLocation().getY(),
-          
+          this.getLocation().getY(),         
           GlobalConstants.tileWidthHeight,
           GlobalConstants.tileWidthHeight,
           GlobalConstants.tileWidthHeight);
@@ -83,20 +80,12 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
           GlobalConstants.tileWidthHeight,
           GlobalConstants.tileWidthHeight,
           GlobalConstants.tileWidthHeight);
-
-
-
     }
-    // this needs to be resolved
-    // need a reference to actors
-    // not quite sure the best way
- //   System.out.println("2zombie floor tile - add actor");
     addActor(Game.getEngine(), wall);
   }
   
  private void addActor(Engine engine, Actor actor)
   {
-//   System.out.println("3zombie floor tile - add actor");   
     engine.getWorld().add(actor);
     // register the actor with the renderer so it can render it each frame
     engine.getRenderer().registerActor(actor,
@@ -107,7 +96,11 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
         Color.WHITE); // ambient
     // sets the actor's texture so the renderer knows to load it and use it
     engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
-//    System.out.println("4zombie floor tile - add actor");
-  
+ 
   }
+ 
+ @Override
+ public void collided(Engine engine, Actor actor) {
+   lastCollisionTime = System.currentTimeMillis();
+ }
 }
