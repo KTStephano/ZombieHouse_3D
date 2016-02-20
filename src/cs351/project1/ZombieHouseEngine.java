@@ -134,7 +134,9 @@ public class ZombieHouseEngine implements Engine
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
-      collision.insert(actor); // insert the actor into the collision detection system
+      // insert the actor into the collision detection system - don't add/re-add
+      // any static, floor or ceiling actors
+      if (!actor.isStatic() && !actor.isPartOfFloor() && !actor.isPartOfCeiling()) collision.insert(actor);
     }
     getSoundEngine().update();
     // set the center point for the sound engine
@@ -220,7 +222,7 @@ public class ZombieHouseEngine implements Engine
     for (Actor actor : changeList)
     {
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
-      if (actor.isStatic()) collision.insert(actor);
+      if (actor.isStatic() || actor.isPartOfFloor()) collision.insert(actor);
     }
   }
 }

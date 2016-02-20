@@ -58,9 +58,14 @@ public class CollisionDetection
       double xOffsetDirection = dx;// < 0 ? -1 : 1;
       double yOffsetDirection = dy;// < 0 ? -1 : 1;
       double roughOffset = (RADIUS + otherActorRadius - distance);
+      // if the actor is part of floor, return true since there was a collision event,
+      // but don't do anything with it to push the actor away from the floor object
+      if (ACTOR.isPartOfFloor() || other.isPartOfFloor()) return true;
+      // don't even bother generating ceiling collision events
+      else if (ACTOR.isPartOfCeiling() || other.isPartOfCeiling()) return false;
       // if either is static, add the total offset to just one of the actors
-      if (ACTOR.isStatic()) other.setLocation(other.getLocation().getX() + roughOffset * -xOffsetDirection,
-                                              other.getLocation().getY() + roughOffset * -yOffsetDirection);
+      else if (ACTOR.isStatic()) other.setLocation(other.getLocation().getX() + roughOffset * -xOffsetDirection,
+                                                   other.getLocation().getY() + roughOffset * -yOffsetDirection);
       else if (other.isStatic()) ACTOR.setLocation(ACTOR.getLocation().getX() + roughOffset * xOffsetDirection,
                                                    ACTOR.getLocation().getY() + roughOffset * yOffsetDirection);
       else
@@ -112,8 +117,12 @@ public class CollisionDetection
   public void insert(Actor actor)
   {
     if (!ACTOR_CIRCLE_MAP.containsKey(actor)) ACTOR_CIRCLE_MAP.put(actor, new BoundingCircle(actor));
-    if (!actor.isStatic()) MOVING_ENTITIES.insert(actor);
-    else STATIC_ENTITIES.insert(actor);
+    // don't add static, floor, or ceiling actors to the moving entities spatial hash map
+    if (!actor.isStatic() && !actor.isPartOfFloor() && !actor.isPartOfCeiling()) MOVING_ENTITIES.insert(actor);
+    // only add static and floor actors - floor actors themselves are treated specially in that they
+    // will generate collision events but the collision detection system won't push the actors away
+    // from the floor actors
+    else if (actor.isStatic() || actor.isPartOfFloor()) STATIC_ENTITIES.insert(actor);
   }
 
   public HashMap<Actor, LinkedList<Actor>> detectCollisions()
