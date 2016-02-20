@@ -1,3 +1,9 @@
+/*
+ =================================================================
+ Citation: http://gamedevelopment.tutsplus.com/tutorials/
+ =================================================================
+ */
+
 package cs351.entities;
 
 import java.util.LinkedList;
@@ -13,15 +19,15 @@ import javafx.stage.Stage;
 public class RoomTestThingy extends Application
 {
   private Group root = new Group();
-  private Scene scene = new Scene(root, 500, 500, Color.BLACK);
+  private Scene scene = new Scene(root, 250, 250, Color.BLACK);
 
   // Board dimensions
-  private int BOARD_WIDTH  = 300;
-  private int BOARD_HEIGHT = 300;
+  private int BOARD_WIDTH  = 31;
+  private int BOARD_HEIGHT = 31;
 
   // min and max size of Rooms
-  private int minRoomSize = 10;
-  private int maxRoomSize = 50;
+  private int minRoomSize = 4;
+  private int maxRoomSize = 10;
 
   // number of Rooms
   private int maxNumRooms = 50;
@@ -208,7 +214,7 @@ public class RoomTestThingy extends Application
     
     colorVal++;
 
-    stage.setTitle("JavaFX Scene Graph Demo");
+    stage.setTitle("Procedurally Generated Dungeon Prototype");
     stage.setScene(scene);
     stage.show();
   }
@@ -234,7 +240,7 @@ public class RoomTestThingy extends Application
     for (int j = minVal; j < maxVal + 1; j++)
     {
       // X direction increases, y stays fixed
-      Rectangle r = new Rectangle(j, previous_Y, 5, 5);
+      Rectangle r = new Rectangle(j, previous_Y, 1, 1);
       r.setFill(Color.PINK);
       root.getChildren().add(r);
     }
@@ -248,7 +254,7 @@ public class RoomTestThingy extends Application
     // Y direction increases, x stays fixed
     for (int j = minY_Val; j < maxY_Val + 1; j++)
     {
-      Rectangle r = new Rectangle(previous_x, j, 5, 5);
+      Rectangle r = new Rectangle(previous_x, j, 1, 1);
       r.setFill(Color.PINK);
       root.getChildren().add(r);
     }
