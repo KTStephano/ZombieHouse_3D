@@ -1,23 +1,30 @@
 package cs351.entities;
 
 import cs351.core.Engine;
+import cs351.core.Game;
 import cs351.core.GlobalConstants;
 import cs351.core.Level;
 import cs351.core.World;
 import cs351.project1.EnvironmentDemo;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 
-import java.util.Collection;
+
 import java.util.Random;
 
 import cs351.core.Actor;
-import cs351.core.Actor.UpdateResult;
+
 
 public class ZombieSpawningFloorTile extends FloorCeilingTile  {
-
+  private int elapsedTime;
+  private Random rand;
   public ZombieSpawningFloorTile(String textureFile, double x, double y, int width,
       int height, int depth) {
 
     super(textureFile, true, false, x, y, width, height, depth);
+    shouldUpdate = true; // engine will perform update calls
+    elapsedTime = 0;
+    rand = new Random(); 
   }
   
   /*  be aware -- this hard coding needs to be replaced */
@@ -38,10 +45,11 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
         number on the interval [0.0, 1.0) is less than zombieSpawn
 
      */
-    Random rand = new Random();
-   
-    if ((this.tileIsEmpty())&&(rand.nextInt(1000)/1000<GlobalConstants.zombieSpawn))
+    
+    elapsedTime += deltaSeconds;
+    if ( (elapsedTime > 2.0) && (this.tileIsEmpty())&&(rand.nextInt(1000)/1000.0< GlobalConstants.zombieSpawn))
     {
+      elapsedTime = 0;
       spawnZombie();
     }
     
@@ -54,17 +62,14 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
   {
     Random rand = new Random();
 
-    int currTexture = rand.nextInt(7);
-    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
-        "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
-        "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
-    String[] lineWalker = { "textures/zombie.jpg" };
+    String[] lineWalker = { "textures/red_zombie.jpg" };
     Zombie wall;
-    if (rand.nextInt(1)==1)
+    if (rand.nextInt(2)==1)
     {
-      wall = new RandomWalkZombie(textures[currTexture],
+      wall = new RandomWalkZombie(lineWalker[0],
           this.getLocation().getX(),
-          this.getLocation().getY(),   
+          this.getLocation().getY(),
+          
           GlobalConstants.tileWidthHeight,
           GlobalConstants.tileWidthHeight,
           GlobalConstants.tileWidthHeight);
@@ -84,6 +89,23 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
     // this needs to be resolved
     // need a reference to actors
     // not quite sure the best way
-   // actors.add(wall);
+   
+    addActor(Game.getEngine(), wall);
+  }
+  
+ private void addActor(Engine engine, Actor actor)
+  {
+    
+    engine.getWorld().add(actor);
+    // register the actor with the renderer so it can render it each frame
+    engine.getRenderer().registerActor(actor,
+        new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
+        //new Box(1,1,1),
+               Color.BEIGE, // diffuse
+        Color.BEIGE, // specular
+        Color.WHITE); // ambient
+    // sets the actor's texture so the renderer knows to load it and use it
+    engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
+  
   }
 }

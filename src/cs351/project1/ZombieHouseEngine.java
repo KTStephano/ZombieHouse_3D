@@ -2,6 +2,7 @@ package cs351.project1;
 
 
 import cs351.core.*;
+import cs351.project1.CollisionDetection;
 import cs351.entities.FloorCeilingTile;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;

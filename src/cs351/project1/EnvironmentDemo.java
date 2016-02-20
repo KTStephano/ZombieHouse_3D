@@ -167,7 +167,7 @@ public class EnvironmentDemo implements World
     // the + 1 is for when the pixelWidth/Height and tilePixelWidth/Height don't divide evenly
     int numTilesWidth = getWorldPixelWidth() / getTilePixelWidth() + 1; // convert pixels to number of tiles
     int numTilesHeight = getWorldPixelHeight() / getTilePixelHeight() + 1; // convert pixels to number of tiles
-
+    Random rand = new Random();
     for (int x = 0; x < numTilesWidth; x++)
     {
       for (int y = 0; y < numTilesHeight; y++)
@@ -204,9 +204,22 @@ public class EnvironmentDemo implements World
 
 
         /***************************************************************************************/
-
+        FloorCeilingTile floor;
+        
+        if (rand.nextInt(50)<10)
+        {
+        // add a ZombieSpawningFloorTile and ceiling tile
+        floor = new ZombieSpawningFloorTile("textures/red_zombie.jpg",//block_texture_dark.jpg",
+            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // same as above but for y
+            getTilePixelWidth(), // sets the width to be 1 tile
+            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+            getTilePixelHeight()); // sets the depth to be 1 tile
+        }
+        else
+        {
         // add a floor and ceiling tile
-        FloorCeilingTile floor = new FloorCeilingTile("textures/block_texture_dark.jpg",
+        floor = new FloorCeilingTile("textures/block_texture_dark.jpg",
             true, // is part of floor
             false, // is not part of ceiling
             x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
@@ -214,7 +227,7 @@ public class EnvironmentDemo implements World
             getTilePixelWidth(), // sets the width to be 1 tile
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
             getTilePixelHeight()); // sets the depth to be 1 tile
-
+        }
         FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
             false, // is not part of floor
             true, // is part of ceiling
@@ -265,4 +278,8 @@ public class EnvironmentDemo implements World
   {
     actors.add(new PlayASoundThingy());
   }
+  
+ 
+  
+  
 }
