@@ -71,8 +71,10 @@ public class CollisionDetection
                                                    ACTOR.getLocation().getY() + roughOffset * yOffsetDirection);
       else
       {
-        //other.setLocation(other.getLocation().getX() + roughOffset * -xOffsetDirection,
-                          //other.getLocation().getY() + roughOffset * -yOffsetDirection);
+        // this simulates pushing slower game objects out of the way
+        roughOffset /= 2.0;
+        other.setLocation(other.getLocation().getX() + roughOffset * -xOffsetDirection,
+                          other.getLocation().getY() + roughOffset * -yOffsetDirection);
         ACTOR.setLocation(ACTOR.getLocation().getX() + roughOffset * xOffsetDirection,
                           ACTOR.getLocation().getY() + roughOffset * yOffsetDirection);
       }
