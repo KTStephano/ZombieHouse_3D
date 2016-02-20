@@ -45,7 +45,7 @@
 #welcome-text {
    -fx-font-size: 32px;
    -fx-font-family: "Arial Black";
-   -fx-fill: #555555;
+   -fx-fill: #999999;
    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
 
