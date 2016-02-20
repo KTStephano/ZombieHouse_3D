@@ -20,7 +20,8 @@ public class CollisionDetection
   private final SpatialHashMap STATIC_ENTITIES;
   private final Engine ENGINE;
   private final HashMap<Actor, BoundingCircle> ACTOR_CIRCLE_MAP;
-  private final ArrayList<Actor> ACTOR_BUFFER = new ArrayList<>(100);
+  private final ArrayList<Actor> ACTOR_BUFFER = new ArrayList<>(1000);
+  private final ArrayList<Actor> STATIC_BUFFER = new ArrayList<>(1000);
   private final HashMap<Actor, LinkedList<Actor>> COLLISIONS = new HashMap<>(100);
 
   private class BoundingCircle
@@ -130,26 +131,45 @@ public class CollisionDetection
     Iterator<Collection<Actor>> iterMoving = MOVING_ENTITIES.iterator();
     Iterator<Collection<Actor>> iterStatic = STATIC_ENTITIES.iterator();
     COLLISIONS.clear();
+    //int collisionChecks = 0;
     while (iterMoving.hasNext())
     {
       ACTOR_BUFFER.clear();
+      STATIC_BUFFER.clear();
       ACTOR_BUFFER.addAll(iterMoving.next());
-      ACTOR_BUFFER.addAll(iterStatic.next());
+      STATIC_BUFFER.addAll(iterStatic.next());
       for (int x = 0; x < ACTOR_BUFFER.size(); x++)
       {
         Actor outer = ACTOR_BUFFER.get(x);
+        Actor inner;
+        // loop over dynamic actors and see if there are any collisions
         for (int y = x + 1; y < ACTOR_BUFFER.size(); y++)
         {
-          Actor inner = ACTOR_BUFFER.get(y);
-          if (outer.isStatic() && inner.isStatic()) continue; // this would be true for two walls sitting next to each other
+          inner = ACTOR_BUFFER.get(y);
+          //if (outer.isStatic() && inner.isStatic()) continue; // this would be true for two walls sitting next to each other
           if (ACTOR_CIRCLE_MAP.get(outer).processCollision(inner))
           {
             if (!COLLISIONS.containsKey(outer)) COLLISIONS.put(outer, new LinkedList<>());
             COLLISIONS.get(outer).add(inner);
           }
+          //collisionChecks++;
+        }
+        // now loop over the static actors by themselves and see if there are
+        // any collisions
+        for (int y = 0; y < STATIC_BUFFER.size(); y++)
+        {
+          inner = STATIC_BUFFER.get(y);
+          //if (outer.isStatic() && inner.isStatic()) continue; // this would be true for two walls sitting next to each other
+          if (ACTOR_CIRCLE_MAP.get(outer).processCollision(inner))
+          {
+            if (!COLLISIONS.containsKey(outer)) COLLISIONS.put(outer, new LinkedList<>());
+            COLLISIONS.get(outer).add(inner);
+          }
+          //collisionChecks++;
         }
       }
     }
+    //System.out.println(collisionChecks);
     return COLLISIONS;
   }
 }
