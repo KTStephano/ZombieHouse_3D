@@ -58,7 +58,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
         tmpSoundStackItem.sound.setBalance(0);
       }
            
-      if ((!tmpSoundStackItem.sound.isPlaying()) && (soundVolume > 0.8))
+      if ((!tmpSoundStackItem.sound.isPlaying()) && (soundVolume > 0.9))
       {      
         tmpSoundStackItem.sound.play();
       }

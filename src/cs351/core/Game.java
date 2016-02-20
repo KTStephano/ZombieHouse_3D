@@ -10,6 +10,8 @@ import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -32,7 +34,10 @@ public class Game extends Application {
   private ZombieHouseRenderer renderer;
   private static Engine engine = new ZombieHouseEngine();
 
-
+  public static Engine getEngine()
+  {
+    return engine;
+  }
   //play button handler - run continually (Until Pause)
   @FXML protected void handlePlay(ActionEvent event)  {
     engine.togglePause(started); // lets the engine know what's going on
@@ -110,6 +115,11 @@ public class Game extends Application {
       engine.frame();
     }
   }
+  
+  
+  
+
+  
 
 
   public static void main(String[] args) {
