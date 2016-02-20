@@ -1,7 +1,5 @@
 package cs351.entities;
 
-//package application;
-
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -102,7 +100,9 @@ public class RoomTestThingy extends Application
   {
 
     LinkedList<RoomTestThingy> rooms = new LinkedList<>();
+    
     RoomTestThingy previousRoom;
+    
     int new_Y;
     int new_X;
     int previous_X;
@@ -122,17 +122,17 @@ public class RoomTestThingy extends Application
       // Now create rooms with random values
       RoomTestThingy newRoom = new RoomTestThingy (x, y, width, height);
 
-      boolean failed = false;
+      boolean intersectingRooms = false;
       
       for (RoomTestThingy otherRoom : rooms)
       {
         if (newRoom.intersects(otherRoom))
         {
-          failed = true;
+          intersectingRooms = true;
           break;
         }
       }
-      if (!failed)
+      if (!intersectingRooms)
       {
         createRoom(newRoom, stage);
 
@@ -160,7 +160,7 @@ public class RoomTestThingy extends Application
           }
         }
       }
-      if (!failed) rooms.add(newRoom); //add new rooms into room array
+      if (!intersectingRooms) rooms.add(newRoom); //add new rooms into room array
     }
   }
 
@@ -195,6 +195,7 @@ public class RoomTestThingy extends Application
      default: color = pnk;
     }
 
+    //draws the dimensions of a rectangle
     for (int j = x; j < x_2; j++)
     {
       for (int k = y; k < y_2; k++)
@@ -213,42 +214,42 @@ public class RoomTestThingy extends Application
   }
 
   
-   /*====================================================================== 
+   /*======================================================================= 
     The following methods will connect each room with hallways. The point
      of this is to make every room accessible.
     
-    A point variable is used to keep track of the center of each room. 
-    When this center is defined, we will connect it to the previous room's 
-    center.
-    ========================================================================
+    The idea here is when a new room is generated, a path is created from
+    the center of the previous room, to the center of the newly created room.
+    =========================================================================
    */
-  public void horizontalHall(int x_start, int x_end, int y_start)
+  public void horizontalHall(int previous_X, int new_X, int previous_Y)
   {
-    int minVal = Math.min(x_start, x_end);
-    int maxVal = Math.max(x_start, x_end);
+    //Defining the minimum value guarantees that the hallway will go in
+    //the correct direction. It can be left or right, but as long as 
+    //the loops starts at the min value, the path will be correct.
+    int minVal = Math.min(previous_X, new_X);
+    int maxVal = Math.max(previous_X, new_X);
 
-    int distance = (maxVal - (minVal) + 1);
-
-    System.out.println("for loop x "+ x+" distance is "+ distance);
+    //Start at the previous x point and draw the path to the current x point
     for (int j = minVal; j < maxVal + 1; j++)
     {
       // X direction increases, y stays fixed
-      Rectangle r = new Rectangle(j, y, 5, 5);
-      r.setFill(Color.BLUE);
+      Rectangle r = new Rectangle(j, previous_Y, 5, 5);
+      r.setFill(Color.PINK);
       root.getChildren().add(r);
     }
   }
 
-  public void verticalHall(int y_start, int y_end, int x)
+  public void verticalHall(int previous_Y, int new_Y, int previous_x)
   {
-    int minY_Val = Math.min(y_start, y_end);
-    int maxY_Val = Math.max(y_start, y_end);
+    int minY_Val = Math.min(previous_Y, new_Y);
+    int maxY_Val = Math.max(previous_Y, new_Y);
 
     // Y direction increases, x stays fixed
     for (int j = minY_Val; j < maxY_Val + 1; j++)
     {
-      Rectangle r = new Rectangle(x, j, 5, 5);
-      r.setFill(Color.BLUE);
+      Rectangle r = new Rectangle(previous_x, j, 5, 5);
+      r.setFill(Color.PINK);
       root.getChildren().add(r);
     }
   }
