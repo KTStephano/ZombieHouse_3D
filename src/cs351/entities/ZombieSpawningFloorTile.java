@@ -3,9 +3,6 @@ package cs351.entities;
 import cs351.core.Engine;
 import cs351.core.Game;
 import cs351.core.GlobalConstants;
-import cs351.core.Level;
-import cs351.core.World;
-import cs351.project1.EnvironmentDemo;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
 
@@ -27,7 +24,7 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
     elapsedTime = 0.0;
     rand = new Random(); 
   }
-  
+
 
   private boolean tileIsEmpty()
   {
@@ -45,13 +42,13 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
         number on the interval [0.0, 1.0) is less than zombieSpawn
 
      */
-   elapsedTime += deltaSeconds;
-    if ( (elapsedTime > 2.0)  && (this.tileIsEmpty())&&(rand.nextInt(100000)/1000.0< GlobalConstants.zombieSpawn))
+    elapsedTime += deltaSeconds;
+    if ( (elapsedTime > 2.0)  && (this.tileIsEmpty())&&(rand.nextInt(1000000)/1000.0< GlobalConstants.zombieSpawn))
     {
       elapsedTime = 0;
       spawnZombie();
     }
-    
+
     return UpdateResult.UPDATE_COMPLETED;
   }
 
@@ -83,24 +80,24 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
     }
     addActor(Game.getEngine(), wall);
   }
-  
- private void addActor(Engine engine, Actor actor)
+
+  private void addActor(Engine engine, Actor actor)
   {
     engine.getWorld().add(actor);
     // register the actor with the renderer so it can render it each frame
     engine.getRenderer().registerActor(actor,
         new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
         //new Box(1,1,1),
-               Color.BEIGE, // diffuse
+        Color.BEIGE, // diffuse
         Color.BEIGE, // specular
         Color.WHITE); // ambient
     // sets the actor's texture so the renderer knows to load it and use it
     engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
- 
+
   }
- 
- @Override
- public void collided(Engine engine, Actor actor) {
-   lastCollisionTime = System.currentTimeMillis();
- }
+
+  @Override
+  public void collided(Engine engine, Actor actor) {
+    lastCollisionTime = System.currentTimeMillis();
+  }
 }

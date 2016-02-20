@@ -2,16 +2,22 @@ package cs351.entities;
 
 import java.util.Random;
 
+import cs351.core.Actor;
 import cs351.core.Engine;
 
 
 public class LineWalkZombie extends Zombie {
   //initialize to something we set
-  double elapsedSeconds=10;
-  Random rand = new Random();
-  double xDirection = -1000;
-  double yDirection = -1000;
+  private double elapsedSeconds=10;
+  private Random rand = new Random();
+  private double xDirection = -1000;
+  private double yDirection = -1000;
+  private boolean setNewDirection = true;
 
+  @Override
+  public void collided(Engine engine, Actor actor) {
+    setNewDirection = true;
+  }
 
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -21,8 +27,9 @@ public class LineWalkZombie extends Zombie {
   public UpdateResult update(Engine engine, double deltaSeconds)
   { 
 
-    if (xDirection == -1000)
+    if (setNewDirection == true)
     {
+      setNewDirection = false;
       // choose random X direction
       xDirection = (100-rand.nextInt(200))/20000.0;
       // choose random Y direction
