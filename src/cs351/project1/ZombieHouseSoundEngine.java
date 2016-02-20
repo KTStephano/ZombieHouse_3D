@@ -80,7 +80,9 @@ public class ZombieHouseSoundEngine implements SoundEngine {
 
 
         try {
-          AudioInputStream input = AudioSystem.getAudioInputStream(new File("/Users/scott/DropBox/workspace/ZombieHouse/src/cs351/entities/sound/zombie.wav"));
+          ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+          URL url = classLoader.getResource("zombie.wav");
+          AudioInputStream input = AudioSystem.getAudioInputStream(url);
           Clip clip = AudioSystem.getClip();
           clip.open(input);
           setVolume((int)(soundVolume*100), clip);
