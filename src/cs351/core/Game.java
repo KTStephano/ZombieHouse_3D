@@ -10,8 +10,6 @@ import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -103,11 +101,7 @@ public class Game extends Application {
 
 
   private class MyTimer extends AnimationTimer {
-    private int timerCt = 300;
-    private ZombieHouseSoundEngine sounds = new ZombieHouseSoundEngine();
 
-    // private Point pt = new Point();
-    // sounds.setCentralPoint(pt);
     @Override
     public void handle(long now)
     {
