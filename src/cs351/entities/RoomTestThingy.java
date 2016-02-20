@@ -24,6 +24,8 @@ public class RoomTestThingy extends Application
   // Board dimensions
   private int BOARD_WIDTH  = 31;
   private int BOARD_HEIGHT = 31;
+  
+  private int [][] boardArray = new int [BOARD_WIDTH][BOARD_HEIGHT];
 
   // min and max size of Rooms
   private int minRoomSize = 4;
@@ -50,7 +52,12 @@ public class RoomTestThingy extends Application
   public Point center;
 
   //Default constructor
-  public RoomTestThingy() {}
+  public RoomTestThingy() 
+  {
+    System.out.println("test constructor ");
+//    initializeArray();
+//    placeRooms();
+  }
 
   // constructor for creating new rooms
   public RoomTestThingy (int x, int y, int width, int height)
@@ -102,9 +109,10 @@ public class RoomTestThingy extends Application
     =========================================================
    */
 
-  public void placeRooms(Stage stage)
+  public void placeRooms()
   {
 
+    System.out.println("place rooms called");
     LinkedList<RoomTestThingy> rooms = new LinkedList<>();
     
     RoomTestThingy previousRoom;
@@ -124,6 +132,8 @@ public class RoomTestThingy extends Application
       height = minRoomSize + rnd.nextInt(maxRoomSize  - minRoomSize + 1);
       x      = minRoomSize + rnd.nextInt(BOARD_WIDTH  - width - 1) + 1;
       y      = minRoomSize + rnd.nextInt(BOARD_HEIGHT - height - 1) + 1;
+      
+      //TODO find out why x and y go outside of the bounds,
 
       // Now create rooms with random values
       RoomTestThingy newRoom = new RoomTestThingy (x, y, width, height);
@@ -140,7 +150,7 @@ public class RoomTestThingy extends Application
       }
       if (!intersectingRooms)
       {
-        createRoom(newRoom, stage);
+        createRoom(newRoom);
 
         new_X = (int) newRoom.getPoints().getX();
         new_Y = (int) newRoom.getPoints().getY();
@@ -170,7 +180,7 @@ public class RoomTestThingy extends Application
     }
   }
 
-  public void createRoom (RoomTestThingy newRoom, Stage stage)
+  public void createRoom (RoomTestThingy newRoom)
   {
     int x   = newRoom.x_StartPt;
     int x_2 = newRoom.x_EndPt;
@@ -206,17 +216,31 @@ public class RoomTestThingy extends Application
     {
       for (int k = y; k < y_2; k++)
       {
-        Rectangle r = new Rectangle(j, k, 1, 1);
-        r.setFill(color);
-        root.getChildren().add(r);
+//        Rectangle r = new Rectangle(j, k, 1, 1);
+//        r.setFill(color);
+//        root.getChildren().add(r);
+        
+        /********************************************/
+        try
+        {
+          // prevents a seg fault
+          if (j < BOARD_WIDTH && k < BOARD_HEIGHT)
+            boardArray[j][k] = 0;
+
+        } catch (IndexOutOfBoundsException e)
+        {
+          System.out.println("out of bounds #1");
+          System.out.println(" j = " + j + " k = " + k);
+        }
+        /*********************************************/
       }
     }
     
     colorVal++;
 
-    stage.setTitle("Procedurally Generated Dungeon Prototype");
-    stage.setScene(scene);
-    stage.show();
+//    stage.setTitle("Procedurally Generated Dungeon Prototype");
+//    stage.setScene(scene);
+//    stage.show();
   }
 
   
@@ -240,13 +264,27 @@ public class RoomTestThingy extends Application
     for (int j = minVal; j < maxVal + 1; j++)
     {
       // X direction increases, y stays fixed
-      Rectangle r = new Rectangle(j, previous_Y, 1, 1);
-      r.setFill(Color.PINK);
-      root.getChildren().add(r);
+//      Rectangle r = new Rectangle(j, previous_Y, 1, 1);
+//      r.setFill(Color.PINK);
+//      root.getChildren().add(r);
+      
+      /***********************************************************/
+      try
+      {
+        // prevents a seg fault
+        if (j < BOARD_WIDTH && previous_Y < BOARD_HEIGHT)
+          boardArray[j][previous_Y] = 0;
+
+      } catch (IndexOutOfBoundsException e)
+      {
+        System.out.println("out of bounds #2");
+        System.out.println(" j = " + j + " prev Y = " + previous_Y);
+      }
+      /***********************************************************/
     }
   }
 
-  public void verticalHall(int previous_Y, int new_Y, int previous_x)
+  public void verticalHall(int previous_Y, int new_Y, int previous_X)
   {
     int minY_Val = Math.min(previous_Y, new_Y);
     int maxY_Val = Math.max(previous_Y, new_Y);
@@ -254,10 +292,51 @@ public class RoomTestThingy extends Application
     // Y direction increases, x stays fixed
     for (int j = minY_Val; j < maxY_Val + 1; j++)
     {
-      Rectangle r = new Rectangle(previous_x, j, 1, 1);
-      r.setFill(Color.PINK);
-      root.getChildren().add(r);
+//      Rectangle r = new Rectangle(previous_X, j, 1, 1);
+//      r.setFill(Color.PINK);
+//      root.getChildren().add(r);
+      
+      /**********************************************************/
+      try
+      {
+        // prevents a seg fault
+        if (j < BOARD_WIDTH && previous_X < BOARD_HEIGHT)
+          boardArray[previous_X][j] = 0;
+
+      } catch (IndexOutOfBoundsException e)
+      {
+        System.out.println("out of bounds #3");
+        System.out.println(" prev X = " + previous_X +" j = " + j);
+      }
+      /***********************************************************/
     }
+  }
+  
+  public void initializeArray(){
+    System.out.println("initialize Array");
+    for (int x = 0; x < 31; x++)
+    {
+      for (int y = 0; y < 31; y++)
+      {
+        boardArray[x][y] = 1;
+      }
+    }
+  }
+  
+  public void printArray(){
+    System.out.println("print Array");
+    for (int x = 0; x < 31; x++)
+    {
+      for (int y = 0; y < 31; y++)
+      {
+        System.out.print(boardArray[x][y]);
+      }System.out.println("\n");
+    }System.out.println("\n");
+  }
+  
+  public int[][] getArray()
+  {
+    return(boardArray);
   }
   
 /*
@@ -289,7 +368,9 @@ public class Point {
   @Override
   public void start(Stage stage)
   {
-    placeRooms(stage);
+    initializeArray();
+    placeRooms();
+    printArray();
   }
 
   public static void main(String[] args)

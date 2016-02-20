@@ -27,7 +27,15 @@ public class EnvironmentDemo implements World
   private int worldPixelHeight = 31;
   private int tileWidthHeight = 1; // measured in pixels
   private Actor player;
-
+  
+  int index = 0;
+  
+  
+  /* ===============MY STUFF TODO===================================*/
+  // RoomTestThingy thingy = new RoomTestThingy();
+ //  int testArray[][];
+   private int [][] testArray = new int [31][31];
+ /*======================================================*/
   @Override
   public boolean contains(Actor actor)
   {
@@ -127,11 +135,20 @@ public class EnvironmentDemo implements World
   @Override
   public void nextLevel(Engine engine)
   {
+    System.out.println("nextLevel is called");
     actors.clear();
     initPlayer();
+    
+    RoomTestThingy thingy = new RoomTestThingy();
+    
+    thingy.initializeArray();  //TODO ADDED THIS STUFF HERE
+    thingy.placeRooms();
+    testArray = thingy.getArray();
+
     initWallsFloorAndCeiling();
     initZombies();
     initPlayASoundThingy(); // can't forget about this
+
     for (Actor actor : actors)
     {
       // register the actor with the renderer so it can render it each frame
@@ -165,13 +182,20 @@ public class EnvironmentDemo implements World
   private void initWallsFloorAndCeiling()
   {
     // the + 1 is for when the pixelWidth/Height and tilePixelWidth/Height don't divide evenly
-    int numTilesWidth = getWorldPixelWidth() / getTilePixelWidth() + 1; // convert pixels to number of tiles
-    int numTilesHeight = getWorldPixelHeight() / getTilePixelHeight() + 1; // convert pixels to number of tiles
+    //TODO I TEMPORARILY REMOVED THE + 1 because it was going out of bounds
+    //TODO 
+    //TODO
+    int numTilesWidth = getWorldPixelWidth() / getTilePixelWidth()  ; // convert pixels to number of tiles
+    int numTilesHeight = getWorldPixelHeight() / getTilePixelHeight() ; // convert pixels to number of tiles
     Random rand = new Random();
+    
+    
     for (int x = 0; x < numTilesWidth; x++)
     {
       for (int y = 0; y < numTilesHeight; y++)
       {
+//        System.out.println(" i = " + x + " k = " + y);
+//        System.out.println(" numTilesWidth = " + numTilesWidth + " numTilesHeight = " + numTilesHeight);
         // this first if checks to see if the current tile is on the border - if it is
         // it adds a wall
         if (x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
@@ -184,30 +208,36 @@ public class EnvironmentDemo implements World
               getTilePixelHeight()); // sets the depth to be 1 tile
           actors.add(wall);
         }
+        
 
         /*************************************************************************************************************/
-        
-        
-        
-        /*
-         ========================================================
-         adding creating new wall objects to make an inside room
 
-         ========================================================       
-         */
-        if ((x == 10 || x == 15) && y < 15)
-        {
-          Actor wall = new Wall("textures/bikiniBabe.jpg",
-              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(), // same as above but for y
-              getTilePixelWidth(), // sets the width to be 1 tile
-              2 * getTilePixelHeight(), // sets the height to be 2 tiles
-              getTilePixelHeight()); // sets the depth to be 1 tile
-          actors.add(wall);
-        }
-
+        // System.out.print(testArray[i][k]);
+        /*********************************************/  
+         try{
+           System.out.println("testArray " +testArray[x][y]);
+          if( (x < 31) && (y < 31)){
+           if (testArray[x][y] == 1) 
+           {
+            Actor wall = new Wall("textures/bikiniBabe.jpg",
+             x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+             y * getTilePixelHeight(), // same as above but for y
+             getTilePixelWidth(), // sets the width to be 1 tile
+             2 * getTilePixelHeight(), // sets the height to be 2 tiles
+             getTilePixelHeight()); // sets the depth to be 1 tile
+             actors.add(wall);
+           }
+          }
+         }catch (IndexOutOfBoundsException e)
+         {
+           System.out.println("out of bounds #1");
+           System.out.println(" x = " + x + " y = " + y);
+           System.out.println(" numTilesWidth = " + numTilesWidth + " numTilesHeight = " + numTilesHeight);
+         }
 
         /**************************************************************************************************************/
+         
+         
         FloorCeilingTile floor;
         
         if (rand.nextInt(50)<10)
