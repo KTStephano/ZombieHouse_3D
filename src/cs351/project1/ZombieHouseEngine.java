@@ -222,7 +222,8 @@ public class ZombieHouseEngine implements Engine
     for (Actor actor : changeList)
     {
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
-      if (actor.isStatic() || actor.isPartOfFloor()) collision.insert(actor);
+      //if (actor.isStatic() || actor.isPartOfFloor()) collision.insert(actor);
+      if (actor.isStatic() || (actor.isPartOfFloor() && actor.shouldUpdate())) collision.insert(actor);
     }
   }
 }
