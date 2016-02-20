@@ -16,14 +16,14 @@ import cs351.core.Actor;
 
 
 public class ZombieSpawningFloorTile extends FloorCeilingTile  {
-  private int elapsedTime;
+  private double elapsedTime;
   private Random rand;
   public ZombieSpawningFloorTile(String textureFile, double x, double y, int width,
       int height, int depth) {
 
     super(textureFile, true, false, x, y, width, height, depth);
     shouldUpdate = true; // engine will perform update calls
-    elapsedTime = 0;
+    elapsedTime = 0.0;
     rand = new Random(); 
   }
   
@@ -45,11 +45,12 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
         number on the interval [0.0, 1.0) is less than zombieSpawn
 
      */
-    
+  //  System.out.println("00zombie floor tile - add actor ELAPSED: "+elapsedTime+"   DELTA:"+deltaSeconds);
     elapsedTime += deltaSeconds;
-    if ( (elapsedTime > 2.0) && (this.tileIsEmpty())&&(rand.nextInt(1000)/1000.0< GlobalConstants.zombieSpawn))
+    if ( (elapsedTime > 2.0)  && (this.tileIsEmpty())&&(rand.nextInt(100000)/1000.0< GlobalConstants.zombieSpawn))
     {
       elapsedTime = 0;
+  //    System.out.println("1zombie floor tile - add actor");
       spawnZombie();
     }
     
@@ -89,13 +90,13 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
     // this needs to be resolved
     // need a reference to actors
     // not quite sure the best way
-   
+ //   System.out.println("2zombie floor tile - add actor");
     addActor(Game.getEngine(), wall);
   }
   
  private void addActor(Engine engine, Actor actor)
   {
-    
+//   System.out.println("3zombie floor tile - add actor");   
     engine.getWorld().add(actor);
     // register the actor with the renderer so it can render it each frame
     engine.getRenderer().registerActor(actor,
@@ -106,6 +107,7 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
         Color.WHITE); // ambient
     // sets the actor's texture so the renderer knows to load it and use it
     engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
+//    System.out.println("4zombie floor tile - add actor");
   
   }
 }
