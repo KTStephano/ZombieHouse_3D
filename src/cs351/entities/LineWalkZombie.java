@@ -16,7 +16,7 @@ public class LineWalkZombie extends Zombie {
 
   @Override
   public void collided(Engine engine, Actor actor) {
-    setNewDirection = true;
+    setNewDirection = !actor.isPartOfFloor();
   }
 
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
