@@ -199,6 +199,8 @@ public class EnvironmentDemo implements World
     {
       for (int y = 0; y < numTilesHeight; y++)
       {
+//        System.out.println(" i = " + x + " k = " + y);
+//        System.out.println(" numTilesWidth = " + numTilesWidth + " numTilesHeight = " + numTilesHeight);
         // this first if checks to see if the current tile is on the border - if it is
         // it adds a wall
         if (x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
@@ -213,42 +215,33 @@ public class EnvironmentDemo implements World
         }
         
 
-/**************ADDED THIS BLOCK OF CODE TO SET WALL ACTORS IN PLACE********************************************/
-          if( (x < 31) && (y < 31))
-          {
+        /*************************************************************************************************************/
+
+        // System.out.print(testArray[i][k]);
+        /*********************************************/  
+          if( (x < 31) && (y < 31)){
            if (testArray[x][y] == 1) 
            {
-<<<<<<< HEAD
-            if(index < 250)
-            {
-              Actor wall = new Wall("textures/bikiniBabe.jpg", //TODO 
-                                    x * getTilePixelWidth(),     
-                                    y * getTilePixelHeight(),    
-                                    getTilePixelWidth(),           
-                                    2 * getTilePixelHeight(),      
-                                    getTilePixelHeight());         
-                                    actors.add(wall);
-              
-            }
-            else
-            {
-              Actor wall = new Wall("textures/ice_texture.jpg", //TODO 
-                x * getTilePixelWidth(),     // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-                y * getTilePixelHeight(),    // same as above but for y
-                getTilePixelWidth(),           // sets the width to be 1 tile
-                2 * getTilePixelHeight(),      // sets the height to be 2 tiles
-                getTilePixelHeight());         // sets the depth to be 1 tile
-                actors.add(wall);
-            }
-           }index++;
-=======
-            Actor wall = new Wall("textures/bikiniBabe.jpg",
-             x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-             y * getTilePixelHeight(), // same as above but for y
-             getTilePixelWidth(), // sets the width to be 1 tile
-             2 * getTilePixelHeight(), // sets the height to be 2 tiles
-             getTilePixelHeight()); // sets the depth to be 1 tile
-             actors.add(wall);
+             if(index < 250)
+             {
+               Actor wall = new Wall("textures/bikiniBabe.jpg",
+               x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+               y * getTilePixelHeight(), // same as above but for y
+               getTilePixelWidth(), // sets the width to be 1 tile
+               2 * getTilePixelHeight(), // sets the height to be 2 tiles
+               getTilePixelHeight()); // sets the depth to be 1 tile
+               actors.add(wall);
+             }
+             else
+             {
+               Actor wall = new Wall("textures/ice_texture.jpg",
+                                     x * getTilePixelWidth(), 
+                                     y * getTilePixelHeight(), 
+                                     getTilePixelWidth(), 
+                                     2 * getTilePixelHeight(), 
+                                     getTilePixelHeight()); 
+               actors.add(wall);
+             } index++;
            }
            // TODO remove this when cheapHackSolutionToPlayerGettingBuriedInAWall isn't needed
             else if (cheapHackSolutionToPlayerGettingBuriedInAWall)
@@ -256,9 +249,10 @@ public class EnvironmentDemo implements World
              cheapHackSolutionToPlayerGettingBuriedInAWall = false;
              initPlayer(x, y);
            }
->>>>>>> 36d9015006376070a6d88689f4d6bd6f7f743203
           }
-/**************************************************************************************************************/
+        
+
+        /**************************************************************************************************************/
          
          
         FloorCeilingTile floor;
