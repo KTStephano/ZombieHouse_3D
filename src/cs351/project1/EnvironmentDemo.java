@@ -137,7 +137,7 @@ public class EnvironmentDemo implements World
   {
     System.out.println("nextLevel is called");
     actors.clear();
-    initPlayer();
+    //initPlayer();
     
     RoomTestThingy thingy = new RoomTestThingy();
     
@@ -168,14 +168,15 @@ public class EnvironmentDemo implements World
     throw new RuntimeException("I'm not a real world so most of my stuff doesn't work");
   }
 
-  private void initPlayer()
+  private void initPlayer(double x, double y)
   {
     // the getWorldPixelWidth() / 2.0 and getWorldPixelHeight() / 2.0 make it so the player is
     // in the middle of the map
     //
     // the 2 * tileWidthHeight is because each tile is 10 pixels and I want
     // the player to be 2 tiles high
-    player = new Player(getWorldPixelWidth() / 2.0, getWorldPixelHeight() / 2.0, 2 * tileWidthHeight);
+    //player = new Player(getWorldPixelWidth() / 2.0, getWorldPixelHeight() / 2.0, 2 * tileWidthHeight);
+    player = new Player(x, y, 2 * tileWidthHeight);
     actors.add(player);
   }
 
@@ -188,6 +189,10 @@ public class EnvironmentDemo implements World
     int numTilesWidth = getWorldPixelWidth() / getTilePixelWidth()  ; // convert pixels to number of tiles
     int numTilesHeight = getWorldPixelHeight() / getTilePixelHeight() ; // convert pixels to number of tiles
     Random rand = new Random();
+
+
+    // TODO remove this when we have a better way to not let the player get stuck in a wall during random generation
+    boolean cheapHackSolutionToPlayerGettingBuriedInAWall = true;
     
     
     for (int x = 0; x < numTilesWidth; x++)
@@ -226,6 +231,12 @@ public class EnvironmentDemo implements World
              2 * getTilePixelHeight(), // sets the height to be 2 tiles
              getTilePixelHeight()); // sets the depth to be 1 tile
              actors.add(wall);
+           }
+           // TODO remove this when cheapHackSolutionToPlayerGettingBuriedInAWall isn't needed
+            else if (cheapHackSolutionToPlayerGettingBuriedInAWall)
+           {
+             cheapHackSolutionToPlayerGettingBuriedInAWall = false;
+             initPlayer(x, y);
            }
           }
          }catch (IndexOutOfBoundsException e)
