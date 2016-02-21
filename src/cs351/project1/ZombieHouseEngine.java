@@ -87,7 +87,7 @@ public class ZombieHouseEngine implements Engine
   @Override
   public boolean[][] getPathingData()
   {
-    return null;
+    return pathingData;
   }
 
   @Override
