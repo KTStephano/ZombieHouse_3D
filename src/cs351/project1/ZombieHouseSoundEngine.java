@@ -48,12 +48,6 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     // NOTE: x, y distance to centralPoint = sqrt((cp.x - x)^2 + (cp.y-y)^2)
     // determines volume during playback
 
-    // Below is a coarse single threaded 
-    // implementation of a sound engine 
-    // media player.
-
-    //  This was created as a test to see how
-    //  well a very basic approach would work.
     while (!soundStack.isEmpty()) 
     {
       tmpSoundStackItem = soundStack.pop();
@@ -64,21 +58,9 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       {
         soundVolume = 1;
       }
-      /*
-      tmpSoundStackItem.sound.setVolume(soundVolume);  
 
-      if ((tmpSoundStackItem.x-centralPoint.x)!=0)
-      {
-        tmpSoundStackItem.sound.setBalance(  (tmpSoundStackItem.x-centralPoint.x) / (tmpSoundStackItem.x-centralPoint.x));       
-      } else
-      {
-        tmpSoundStackItem.sound.setBalance(0);
-      }
-       */
       if ( (soundVolume > 0.5))
       {      
-
-
         try {
           ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
           URL url = classLoader.getResource("zombie.wav");
@@ -91,81 +73,6 @@ public class ZombieHouseSoundEngine implements SoundEngine {
         } catch (IOException e1) {
         } catch (LineUnavailableException e) {
         }
-
-
-
-        /*
-        int BUFFER_SIZE = 128000;
-        AudioInputStream audioStream;
-        SourceDataLine sourceLine;
-        /**
-         * @param filename the name of the file that is going to be played
-
-
-
-        try {
-          audioStream = AudioSystem.getAudioInputStream(new File("cs351/entities/sound/zombie.mp3" ));
-
-            sourceLine = (SourceDataLine) AudioSystem.getLine(new DataLine.Info(SourceDataLine.class, audioStream.getFormat()));
-            sourceLine.open(audioStream.getFormat());
-            sourceLine.start();           
-
-            int nBytesRead = 0;
-            byte[] abData = new byte[BUFFER_SIZE];
-            while (nBytesRead != -1) {
-                try {
-                    nBytesRead = audioStream.read(abData, 0, abData.length);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (nBytesRead >= 0) {
-                    @SuppressWarnings("unused")
-                    int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-                }
-            }
-            sourceLine.drain();
-            sourceLine.close();
-
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-         */
-
-
-
-
-        //      try {
-        /*
-
-          File soundFile = new File( "cs351/entities/sound/zombie.mp3" );
-          AudioInputStream audioInputStream = AudioSystem.getAudioInputStream( soundFile );
-          Clip clip = AudioSystem.getClip();
-          clip.open(audioInputStream);
-          clip.start();//This plays the audio
-         */
-
-        /*
-          Clip clip = AudioSystem.getClip();
-          AudioInputStream ais;
-          ais = AudioSystem.getAudioInputStream( tmpSoundStackItem.url );
-          clip.open( ais);
-
-          FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-          volume.setValue(1.0f); // Reduce volume by 10 decibels.
-
-          clip.start();
-          //clip.loop(1);
-         * 
-         * 
-         */
-        // } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-        // e.printStackTrace();
-        //}
-
       }
     }
 
