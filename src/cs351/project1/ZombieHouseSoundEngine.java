@@ -3,6 +3,7 @@ package cs351.project1;
 import cs351.core.SoundEngine;
 import java.util.*;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -24,6 +25,27 @@ public class ZombieHouseSoundEngine implements SoundEngine {
   private Point centralPoint = new Point();
   private Stack<SoundStackItem> soundStack = new Stack<>();
   static SoundStackItem  tmpSoundStackItem;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  private AudioInputStream inputStream;
+  private AudioFormat format;
+  private SourceDataLine sourceDataLine;
+  private File file;
+  private final int BUFFER_SIZE = 128000;
+  
+  
+  
+  
+  
 
   @Override
   public void setCentralPoint(double x, double y) 
@@ -61,7 +83,14 @@ public class ZombieHouseSoundEngine implements SoundEngine {
 
       if ( (soundVolume > 0.5))
       {      
-        try {
+  
+          
+        playSound("zombie.wav",soundVolume);
+        
+        
+       /*
+          
+          
           ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
           URL url = classLoader.getResource("cs351/entities/sound/zombie.wav");
           AudioInputStream input = AudioSystem.getAudioInputStream(url);
@@ -78,10 +107,32 @@ public class ZombieHouseSoundEngine implements SoundEngine {
         } catch (Exception e3) {
           e3.printStackTrace();
         }
+        
+        */
       }
     }
 
 
+  }
+  
+  
+
+  public void playSound(String filename, double vol ) {
+
+    try
+    {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      URL url = classLoader.getResource(filename);
+      AudioInputStream input = AudioSystem.getAudioInputStream(url);
+      Clip clip = AudioSystem.getClip();
+      clip.open(input);
+      setVolume((int)(vol*100), clip);
+      clip.start();
+    } catch (Exception e) {
+      //System.out.println("Error: "+e.getMessage());
+      //e.printStackTrace();
+    }
+ 
   }
   
   public void setVolume(int percent, Clip clip) {
