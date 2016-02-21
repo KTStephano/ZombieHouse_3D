@@ -34,7 +34,8 @@ public class CollisionDetection
     private double otherActorX;
     private double otherActorY;
     private double otherActorRadius;
-    private double distance;
+    private double roughDistance;
+    private double combinedRadii_Squared;
 
     public BoundingCircle(Actor actor)
     {
@@ -58,7 +59,12 @@ public class CollisionDetection
       double dy = actorY - otherActorY;
       double xOffsetDirection = dx;// < 0 ? -1 : 1;
       double yOffsetDirection = dy;// < 0 ? -1 : 1;
-      double roughOffset = (RADIUS + otherActorRadius - distance);
+      //double distance = Math.sqrt(roughDistance);
+
+      // the division by 2.0 is not exact, I just found that many times it resulted
+      // in an offset that was very similar to if it had used an actual square root
+      // operation
+      double roughOffset = (RADIUS + otherActorRadius - roughDistance) / 2.0;
       // if the actor is part of floor, return true since there was a collision event,
       // but don't do anything with it to push the actor away from the floor object
       if (ACTOR.isPartOfFloor() || other.isPartOfFloor()) return true;
@@ -91,8 +97,10 @@ public class CollisionDetection
 
       double dx = actorX - otherActorX;
       double dy = actorY - otherActorY;
-      distance = Math.sqrt(dx * dx + dy * dy);
-      return distance < RADIUS + otherActorRadius;
+      //roughDistance = Math.sqrt(dx * dx + dy * dy);
+      roughDistance = dx * dx + dy * dy;
+      combinedRadii_Squared = (RADIUS + otherActorRadius) * (RADIUS + otherActorRadius);
+      return roughDistance < combinedRadii_Squared;
     }
   }
 
