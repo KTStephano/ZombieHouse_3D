@@ -68,32 +68,6 @@ public class Zombie extends Actor
 
 
 
-  /*
-
-  public   
-
-  URL url = new URL("http://pscode.org/media/leftright.wav");
-  Clip clip = AudioSystem.getClip();
-  AudioInputStream ais = AudioSystem.getAudioInputStream( url );
-  clip.open( ais);
-  clip.loop(Clip.LOOP_CONTINUOUSLY);
-
-
-
-  URL url2 = new URL("http://pscode.org/media/100_2817-linear.wav");
-  Clip clip2 = AudioSystem.getClip();
-  AudioInputStream ais2 = AudioSystem.getAudioInputStream( url2 );
-  clip2.open(ais2);
-
-  // loop continuously
-
-  clip2.loop(Clip.LOOP_CONTINUOUSLY);
-
-
-   */
-
-
-
 
 
 

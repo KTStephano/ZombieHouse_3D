@@ -12,7 +12,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import javafx.scene.media.AudioClip;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +24,6 @@ public class ZombieHouseSoundEngine implements SoundEngine {
   private Point centralPoint = new Point();
   private Stack<SoundStackItem> soundStack = new Stack<>();
   static SoundStackItem  tmpSoundStackItem;
-  private static final double MAX_VOLUME = 1.0;
 
   @Override
   public void setCentralPoint(double x, double y) 
@@ -52,7 +50,9 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     {
       tmpSoundStackItem = soundStack.pop();
 
-      float relativeDistance = ((float)tmpSoundStackItem.x-centralPoint.x)*((float)tmpSoundStackItem.x-centralPoint.x)+((float)tmpSoundStackItem.y-centralPoint.y)*((float)tmpSoundStackItem.y-centralPoint.y);      
+      float relativeDistance = ((float)tmpSoundStackItem.x-centralPoint.x)
+          *((float)tmpSoundStackItem.x-centralPoint.x)+((float)tmpSoundStackItem.y-centralPoint.y)
+          *((float)tmpSoundStackItem.y-centralPoint.y);      
       float soundVolume = 30/relativeDistance;
       if (soundVolume > 1) 
       {
@@ -63,15 +63,20 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       {      
         try {
           ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-          URL url = classLoader.getResource("zombie.wav");
+          URL url = classLoader.getResource("cs351/entities/sound/zombie.wav");
           AudioInputStream input = AudioSystem.getAudioInputStream(url);
           Clip clip = AudioSystem.getClip();
           clip.open(input);
           setVolume((int)(soundVolume*100), clip);
           clip.start();
-        } catch (UnsupportedAudioFileException e1) {
+        } catch (UnsupportedAudioFileException e) {
+          e.printStackTrace();
         } catch (IOException e1) {
-        } catch (LineUnavailableException e) {
+          e1.printStackTrace();
+        } catch (LineUnavailableException e2) {
+          e2.printStackTrace();
+        } catch (Exception e3) {
+          e3.printStackTrace();
         }
       }
     }
