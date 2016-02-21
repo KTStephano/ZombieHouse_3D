@@ -7,15 +7,11 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import java.awt.Point;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -25,27 +21,6 @@ public class ZombieHouseSoundEngine implements SoundEngine {
   private Point centralPoint = new Point();
   private Stack<SoundStackItem> soundStack = new Stack<>();
   static SoundStackItem  tmpSoundStackItem;
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  private AudioInputStream inputStream;
-  private AudioFormat format;
-  private SourceDataLine sourceDataLine;
-  private File file;
-  private final int BUFFER_SIZE = 128000;
-  
-  
-  
-  
-  
 
   @Override
   public void setCentralPoint(double x, double y) 
@@ -82,55 +57,25 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       }
 
       if ( (soundVolume > 0.5))
-      {      
-  
-          
-        playSound("zombie.wav",soundVolume);
-        
-        
-       /*
-          
-          
-          ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-          URL url = classLoader.getResource("cs351/entities/sound/zombie.wav");
-          AudioInputStream input = AudioSystem.getAudioInputStream(url);
-          Clip clip = AudioSystem.getClip();
-          clip.open(input);
-          setVolume((int)(soundVolume*100), clip);
-          clip.start();
-        } catch (UnsupportedAudioFileException e) {
-          e.printStackTrace();
-        } catch (IOException e1) {
-          e1.printStackTrace();
-        } catch (LineUnavailableException e2) {
-          e2.printStackTrace();
-        } catch (Exception e3) {
-          e3.printStackTrace();
-        }
-        
-        */
+      {                
+        playSound(tmpSoundStackItem.url,soundVolume);       
       }
     }
 
 
   }
-  
-  
 
-  public void playSound(String filename, double vol ) {
+
+  public void playSound(URL url, double vol ) {
 
     try
     {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      URL url = classLoader.getResource(filename);
       AudioInputStream input = AudioSystem.getAudioInputStream(url);
       Clip clip = AudioSystem.getClip();
       clip.open(input);
       setVolume((int)(vol*100), clip);
       clip.start();
     } catch (Exception e) {
-      //System.out.println("Error: "+e.getMessage());
-      //e.printStackTrace();
     }
  
   }

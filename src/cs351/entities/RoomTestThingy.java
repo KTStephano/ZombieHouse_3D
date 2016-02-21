@@ -51,6 +51,13 @@ public class RoomTestThingy extends Application
 
   public Point center;
 
+  public int [][] getBoard()
+  {
+    return boardArray;
+  }
+  
+  
+  
   //Default constructor
   public RoomTestThingy() 
   {

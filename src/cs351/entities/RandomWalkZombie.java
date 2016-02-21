@@ -1,6 +1,7 @@
 package cs351.entities;
 
 import cs351.core.Engine;
+import cs351.core.GlobalConstants;
 import cs351.entities.Zombie;
 
 import java.util.Random;
@@ -24,7 +25,7 @@ public class RandomWalkZombie extends Zombie {
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
     // every 5 seconds, switch direction
-    if (elapsedSeconds > zombieDecisionRate)
+    if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
     {
       elapsedSeconds = 0.0;
       // -5.0 to 5.0
@@ -32,6 +33,8 @@ public class RandomWalkZombie extends Zombie {
       // -5.0 to 5.0
       yDirection = (100-rand.nextInt(200))/20000.0;
     }
+    
+    
     setLocation(getLocation().getX()+xDirection, getLocation().getY() +yDirection);
     
 
