@@ -99,15 +99,19 @@ public class Zombie extends Actor
 
   }
 
-  protected Point2D getNextLocation(Engine engine, boolean canSmellPlayer)
+  protected Point2D getNextLocation(Engine engine, boolean canSmellPlayer, int [][] gameBoard)
   {
     
     double x=0;
     double y=0;
+    double playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
+    double playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
+    Point2D nextLocation = new Point2D(playerY, playerY);
     if (canSmellPlayer)
     {
       // get next x and y using A Star
       //engine.
+  //    getNextAStarLocation(x,y, playerX, playerY, gameBoard);
     } 
     else 
     {
@@ -121,7 +125,7 @@ public class Zombie extends Actor
     }
  
     
-    return  new Point2D(x, y);
+    return  new Point2D(playerY, playerY);
 
   }
 
