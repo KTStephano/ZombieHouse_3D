@@ -50,6 +50,7 @@ public class RoomTestThingy extends Application
   private int y;
 
   public Point center;
+  private int textureIndex;
 
   //Default constructor
   public RoomTestThingy() 
@@ -199,16 +200,16 @@ public class RoomTestThingy extends Application
     //Switch room colors to make the model more interesting
     switch(colorVal)
     {
-      case 0: color = blu;
+      case 0: setTextureNumber(1);
         break;
         
-      case 1: color = grn;
+      case 1: setTextureNumber(2);
         break;
         
-      case 2: color = red;
+      case 2: setTextureNumber(3);
         break;
         
-     default: color = pnk;
+     default: setTextureNumber(4);
     }
 
     //draws the dimensions of a rectangle
@@ -323,6 +324,29 @@ public class RoomTestThingy extends Application
     }
   }
   
+  /*
+   ==========================================
+   This just returns numbers that correspond 
+   to the type of texture each room will 
+   have. The point is to make each room have
+   a different look to it
+   ==========================================
+   */
+  public int getTextureNumber()
+  {
+    return textureIndex;
+  }
+  public void setTextureNumber(int textureIndex)
+  {
+    this.textureIndex = textureIndex;
+  }
+  
+  /*
+   =================================
+   simple function to print values
+   of array
+   =================================
+   */
   public void printArray(){
     System.out.println("print Array");
     for (int x = 0; x < 31; x++)
@@ -368,14 +392,14 @@ public class Point {
   @Override
   public void start(Stage stage)
   {
-    initializeArray();
-    placeRooms();
-    printArray();
+//    initializeArray();
+//    placeRooms();
+//    printArray();
   }
 
-  public static void main(String[] args)
-  {
-    launch(args);
-  }
+//  public static void main(String[] args)
+//  {
+//    launch(args);
+//  }
 
 }
