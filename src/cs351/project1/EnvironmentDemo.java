@@ -32,8 +32,6 @@ public class EnvironmentDemo implements World
   
   
   /* ===============MY STUFF TODO===================================*/
-  private String text1;
-  private String text2 = "textures/bikiniBabe.jpg";
   // RoomTestThingy thingy = new RoomTestThingy();
  //  int testArray[][];
    private int [][] testArray = new int [31][31];
@@ -211,32 +209,33 @@ public class EnvironmentDemo implements World
         
 
 /**************ADDED THIS BLOCK OF CODE TO SET WALL ACTORS IN PLACE********************************************/
-        RoomTestThingy roomObj = new RoomTestThingy();
-        int textureNum = roomObj.getTextureNumber();
-        StringBuilder text1 = new StringBuilder("textures/bikiniBabe.jpg");
-        
-         try{
           if( (x < 31) && (y < 31))
           {
-            if(textureNum == 2) 
            if (testArray[x][y] == 1) 
            {
-            Actor wall = new Wall("textures/bikiniBabe.jpg",
-              x * getTilePixelWidth(),     // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(),    // same as above but for y
-             getTilePixelWidth(),           // sets the width to be 1 tile
-             2 * getTilePixelHeight(),      // sets the height to be 2 tiles
-             getTilePixelHeight());         // sets the depth to be 1 tile
-             actors.add(wall);
-           }//TODO 
+            if(index < 250)
+            {
+              Actor wall = new Wall("textures/bikiniBabe.jpg", //TODO 
+                                    x * getTilePixelWidth(),     
+                                    y * getTilePixelHeight(),    
+                                    getTilePixelWidth(),           
+                                    2 * getTilePixelHeight(),      
+                                    getTilePixelHeight());         
+                                    actors.add(wall);
+              
+            }
+            else
+            {
+              Actor wall = new Wall("textures/ice_texture.jpg", //TODO 
+                x * getTilePixelWidth(),     // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                y * getTilePixelHeight(),    // same as above but for y
+                getTilePixelWidth(),           // sets the width to be 1 tile
+                2 * getTilePixelHeight(),      // sets the height to be 2 tiles
+                getTilePixelHeight());         // sets the depth to be 1 tile
+                actors.add(wall);
+            }
+           }index++;
           }
-         }catch (IndexOutOfBoundsException e)
-         {
-           System.out.println("out of bounds #1");
-           System.out.println(" x = " + x + " y = " + y);
-           System.out.println(" numTilesWidth = " + numTilesWidth + " numTilesHeight = " + numTilesHeight);
-         }
-
 /**************************************************************************************************************/
          
          
