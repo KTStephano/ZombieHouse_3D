@@ -2,8 +2,8 @@ package cs351.entities;
 
 import cs351.core.Actor;
 import cs351.core.Engine;
-
-import java.net.MalformedURLException;
+import cs351.core.GlobalConstants;
+import javafx.geometry.Point2D;
 import java.net.URL;
 import java.util.Random;
 
@@ -22,6 +22,13 @@ public class Zombie extends Actor
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile);
+    setLocation(x, y);
+    setWidthHeightDepth(width, height, depth);
+  }
+
+  public Zombie(String textureFile, String modelFile, double x, double y, int width, int height, int depth)
+  {
+    super(textureFile, modelFile);
     setLocation(x, y);
     setWidthHeightDepth(width, height, depth);
   }
@@ -52,12 +59,12 @@ public class Zombie extends Actor
     {
       elapsedSeconds = 0.0;
 
-      URL url;
-      try {
-        url = new URL("http://www.google.com/");
-        engine.getSoundEngine().queueSoundAtLocation(url, getLocation().getX(), getLocation().getY());
-      } catch (MalformedURLException e) {
-      }
+      String filename = "zombie.wav";
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      URL url = classLoader.getResource(filename);
+
+      engine.getSoundEngine().queueSoundAtLocation(url, getLocation().getX(), getLocation().getY());
+
     }
   }
   public void collided(Engine engine, Actor actor)
@@ -65,12 +72,69 @@ public class Zombie extends Actor
 
   }
 
+  /*
+  1) If a zombie's distance from the player is  zombieSmell,
+  then the zombie can smell the player. This distance is the the
+  shortest-path distance (NOT the Euclidean distance ignoring
+  objects and walls as is the player hearing).
+  2) If a zombie can smell a player, then the zombie "knows" the
+  player's exact location and the shortest path, avoiding all
+  obstacles, to the player.
+  3) If either a Random Walk or Line Walk zombies smells a
+  player, then on the next decision update, the zombie will
+  calculate the shortest path and adjust its heading to match.
 
 
+   */
 
+  protected boolean canSmellPlayer(Engine engine, double deltaSeconds)
+  {
+    int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
+    int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
+    double dx = playerX - getLocation().getX();
+    double dy = playerY - getLocation().getY();
+    int distanceToPlayer = (int)(Math.sqrt(dx*dx + dy*dy));
 
+    if (distanceToPlayer <= GlobalConstants.zombieSmell)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }   
 
+  }
 
+  protected Point2D getNextLocation(Engine engine, boolean canSmellPlayer, int [][] gameBoard)
+  {
+    
+    double x=0;
+    double y=0;
+    double playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
+    double playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
+    Point2D nextLocation = new Point2D(playerY, playerY);
+    if (canSmellPlayer)
+    {
+      // get next x and y using A Star
+      //engine.
+  //    getNextAStarLocation(x,y, playerX, playerY, gameBoard);
+    } 
+    else 
+    {
+      Random rand = new Random();
+      // direction to add to x
+      double xDirection = (int) ((100-rand.nextInt(200))/20000.0);
+      // direction to add to y
+      double yDirection = (int) ((100-rand.nextInt(200))/20000.0);
+      x = (getLocation().getX()+xDirection);
+      y = (getLocation().getY()+yDirection);
+    }
+ 
+    
+    return  new Point2D(playerY, playerY);
+
+  }
 
 
 

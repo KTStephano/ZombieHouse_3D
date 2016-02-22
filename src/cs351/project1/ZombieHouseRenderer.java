@@ -38,7 +38,8 @@ public class ZombieHouseRenderer implements Renderer
 
   private class Model
   {
-    public Mesh mesh; // if a custom model was loaded
+    public TriangleMesh mesh; // if a custom model was loaded
+    public MeshView meshView;
     public Shape3D shape; // if one of the default shapes was used
     public PhongMaterial material;
     public Texture diffuseTexture;
@@ -296,6 +297,20 @@ public class ZombieHouseRenderer implements Renderer
   }
 
   @Override
+  public void registerActor(Actor actor, TriangleMesh mesh, Color diffuseColor, Color specularColor, Color ambientColor)
+  {
+    Model model = generateModel(actor, null, diffuseColor, specularColor, ambientColor);
+    if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
+    ACTOR_MODEL_MAP.put(actor, model);
+    model.mesh = mesh;
+    model.meshView = new MeshView(model.mesh);
+    model.meshView.setMaterial(model.material);
+    model.meshView.getTransforms().addAll(model.rotation, model.translation);
+    model.meshView.setCullFace(CullFace.NONE);
+    renderSceneGraph.getChildren().addAll(model.meshView);
+  }
+
+  @Override
   public void mapTextureToActor(String textureFile, Actor actor)
   {
     if (!ACTOR_MODEL_MAP.containsKey(actor))
@@ -309,7 +324,8 @@ public class ZombieHouseRenderer implements Renderer
     // update the model's material to use the material created during
     // the texture loading/creation process
     model.material = model.diffuseTexture.getMaterial();
-    model.shape.setMaterial(model.material);
+    if (model.shape != null) model.shape.setMaterial(model.material);
+    else model.meshView.setMaterial(model.material);
     model.material.setDiffuseMap(model.diffuseTexture.getTexture());
   }
 
@@ -321,13 +337,13 @@ public class ZombieHouseRenderer implements Renderer
     material.setDiffuseColor(diffuseColor);
     material.setSpecularColor(specularColor);
     model.material = material;
-    shape.setMaterial(material);
+    if (shape != null) shape.setMaterial(material);
     model.lights = new ArrayList<>(5);
     model.translation = new Translate(actor.getLocation().getX(),
-            0.0,
-            actor.getLocation().getY());
+                                      0.0,
+                                      actor.getLocation().getY());
     model.rotation = new Rotate(0.0, 0.0, 0.0);
-    shape.getTransforms().addAll(model.rotation, model.translation);
+    if (shape != null) shape.getTransforms().addAll(model.rotation, model.translation);
 
     return model;
   }
@@ -341,12 +357,12 @@ public class ZombieHouseRenderer implements Renderer
     {
       Actor actor = entry.getKey();
       Model model = entry.getValue();
-      if (model.shape == null) continue;
       //translate.setX(actor.getLocation().getX() - model.translation.getX());
       //translate.setY(model.translation.getY());
       //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
       //model.shape.getTransforms().clear();
       //model.shape.getTransforms().addAll(translate);
+      double actorHeightOffset = model.shape != null ? -actor.getHeight() / 2.0 : 0.0;
       // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
       if (actor.isPartOfFloor()) setTranslationValuesForModel(model, actor.getLocation().getX(),
                                                               floorDepthOffset,
@@ -355,9 +371,14 @@ public class ZombieHouseRenderer implements Renderer
                                                                      floorHeightOffset - actor.getHeight() / 2.0,
                                                                      actor.getLocation().getY());
       else setTranslationValuesForModel(model, actor.getLocation().getX(),
-                                        -actor.getHeight() / 2.0,
+                                        actorHeightOffset,
                                         actor.getLocation().getY());
-      model.shape.setDrawMode(mode);
+      if (model.shape != null) model.shape.setDrawMode(mode);
+      else
+      {
+        model.meshView.setDrawMode(mode);
+        model.meshView.setCullFace(CullFace.BACK);
+      }
     }
   }
 

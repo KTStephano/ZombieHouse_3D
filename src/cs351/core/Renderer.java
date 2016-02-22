@@ -3,6 +3,7 @@ package cs351.core;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.TriangleMesh;
 
 /**
  * The Renderer is meant to manage the final translation/rotation of all registered
@@ -52,6 +53,19 @@ public interface Renderer
    * @param ambientColor base color of the object
    */
   void registerActor(Actor actor, Shape3D shape, Color diffuseColor, Color specularColor, Color ambientColor);
+
+  /**
+   * Registers an Actor object with the renderer. This function requires a TriangleMesh which allows
+   * you to load in a 3D model that is different from the standard Shape3D objects.
+   *
+   * @param actor object to add to the scene
+   * @param mesh mesh to use
+   * @param diffuseColor this is the color the object scatters in all directions when light hits it
+   * @param specularColor this is the color the object reflects in one direction when light hits it -
+   *                      results in a shiny circles on the surface
+   * @param ambientColor base color of the object
+   */
+  void registerActor(Actor actor, TriangleMesh mesh, Color diffuseColor, Color specularColor, Color ambientColor);
 
   /**
    * This should be used for all Actor objects that need to be textured.

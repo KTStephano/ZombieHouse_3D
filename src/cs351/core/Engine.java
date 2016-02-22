@@ -67,6 +67,16 @@ public interface Engine
   Collection<Actor> getNeighboringActors(Actor actor, int tileDistance);
 
   /**
+   * When this is called, an array of booleans is returned representing all the areas
+   * in the map that zombies can walk over. If the value in the board is true, that
+   * area is a valid floor tile with no wall obstacle covering it. If it is false then
+   * there is a wall sitting on top of it and that spot can't be reached.
+   *
+   * @return boolean array representing the world
+   */
+  boolean[][] getPathingData();
+
+  /**
    * Initializes the engine and prepares it for the first call to the
    * frame function.
    *

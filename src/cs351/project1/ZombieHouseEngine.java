@@ -28,6 +28,7 @@ public class ZombieHouseEngine implements Engine
   private boolean pendingNextLevel;
   private long millisecondsSinceLastFrame;
   private long millisecondTimeStamp;
+  private boolean[][] pathingData;
 
   public ZombieHouseEngine()
   {
@@ -84,6 +85,12 @@ public class ZombieHouseEngine implements Engine
   }
 
   @Override
+  public boolean[][] getPathingData()
+  {
+    return pathingData;
+  }
+
+  @Override
   public void init(Stage stage, World world, SoundEngine soundEngine, Renderer renderer)
   {
     if (isInitialized) throw new RuntimeException("Engine was not shutdown before a new call to init");
@@ -91,6 +98,13 @@ public class ZombieHouseEngine implements Engine
     this.world = world;
     this.soundEngine = soundEngine;
     this.renderer = renderer;
+    pathingData = new boolean[world.getWorldPixelWidth() / world.getTilePixelWidth()]
+                             [world.getWorldPixelHeight() / world.getTilePixelHeight()];
+    for (int x = 0; x < pathingData.length; x++)
+    {
+      // start off assuming each location can be visited
+      Arrays.fill(pathingData[x], true);
+    }
 
     isInitialized = true;
     isPendingShutdown = false;
@@ -224,6 +238,20 @@ public class ZombieHouseEngine implements Engine
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
       //if (actor.isStatic() || actor.isPartOfFloor()) collision.insert(actor);
       if (actor.isStatic() || (actor.isPartOfFloor() && actor.shouldUpdate())) collision.insert(actor);
+
+      if (actor.isStatic() || actor.isPartOfFloor())
+      {
+        // get the integer coordinates for this actor
+        int x = (int)(actor.getLocation().getX() / getWorld().getTilePixelWidth());
+        int y = (int)(actor.getLocation().getY() / getWorld().getTilePixelHeight());
+        if (x >= 0 && x < pathingData.length && y >= 0 && y < pathingData[0].length)
+        {
+          // if the current actor is not static (which is for walls) and it is part of
+          // the floor and the pathing data at the current location is still true (otherwise
+          // it was already covered by a wall), then leave the current location as valid
+          pathingData[x][y] = !actor.isStatic() && actor.isPartOfFloor() && pathingData[x][y];
+        }
+      }
     }
   }
 }
