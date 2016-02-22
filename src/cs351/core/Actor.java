@@ -1,6 +1,8 @@
 package cs351.core;
 
+import cs351.project1.Entity;
 import javafx.geometry.Point2D;
+import javafx.scene.shape.TriangleMesh;
 
 import java.util.LinkedList;
 
@@ -25,6 +27,7 @@ public abstract class Actor
   protected boolean isPartOfFloor; // true if floor tile
   protected boolean isPartOfCeiling; // true if ceiling
   protected final String TEXTURE_FILE;
+  protected Entity entity = null;
 
   /**
    * UpdateResult contains a few different enum values that each Actor can use
@@ -45,6 +48,12 @@ public abstract class Actor
   public Actor(String textureFile)
   {
     TEXTURE_FILE = textureFile;
+  }
+
+  public Actor(String textureFile, String modelFile)
+  {
+    this(textureFile);
+    entity = new Entity(modelFile);
   }
 
   /**
@@ -90,6 +99,12 @@ public abstract class Actor
    * @param actor reference to the Actor object that collided with this object
    */
   public abstract void collided(Engine engine, Actor actor);
+
+  public TriangleMesh getMesh()
+  {
+    if (entity == null) return null;
+    return entity.getMesh();
+  }
 
   /**
    * The renderer will use this function to figure out whether the tile is part of

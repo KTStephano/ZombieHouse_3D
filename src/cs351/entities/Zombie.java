@@ -26,6 +26,13 @@ public class Zombie extends Actor
     setWidthHeightDepth(width, height, depth);
   }
 
+  public Zombie(String textureFile, String modelFile, double x, double y, int width, int height, int depth)
+  {
+    super(textureFile, modelFile);
+    setLocation(x, y);
+    setWidthHeightDepth(width, height, depth);
+  }
+
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
     // totalSpeed represents the movement speed offset in tiles per second

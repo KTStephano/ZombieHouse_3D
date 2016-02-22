@@ -20,8 +20,14 @@ public class RandomWalkZombie extends Zombie {
     super(textureFile, x, y, width, height, depth);
   }
 
+  public RandomWalkZombie(String textureFile, String modelFile, double x, double y, int width, int height, int depth)
+  {
+    super(textureFile, modelFile, x, y, width, height, depth);
+  }
+
   public UpdateResult update(Engine engine, double deltaSeconds)
-  { 
+  {
+    if (entity != null) entity.update();
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
     // every 5 seconds, switch direction
