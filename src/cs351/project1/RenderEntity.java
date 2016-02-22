@@ -18,7 +18,7 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
  * CITATION: http://www.interactivemesh.org/models/jfx3dimporter.html
  * The above website is where I got the code that lets us load 3D assets.
  *
- * An entity represents a game object that is not easily
+ * An renderEntity represents a game object that is not easily
  * represented using the standard JavaFX class of shapes. This
  * includes anything that needs to be loaded in as a 3d model
  * containing vertex, normal, texture and animation data.
@@ -32,7 +32,7 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
  * pass in just one .obj file it will assume you do not want
  * to animate the object.
  */
-public class Entity
+public class RenderEntity
 {
   private static final HashMap<String, Model[]> MESH_LOOKUP_TABLE = new HashMap<>(100);
   private ObjModelImporter importer = new ObjModelImporter();
@@ -57,7 +57,7 @@ public class Entity
    *
    * @param filename non-absolute path to the file
    */
-  public Entity(String filename)
+  public RenderEntity(String filename)
   {
     // check if the mesh sequence already exists
     if (MESH_LOOKUP_TABLE.containsKey(filename)) sequence = MESH_LOOKUP_TABLE.get(filename);
@@ -72,15 +72,7 @@ public class Entity
       loadModel(filename, stripExtension(filename));
       MESH_LOOKUP_TABLE.put(filename, sequence);
     }
-  }
-
-  /**
-   * This updates the TriangleMesh of this entity. This is going to be
-   * used as a means of enabling per-vertex animation in the future.
-   */
-  public void update()
-  {
-    if (currModel > sequence.length - 1) currModel = 0;
+    // TODO remove this (it's a temporary fix to prevent huge frame rate drops)
     Model model = sequence[currModel];
     mesh.getPoints().clear();
     mesh.getTexCoords().clear();
@@ -90,6 +82,26 @@ public class Entity
     mesh.getTexCoords().addAll(model.texCoords);
     mesh.getNormals().addAll(model.normals);
     mesh.getFaces().addAll(model.faces);
+  }
+
+  /**
+   * This updates the TriangleMesh of this renderEntity. This is going to be
+   * used as a means of enabling per-vertex animation in the future.
+   */
+  public void update()
+  {
+    if (currModel > sequence.length - 1) currModel = 0;
+    /*
+    Model model = sequence[currModel];
+    mesh.getPoints().clear();
+    mesh.getTexCoords().clear();
+    mesh.getNormals().clear();
+    mesh.getFaces().clear();
+    mesh.getPoints().addAll(model.vertices);
+    mesh.getTexCoords().addAll(model.texCoords);
+    mesh.getNormals().addAll(model.normals);
+    mesh.getFaces().addAll(model.faces);
+    */
   }
 
   public TriangleMesh getMesh()

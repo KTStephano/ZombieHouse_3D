@@ -1,10 +1,8 @@
 package cs351.core;
 
-import cs351.project1.Entity;
+import cs351.project1.RenderEntity;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.TriangleMesh;
-
-import java.util.LinkedList;
 
 /**
  * The Actor class represents any object that can be added to the game
@@ -27,7 +25,7 @@ public abstract class Actor
   protected boolean isPartOfFloor; // true if floor tile
   protected boolean isPartOfCeiling; // true if ceiling
   protected final String TEXTURE_FILE;
-  protected Entity entity = null;
+  protected RenderEntity renderEntity = null;
 
   /**
    * UpdateResult contains a few different enum values that each Actor can use
@@ -53,7 +51,7 @@ public abstract class Actor
   public Actor(String textureFile, String modelFile)
   {
     this(textureFile);
-    entity = new Entity(modelFile);
+    renderEntity = new RenderEntity(modelFile);
   }
 
   /**
@@ -102,8 +100,8 @@ public abstract class Actor
 
   public TriangleMesh getMesh()
   {
-    if (entity == null) return null;
-    return entity.getMesh();
+    if (renderEntity == null) return null;
+    return renderEntity.getMesh();
   }
 
   /**
