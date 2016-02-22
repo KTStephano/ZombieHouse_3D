@@ -1,13 +1,10 @@
 package cs351.project1;
 
 import cs351.core.Engine;
-import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
@@ -39,16 +36,12 @@ public class RenderEntity
   private TriangleMesh mesh = new TriangleMesh();
   private Model[] sequence;
   private int currModel = 0;
-  private ArrayList<Point3D> vertexBuffer; // these are stored in sets of 3 floats
-  private ArrayList<Point2D> textureBuffer; // these are stored in sets of 2 floats
-  private ArrayList<Point3D> normalBuffer; // these are stored in sets of 3 floats
-  private ArrayList<Short> facesBuffer; // these are stored in sets of 9 shorts (9 shorts = 1 face)
 
   private class Model
   {
-    public float[] vertices;
-    public float[] texCoords;
-    public float[] normals;
+    public float[] vertices; // 3 floats = 1 vertex
+    public float[] texCoords; // 2 floats = 1 texture coordinate
+    public float[] normals; // 3 floats = 1 normal
     public int[] faces;
   }
 
@@ -59,17 +52,12 @@ public class RenderEntity
    */
   public RenderEntity(String filename)
   {
-    // check if the mesh sequence already exists
+    // check if the model sequence already exists
     if (MESH_LOOKUP_TABLE.containsKey(filename)) sequence = MESH_LOOKUP_TABLE.get(filename);
     // if not, load it
     else
     {
-      vertexBuffer = new ArrayList<>(2500);
-      textureBuffer = new ArrayList<>(2500);
-      normalBuffer = new ArrayList<>(2500);
-      facesBuffer = new ArrayList<>(2500);
-
-      loadModel(filename, stripExtension(filename));
+      loadModel(filename, getExtension(filename));
       MESH_LOOKUP_TABLE.put(filename, sequence);
     }
     // TODO remove this (it's a temporary fix to prevent huge frame rate drops)
@@ -109,7 +97,7 @@ public class RenderEntity
     return mesh;
   }
 
-  private String stripExtension(String filename)
+  private String getExtension(String filename)
   {
     for (int i = 0; i < filename.length(); i++)
     {
