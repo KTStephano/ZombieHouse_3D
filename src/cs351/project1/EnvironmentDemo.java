@@ -152,11 +152,23 @@ public class EnvironmentDemo implements World
     for (Actor actor : actors)
     {
       // register the actor with the renderer so it can render it each frame
-      engine.getRenderer().registerActor(actor,
-          new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
-          Color.BEIGE, // diffuse
-          Color.BEIGE, // specular
-          Color.WHITE); // ambient
+      if (actor.getMesh() != null)
+      {
+        engine.getRenderer().registerActor(actor,
+                                           actor.getMesh(),
+                                           Color.BEIGE, // diffuse
+                                           Color.BEIGE, // specular
+                                           Color.WHITE); // ambient
+      }
+      else
+      {
+        engine.getRenderer().registerActor(actor,
+                                           new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
+                                           Color.BEIGE, // diffuse
+                                           Color.BEIGE, // specular
+                                           Color.WHITE); // ambient
+      }
+
       // sets the actor's texture so the renderer knows to load it and use it
       engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
     }
@@ -176,7 +188,7 @@ public class EnvironmentDemo implements World
     // the 2 * tileWidthHeight is because each tile is 10 pixels and I want
     // the player to be 2 tiles high
     //player = new Player(getWorldPixelWidth() / 2.0, getWorldPixelHeight() / 2.0, 2 * tileWidthHeight);
-    player = new Player(x, y, 2 * tileWidthHeight);
+    player = new Player(x, y, 3 * tileWidthHeight);
     actors.add(player);
   }
 
@@ -305,6 +317,7 @@ public class EnvironmentDemo implements World
     for (int i = 0; i < numZombies/2; i++)
     {
       Zombie wall1 = new RandomWalkZombie(textures[currTexture],
+              "resources/zombie_slow.obj",
           rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
           rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
           getTilePixelWidth(), // sets width to be 1 tile
