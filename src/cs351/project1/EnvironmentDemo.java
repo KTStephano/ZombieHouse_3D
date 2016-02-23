@@ -317,7 +317,7 @@ public class EnvironmentDemo implements World
     for (int i = 0; i < numZombies/2; i++)
     {
       Zombie wall1 = new RandomWalkZombie(textures[currTexture],
-              "resources/Zombie1_Animated/",
+              "Zombie1_Animated",
           rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
           rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
           getTilePixelWidth(), // sets width to be 1 tile

@@ -155,7 +155,8 @@ public class RenderEntity
   private Model[] loadDirectory(String directory)
   {
     // this line builds the path to the directory
-    File folder = new File(".\\src\\cs351\\core\\" + directory);
+    //File folder = new File(".\\src\\cs351\\core\\" + directory);
+    File folder = new File(directory);
     File[] files = folder.listFiles();
     Model[] models = new Model[files.length];
     int index = 0;
