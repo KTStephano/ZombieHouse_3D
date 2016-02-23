@@ -145,25 +145,37 @@ public class RenderEntity
       sequence = new Model[1];
       sequence[0] = loadObj(filename);
     }
-    else if (extension.equals(""))
+    else if (extension.equals(".txt"))
     {
-      sequence = loadDirectory(filename);
+      sequence = loadFromTxt(filename);
     }
     else throw new RuntimeException(filename + " is not a recognized format : must be either .obj or directory");
   }
 
-  private Model[] loadDirectory(String directory)
+  private Model[] loadFromTxt(String filename)
   {
     // this line builds the path to the directory
     //File folder = new File(".\\src\\cs351\\core\\" + directory);
-    File folder = new File(directory);
-    File[] files = folder.listFiles();
-    Model[] models = new Model[files.length];
-    int index = 0;
-    for (File entry : files)
+    InputStream stream = RenderEntity.class.getResourceAsStream(filename);
+    BufferedReader read = new BufferedReader(new InputStreamReader(stream));
+    ArrayList<String> files = new ArrayList<String>(25);
+    try
     {
-      System.out.println("RenderEntity: loading " + entry.getName());
-      models[index] = loadObj(entry);
+      String line;
+      while ((line = read.readLine()) != null) files.add(line);
+      stream.close();
+      read.close();
+    }
+    catch (IOException e)
+    {
+      System.out.println("Could not load " + filename);
+    }
+    Model[] models = new Model[files.size()];
+    int index = 0;
+    for (String file : files)
+    {
+      System.out.println("RenderEntity: loading " + file);
+      models[index] = loadObj(file);
       index++;
     }
     return models;
