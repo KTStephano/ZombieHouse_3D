@@ -1,11 +1,22 @@
-package cs351.project1;
+package cs351.core;
 
 import cs351.core.Engine;
+import cs351.core.Game;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 /**
@@ -15,6 +26,8 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
  * CITATION: http://www.interactivemesh.org/models/jfx3dimporter.html
  * The above website is where I got the code that lets us load 3D assets.
  *
+ * CITATION: http://www.avajava.com/tutorials/lessons/how-do-i-recursively-display-all-files-and-directories-in-a-directory.html
+ *
  * An renderEntity represents a game object that is not easily
  * represented using the standard JavaFX class of shapes. This
  * includes anything that needs to be loaded in as a 3d model
@@ -23,7 +36,7 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
  * Currently the only file format that is supported is the .obj
  * format.
  *
- * If you pass in a .zip file containing a list of .obj files,
+ * If you pass in a directory containing a list of .obj files,
  * this class will read them in in order and interpret them as
  * a single animation sequence for the loaded object. If you
  * pass in just one .obj file it will assume you do not want
@@ -33,9 +46,12 @@ public class RenderEntity
 {
   private static final HashMap<String, Model[]> MESH_LOOKUP_TABLE = new HashMap<>(100);
   private ObjModelImporter importer = new ObjModelImporter();
-  private TriangleMesh mesh = new TriangleMesh();
+  private TriangleMesh[] meshList;
+  private TriangleMesh mesh;
   private Model[] sequence;
   private int currModel = 0;
+  private int animFramesPerSecond = 1;
+  private double timeElapsed = 0.0;
 
   private class Model
   {
@@ -60,41 +76,49 @@ public class RenderEntity
       loadModel(filename, getExtension(filename));
       MESH_LOOKUP_TABLE.put(filename, sequence);
     }
-    // TODO remove this (it's a temporary fix to prevent huge frame rate drops)
-    Model model = sequence[currModel];
-    mesh.getPoints().clear();
-    mesh.getTexCoords().clear();
-    mesh.getNormals().clear();
-    mesh.getFaces().clear();
-    mesh.getPoints().addAll(model.vertices);
-    mesh.getTexCoords().addAll(model.texCoords);
-    mesh.getNormals().addAll(model.normals);
-    mesh.getFaces().addAll(model.faces);
+    // build the meshList
+    meshList = new TriangleMesh[sequence.length];
+    for (int i = 0; i < sequence.length; i++)
+    {
+      Model model = sequence[i];
+      meshList[i] = new TriangleMesh();
+      meshList[i].getPoints().addAll(model.vertices);
+      meshList[i].getTexCoords().addAll(model.texCoords);
+      meshList[i].getNormals().addAll(model.normals);
+      meshList[i].getFaces().addAll(model.faces);
+    }
+    // set the starting mesh
+    mesh = meshList[currModel];
+    animFramesPerSecond = sequence.length;
   }
 
   /**
    * This updates the TriangleMesh of this renderEntity. This is going to be
    * used as a means of enabling per-vertex animation in the future.
    */
-  public void update()
+  public void animate(double deltaSeconds)
   {
-    if (currModel > sequence.length - 1) currModel = 0;
-    /*
-    Model model = sequence[currModel];
-    mesh.getPoints().clear();
-    mesh.getTexCoords().clear();
-    mesh.getNormals().clear();
-    mesh.getFaces().clear();
-    mesh.getPoints().addAll(model.vertices);
-    mesh.getTexCoords().addAll(model.texCoords);
-    mesh.getNormals().addAll(model.normals);
-    mesh.getFaces().addAll(model.faces);
-    */
+    timeElapsed += deltaSeconds;
+    // 1.0 / animFramesPerSecond would be 1.0 for 1 animation frame per second, 0.5 for
+    // 2 animation frames per second, etc.
+    if (timeElapsed > 1.0 / animFramesPerSecond)
+    {
+      timeElapsed = 0;
+      currModel++;
+      if (currModel > sequence.length - 1) currModel = 0;
+      mesh = meshList[currModel];
+    }
   }
 
   public TriangleMesh getMesh()
   {
     return mesh;
+  }
+
+  // used by the renderer
+  public TriangleMesh[] getMeshList()
+  {
+    return meshList;
   }
 
   private String getExtension(String filename)
@@ -103,7 +127,7 @@ public class RenderEntity
     {
       if (filename.charAt(i) == '.') return filename.substring(i, filename.length());
     }
-    return null;
+    return "";
   }
 
   /**
@@ -115,16 +139,65 @@ public class RenderEntity
    */
   private void loadModel(String filename, String extension)
   {
-    if (extension == null) throw new RuntimeException(filename + " is not a valid file");
-
     // check the file type
     if (extension.equals(".obj"))
     {
       sequence = new Model[1];
       sequence[0] = loadObj(filename);
     }
-    else if (extension.equals(".zip")) throw new RuntimeException("Support for .zip files is still in progress");
-    else throw new RuntimeException(filename + " is not a recognized format : must be either .obj or .zip");
+    else if (extension.equals(""))
+    {
+      sequence = loadDirectory(filename);
+    }
+    else throw new RuntimeException(filename + " is not a recognized format : must be either .obj or directory");
+  }
+
+  private Model[] loadDirectory(String directory)
+  {
+    // this line builds the path to the directory
+    File folder = new File(".\\src\\cs351\\core\\" + directory);
+    File[] files = folder.listFiles();
+    Model[] models = new Model[files.length];
+    int index = 0;
+    for (File entry : files)
+    {
+      System.out.println("RenderEntity: loading " + entry.getName());
+      models[index] = loadObj(entry);
+      index++;
+    }
+    return models;
+  }
+
+  private void packData(Model model, TriangleMesh mesh)
+  {
+    model.vertices = new float[mesh.getPoints().size()];
+    model.texCoords = new float[mesh.getTexCoords().size()];
+    model.normals = new float[mesh.getNormals().size()];
+    model.faces = new int[mesh.getFaces().size()];
+
+    mesh.getPoints().toArray(model.vertices);
+    mesh.getTexCoords().toArray(model.texCoords);
+    mesh.getNormals().toArray(model.normals);
+    mesh.getFaces().toArray(model.faces);
+  }
+
+  /**
+   * Uses the ObjModelImporter to load the .obj file and extract its data.
+   *
+   * @param file file to read from
+   * @return valid model object containing the vertex/texture coordinate/normal/face data
+   */
+  private Model loadObj(File file)
+  {
+    importer.clear();
+    importer.read(file);
+    Model model = new Model();
+    MeshView meshView = importer.getImport()[0];
+    TriangleMesh mesh = (TriangleMesh) meshView.getMesh();
+
+    packData(model, mesh);
+
+    return model;
   }
 
   /**
@@ -135,21 +208,14 @@ public class RenderEntity
    */
   private Model loadObj(String filename)
   {
+    importer.clear();
     URL url = Engine.class.getResource(filename);
     importer.read(url);
     Model model = new Model();
     MeshView meshView = importer.getImport()[0];
     TriangleMesh mesh = (TriangleMesh)meshView.getMesh();
 
-    model.vertices = new float[mesh.getPoints().size()];
-    model.texCoords = new float[mesh.getTexCoords().size()];
-    model.normals = new float[mesh.getNormals().size()];
-    model.faces = new int[mesh.getFaces().size()];
-
-    mesh.getPoints().toArray(model.vertices);
-    mesh.getTexCoords().toArray(model.texCoords);
-    mesh.getNormals().toArray(model.normals);
-    mesh.getFaces().toArray(model.faces);
+    packData(model, mesh);
 
     return model;
 

@@ -1,6 +1,5 @@
 package cs351.core;
 
-import cs351.project1.RenderEntity;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.TriangleMesh;
 
@@ -98,10 +97,9 @@ public abstract class Actor
    */
   public abstract void collided(Engine engine, Actor actor);
 
-  public TriangleMesh getMesh()
+  public RenderEntity getRenderEntity()
   {
-    if (renderEntity == null) return null;
-    return renderEntity.getMesh();
+    return renderEntity;
   }
 
   /**

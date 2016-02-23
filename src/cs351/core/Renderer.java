@@ -21,7 +21,7 @@ public interface Renderer
    * @param mode if this is set to DrawMode.FILL the objects will appear solid, but if
    *             this is set to DrawMode.LINE everything will look like it is a wire-frame model
    */
-  void render(Engine engine, DrawMode mode);
+  void render(Engine engine, DrawMode mode, double deltaSeconds);
 
   /**
    * Resets the renderer to its default starting state.
@@ -59,13 +59,13 @@ public interface Renderer
    * you to load in a 3D model that is different from the standard Shape3D objects.
    *
    * @param actor object to add to the scene
-   * @param mesh mesh to use
+   * @param entity object with all the mesh/animation data
    * @param diffuseColor this is the color the object scatters in all directions when light hits it
    * @param specularColor this is the color the object reflects in one direction when light hits it -
    *                      results in a shiny circles on the surface
    * @param ambientColor base color of the object
    */
-  void registerActor(Actor actor, TriangleMesh mesh, Color diffuseColor, Color specularColor, Color ambientColor);
+  void registerActor(Actor actor, RenderEntity entity, Color diffuseColor, Color specularColor, Color ambientColor);
 
   /**
    * This should be used for all Actor objects that need to be textured.

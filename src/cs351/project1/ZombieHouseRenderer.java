@@ -38,8 +38,9 @@ public class ZombieHouseRenderer implements Renderer
 
   private class Model
   {
-    public TriangleMesh mesh; // if a custom model was loaded
-    public MeshView meshView;
+    public RenderEntity entity; // if a custom model was loaded
+    private MeshView currMeshView;
+    public HashMap<TriangleMesh, MeshView> meshViewMap;
     public Shape3D shape; // if one of the default shapes was used
     public PhongMaterial material;
     public Texture diffuseTexture;
@@ -241,13 +242,13 @@ public class ZombieHouseRenderer implements Renderer
   }
 
   @Override
-  public void render(Engine engine, DrawMode mode)
+  public void render(Engine engine, DrawMode mode, double deltaSeconds)
   {
     // orient the player to their rotation/location
     orientPlayerToScene();
 
     // render the actors
-    renderActors(engine, mode);
+    renderActors(engine, mode, deltaSeconds);
   }
 
   @Override
@@ -297,17 +298,29 @@ public class ZombieHouseRenderer implements Renderer
   }
 
   @Override
-  public void registerActor(Actor actor, TriangleMesh mesh, Color diffuseColor, Color specularColor, Color ambientColor)
+  public void registerActor(Actor actor, RenderEntity entity, Color diffuseColor, Color specularColor, Color ambientColor)
   {
     Model model = generateModel(actor, null, diffuseColor, specularColor, ambientColor);
     if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
     ACTOR_MODEL_MAP.put(actor, model);
-    model.mesh = mesh;
-    model.meshView = new MeshView(model.mesh);
-    model.meshView.setMaterial(model.material);
-    model.meshView.getTransforms().addAll(model.rotation, model.translation);
-    model.meshView.setCullFace(CullFace.NONE);
-    renderSceneGraph.getChildren().addAll(model.meshView);
+    model.entity = entity;
+    // A RenterEntity stores its meshes in the form of a list where each element in the list
+    // is a different mesh corresponding to a different frame in the animation. This means that
+    // the renderer needs to build a map of meshes to meshViews and create each meshView.
+    TriangleMesh[] meshList = model.entity.getMeshList();
+    model.meshViewMap = new HashMap<>(meshList.length);
+    for (TriangleMesh mesh : meshList)
+    {
+      MeshView meshView = new MeshView(mesh);
+      model.meshViewMap.put(mesh, meshView);
+      meshView.setMaterial(model.material);
+      meshView.getTransforms().addAll(model.rotation, model.translation);
+      meshView.setCullFace(CullFace.NONE);
+      meshView.setVisible(false);
+      renderSceneGraph.getChildren().addAll(meshView);
+    }
+    model.currMeshView = model.meshViewMap.get(meshList[0]);
+    model.currMeshView.setVisible(true);
   }
 
   @Override
@@ -325,7 +338,11 @@ public class ZombieHouseRenderer implements Renderer
     // the texture loading/creation process
     model.material = model.diffuseTexture.getMaterial();
     if (model.shape != null) model.shape.setMaterial(model.material);
-    else model.meshView.setMaterial(model.material);
+    else
+    {
+      TriangleMesh[] meshList = model.entity.getMeshList();
+      for (TriangleMesh mesh : meshList) model.meshViewMap.get(mesh).setMaterial(model.material);
+    }
     model.material.setDiffuseMap(model.diffuseTexture.getTexture());
   }
 
@@ -348,7 +365,7 @@ public class ZombieHouseRenderer implements Renderer
     return model;
   }
 
-  private void renderActors(Engine engine, DrawMode mode)
+  private void renderActors(Engine engine, DrawMode mode, double deltaSeconds)
   {
     //double floorDepthOffset = engine.getWorld().getTilePixelHeight();
     double floorDepthOffset = 0.5;
@@ -376,8 +393,12 @@ public class ZombieHouseRenderer implements Renderer
       if (model.shape != null) model.shape.setDrawMode(mode);
       else
       {
-        model.meshView.setDrawMode(mode);
-        model.meshView.setCullFace(CullFace.BACK);
+        model.entity.animate(deltaSeconds);
+        model.currMeshView.setVisible(false); // this is now the old mesh view - disable its visibility
+        model.currMeshView = model.meshViewMap.get(model.entity.getMesh());
+        model.currMeshView.setVisible(true); // only the current one
+        model.currMeshView.setDrawMode(mode);
+        model.currMeshView.setCullFace(CullFace.BACK);
       }
     }
   }

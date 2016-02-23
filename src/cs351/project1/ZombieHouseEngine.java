@@ -206,7 +206,7 @@ public class ZombieHouseEngine implements Engine
       }
     }
     // render the world
-    getRenderer().render(this, DrawMode.FILL);
+    getRenderer().render(this, DrawMode.FILL, deltaSeconds);
     // if during the frame an actor(s) were added to the world, pull them now
     pullLatestActorsFromWorld();
     // with the frame complete, call initEngineState to see if anything needs to change

@@ -152,10 +152,10 @@ public class EnvironmentDemo implements World
     for (Actor actor : actors)
     {
       // register the actor with the renderer so it can render it each frame
-      if (actor.getMesh() != null)
+      if (actor.getRenderEntity() != null)
       {
         engine.getRenderer().registerActor(actor,
-                                           actor.getMesh(),
+                                           actor.getRenderEntity(),
                                            Color.BEIGE, // diffuse
                                            Color.BEIGE, // specular
                                            Color.WHITE); // ambient
@@ -317,7 +317,7 @@ public class EnvironmentDemo implements World
     for (int i = 0; i < numZombies/2; i++)
     {
       Zombie wall1 = new RandomWalkZombie(textures[currTexture],
-              "resources/zombie_slow.obj",
+              "resources/Zombie1_Animated/",
           rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
           rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
           getTilePixelWidth(), // sets width to be 1 tile

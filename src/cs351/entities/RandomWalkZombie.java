@@ -26,7 +26,6 @@ public class RandomWalkZombie extends Zombie {
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    if (renderEntity != null) renderEntity.update();
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
     // every 5 seconds, switch direction
