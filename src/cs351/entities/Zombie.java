@@ -3,6 +3,7 @@ package cs351.entities;
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
+import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import javafx.geometry.Point2D;
 import java.net.URL;
 import java.util.Random;
@@ -87,15 +88,16 @@ public class Zombie extends Actor
 
    */
 
-  protected boolean canSmellPlayer(Engine engine, double deltaSeconds)
+  protected boolean canSmellPlayer(Engine engine)
   {
     int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
+    
     double dx = playerX - getLocation().getX();
     double dy = playerY - getLocation().getY();
     int distanceToPlayer = (int)(Math.sqrt(dx*dx + dy*dy));
 
-    if (distanceToPlayer <= GlobalConstants.zombieSmell)
+    if (distanceToPlayer <= 3)//GlobalConstants.zombieSmell)
     {
       return true;
     }
@@ -105,22 +107,31 @@ public class Zombie extends Actor
     }   
 
   }
+  
+
 
   protected Point2D getNextLocation(Engine engine, boolean canSmellPlayer, int [][] gameBoard)
   {
     
-    double x=0;
-    double y=0;
-    double playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
-    double playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
-    Point2D nextLocation = new Point2D(playerY, playerY);
+    double x=-1;
+    double y=-1;
+    int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
+    int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
+    int zombieX = (int)this.getLocation().getX();
+    int zombieY = (int)this.getLocation().getY();
+    TestDijkstraAlgorithm dijkstras=engine.getDijkstra();
+    Point2D nextZombieLocation=null;
     if (canSmellPlayer)
     {
-      // get next x and y using A Star
-      //engine.
-  //    getNextAStarLocation(x,y, playerX, playerY, gameBoard);
+      nextZombieLocation = dijkstras.getNextLocation(zombieX, zombieY, playerX, playerY);
     } 
-    else 
+
+    if (nextZombieLocation!=null)
+    {
+      x = nextZombieLocation.getX();
+      y = nextZombieLocation.getY();     
+    }
+    else
     {
       Random rand = new Random();
       // direction to add to x
@@ -132,13 +143,9 @@ public class Zombie extends Actor
     }
  
     
-    return  new Point2D(playerY, playerY);
+    return  new Point2D(x, y);
 
   }
-
-
-
-
 
 
 }
