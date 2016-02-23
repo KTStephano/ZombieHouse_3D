@@ -32,8 +32,10 @@ public class EnvironmentDemo implements World
   
   
   /* ===============MY STUFF TODO===================================*/
+  // RoomTestThingy thingy = new RoomTestThingy();
+ //  int testArray[][];
    private int [][] testArray = new int [31][31];
-  /*======================================================*/
+ /*======================================================*/
   @Override
   public boolean contains(Actor actor)
   {
@@ -150,11 +152,23 @@ public class EnvironmentDemo implements World
     for (Actor actor : actors)
     {
       // register the actor with the renderer so it can render it each frame
-      engine.getRenderer().registerActor(actor,
-          new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
-          Color.BEIGE, // diffuse
-          Color.BEIGE, // specular
-          Color.WHITE); // ambient
+      if (actor.getRenderEntity() != null)
+      {
+        engine.getRenderer().registerActor(actor,
+                                           actor.getRenderEntity(),
+                                           Color.BEIGE, // diffuse
+                                           Color.BEIGE, // specular
+                                           Color.WHITE); // ambient
+      }
+      else
+      {
+        engine.getRenderer().registerActor(actor,
+                                           new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
+                                           Color.BEIGE, // diffuse
+                                           Color.BEIGE, // specular
+                                           Color.WHITE); // ambient
+      }
+
       // sets the actor's texture so the renderer knows to load it and use it
       engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
     }
@@ -174,7 +188,7 @@ public class EnvironmentDemo implements World
     // the 2 * tileWidthHeight is because each tile is 10 pixels and I want
     // the player to be 2 tiles high
     //player = new Player(getWorldPixelWidth() / 2.0, getWorldPixelHeight() / 2.0, 2 * tileWidthHeight);
-    player = new Player(x, y, 2 * tileWidthHeight);
+    player = new Player(x, y, 3 * tileWidthHeight);
     actors.add(player);
   }
 
@@ -197,6 +211,10 @@ public class EnvironmentDemo implements World
     {
       for (int y = 0; y < numTilesHeight; y++)
       {
+//        System.out.println(" i = " + x + " k = " + y);
+//        System.out.println(" numTilesWidth = " + numTilesWidth + " numTilesHeight = " + numTilesHeight);
+        // this first if checks to see if the current tile is on the border - if it is
+        // it adds a wall
         if (x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
         {
           Actor wall = new Wall("textures/block_texture_dark.jpg",
@@ -209,7 +227,10 @@ public class EnvironmentDemo implements World
         }
         
 
-      /*****************************************************************************************/
+        /*************************************************************************************************************/
+
+        // System.out.print(testArray[i][k]);
+        /*********************************************/  
           if( (x < 31) && (y < 31)){
            if (testArray[x][y] == 1) 
            {
@@ -241,8 +262,9 @@ public class EnvironmentDemo implements World
              initPlayer(x, y);
            }
           }
+        
 
-        /********************************************************************************************/
+        /**************************************************************************************************************/
          
          
         FloorCeilingTile floor;
@@ -295,6 +317,7 @@ public class EnvironmentDemo implements World
     for (int i = 0; i < numZombies/2; i++)
     {
       Zombie wall1 = new RandomWalkZombie(textures[currTexture],
+              "resources/Zombie1_Animated.txt",
           rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
           rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
           getTilePixelWidth(), // sets width to be 1 tile
@@ -319,4 +342,8 @@ public class EnvironmentDemo implements World
   {
     actors.add(new PlayASoundThingy());
   }
+  
+ 
+  
+  
 }

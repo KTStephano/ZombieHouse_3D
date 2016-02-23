@@ -1,12 +1,13 @@
 package cs351.project1;
 
 
+import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import cs351.core.*;
 import cs351.project1.CollisionDetection;
-import cs351.entities.FloorCeilingTile;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 
 import java.util.*;
 
@@ -16,6 +17,7 @@ public class ZombieHouseEngine implements Engine
   private SoundEngine soundEngine;
   private Renderer renderer;
   private CollisionDetection collision;
+  private TestDijkstraAlgorithm dijkstra;
   private int worldWidth, worldHeight; // measured in tiles
   private final HashSet<Actor> ALL_ACTORS;
   private final HashSet<Actor> UPDATE_ACTORS; // only the actors that want to be updated each frame
@@ -41,6 +43,11 @@ public class ZombieHouseEngine implements Engine
   {
     validateEngineState();
     return world;
+  }
+  @Override
+  public TestDijkstraAlgorithm getDijkstra()
+  {
+    return dijkstra;
   }
 
   @Override
@@ -116,6 +123,35 @@ public class ZombieHouseEngine implements Engine
     stage.setOnCloseRequest(this::windowClosed);
     collision = new CollisionDetection(this); // init the collision detection system
     initEngineState(); // init the initial engine state from the world
+    
+    
+    
+    
+    
+    
+    
+    
+    /********************** temporary  *********************/
+
+    
+    dijkstra = new  TestDijkstraAlgorithm();
+
+    int w = world.getWorldPixelWidth() / world.getTilePixelWidth();
+    int h = world.getWorldPixelHeight() / world.getTilePixelHeight();
+
+    dijkstra.initGraph(getPathingData(),w, h);
+  
+   
+    
+    /********************************************************/
+    
+    
+    
+    
+    
+    
+    
+    
   }
 
   @Override
@@ -170,7 +206,7 @@ public class ZombieHouseEngine implements Engine
       }
     }
     // render the world
-    getRenderer().render(this, DrawMode.FILL);
+    getRenderer().render(this, DrawMode.FILL, deltaSeconds);
     // if during the frame an actor(s) were added to the world, pull them now
     pullLatestActorsFromWorld();
     // with the frame complete, call initEngineState to see if anything needs to change
