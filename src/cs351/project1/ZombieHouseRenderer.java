@@ -301,7 +301,6 @@ public class ZombieHouseRenderer implements Renderer
     if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
     ACTOR_MODEL_MAP.put(actor, model);
     renderSceneGraph.getChildren().addAll(model.shape);
-    model.material.setSpecularPower(0.0);
   }
 
   @Override
@@ -351,7 +350,6 @@ public class ZombieHouseRenderer implements Renderer
       for (TriangleMesh mesh : meshList) model.meshViewMap.get(mesh).setMaterial(model.material);
     }
     model.material.setDiffuseMap(model.diffuseTexture.getTexture());
-    model.material.setSpecularColor(Color.color(0.0, 0.0, 0.0));
   }
 
   private Model generateModel(Actor actor, Shape3D shape, Color ambientColor, Color diffuseColor, Color specularColor)
@@ -390,6 +388,8 @@ public class ZombieHouseRenderer implements Renderer
       if (distanceModifier < 0.0) distanceModifier = 0.0;
       //if (distanceModifier < 0.0) distanceModifier = 0.0;
       model.material.setDiffuseColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
+      distanceModifier /= 2.0;
+      model.material.setSpecularColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
       //translate.setX(actor.getLocation().getX() - model.translation.getX());
       //translate.setY(model.translation.getY());
       //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
