@@ -388,7 +388,16 @@ public class ZombieHouseRenderer implements Renderer
       if (distanceModifier < 0.0) distanceModifier = 0.0;
       //if (distanceModifier < 0.0) distanceModifier = 0.0;
       model.material.setDiffuseColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
-      distanceModifier /= 2.0;
+      // the reason for this check is so that non-static geometry will not have specular reflection
+      // (looks weird on zombies), and if the distanceModifier is already <= 0.0 there is no reason
+      // to perform the division anyway
+      if ((actor.isStatic() || actor.isPartOfCeiling() || actor.isPartOfFloor()) && distanceModifier > 0.0)
+      {
+        distanceModifier /= 2.0;
+      }
+      else distanceModifier = 0.0;
+      // still need to set specular every frame to make sure it gets hard-reset for objects that
+      // are far away
       model.material.setSpecularColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
       //translate.setX(actor.getLocation().getX() - model.translation.getX());
       //translate.setY(model.translation.getY());
