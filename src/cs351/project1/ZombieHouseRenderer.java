@@ -279,7 +279,7 @@ public class ZombieHouseRenderer implements Renderer
     renderScene.setCamera(camera);
     // TODO mess with the playerLight color values more - 0.65 seemed reasonable, but so
     // TODO did 0.7 and 0.5
-    playerLight = new PointLight(Color.color(0.65, 0.65, 0.65));
+    playerLight = new PointLight(Color.color(1.0, 1.0, 1.0));
     playerLight.setLightOn(true);
     renderSceneGraph.getChildren().add(playerLight);
     //light.getTransforms().add(new Translate(this.player.getLocation().getX(), -this.player.getHeight() / 2.0, this.player.getLocation().getY()));
