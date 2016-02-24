@@ -97,7 +97,7 @@ public class Zombie extends Actor
     double dy = playerY - getLocation().getY();
     int distanceToPlayer = (int)(Math.sqrt(dx*dx + dy*dy));
 
-    if (distanceToPlayer <= 3)//GlobalConstants.zombieSmell)
+    if (distanceToPlayer <= GlobalConstants.zombieSmell)
     {
       return true;
     }

@@ -1,4 +1,5 @@
 package cs351.DijkstraAlgorithm;
+
 /*
  * 
  * Lars Vogel
