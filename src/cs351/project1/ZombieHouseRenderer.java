@@ -35,6 +35,8 @@ public class ZombieHouseRenderer implements Renderer
   private final HashMap<String, Texture> TEXTURE_LOOKUP = new HashMap<>(50);
   private double largestWall = 0.0; // used to calculate where the ceiling should be
   private Group renderSceneGroup;
+  private Rotate lightRot = new Rotate(0.0, 0.0, 0.0);
+  private double lightRotAngle = 0.0;
 
   private class Model
   {
@@ -275,12 +277,16 @@ public class ZombieHouseRenderer implements Renderer
     camera.setFieldOfView(fieldOfView);
     renderSceneGraph.getChildren().add(camera);
     renderScene.setCamera(camera);
-    playerLight = new PointLight(Color.color(0.2, 0.2, 0.2));
+    // TODO mess with the playerLight color values more - 0.65 seemed reasonable, but so
+    // TODO did 0.7 and 0.5
+    playerLight = new PointLight(Color.color(0.65, 0.65, 0.65));
     playerLight.setLightOn(true);
     renderSceneGraph.getChildren().add(playerLight);
+    //light.getTransforms().add(new Translate(this.player.getLocation().getX(), -this.player.getHeight() / 2.0, this.player.getLocation().getY()));
     controller.getTranslation().setX(this.player.getLocation().getX());
     controller.getTranslation().setY(-this.player.getHeight() / 2.0);
     controller.getTranslation().setZ(this.player.getLocation().getY());
+    playerLight.getTransforms().addAll(new Translate(0.0, 0.0, 0.0));
     playerLight.getTransforms().addAll(controller.getTranslation(), controller.getRotation());
     camera.getTransforms().addAll(controller.getTranslation(), controller.getRotation());
     //scene.setOnKeyPressed(this.player::keyPressed);
@@ -295,6 +301,7 @@ public class ZombieHouseRenderer implements Renderer
     if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
     ACTOR_MODEL_MAP.put(actor, model);
     renderSceneGraph.getChildren().addAll(model.shape);
+    model.material.setSpecularPower(0.0);
   }
 
   @Override
@@ -336,7 +343,7 @@ public class ZombieHouseRenderer implements Renderer
     model.diffuseTexture = registerTexture(textureFile);
     // update the model's material to use the material created during
     // the texture loading/creation process
-    model.material = model.diffuseTexture.getMaterial();
+    //model.material = model.diffuseTexture.getMaterial();
     if (model.shape != null) model.shape.setMaterial(model.material);
     else
     {
@@ -344,6 +351,7 @@ public class ZombieHouseRenderer implements Renderer
       for (TriangleMesh mesh : meshList) model.meshViewMap.get(mesh).setMaterial(model.material);
     }
     model.material.setDiffuseMap(model.diffuseTexture.getTexture());
+    model.material.setSpecularColor(Color.color(0.0, 0.0, 0.0));
   }
 
   private Model generateModel(Actor actor, Shape3D shape, Color ambientColor, Color diffuseColor, Color specularColor)
@@ -374,6 +382,14 @@ public class ZombieHouseRenderer implements Renderer
     {
       Actor actor = entry.getKey();
       Model model = entry.getValue();
+      double dx = player.getLocation().getX() - actor.getLocation().getX();
+      double dy = player.getLocation().getY() - actor.getLocation().getY();
+      double roughDistance = dx * dx + dy * dy;
+      // TODO replace 49.0 with non-hardcoded player sight value
+      double distanceModifier = 1.0 - roughDistance / 49.0;
+      if (distanceModifier < 0.0) distanceModifier = 0.0;
+      //if (distanceModifier < 0.0) distanceModifier = 0.0;
+      model.material.setDiffuseColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
       //translate.setX(actor.getLocation().getX() - model.translation.getX());
       //translate.setY(model.translation.getY());
       //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
@@ -427,7 +443,7 @@ public class ZombieHouseRenderer implements Renderer
   private void initLighting()
   {
     AmbientLight ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
-    ambient.setLightOn(true);
+    ambient.setLightOn(false);
     renderSceneGraph.getChildren().add(ambient);
   }
 
