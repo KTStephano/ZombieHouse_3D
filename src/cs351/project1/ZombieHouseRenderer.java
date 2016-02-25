@@ -29,6 +29,7 @@ public class ZombieHouseRenderer implements Renderer
   private Player player;
   private PlayerController controller;
   private PointLight playerLight;
+  private AmbientLight ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
   private Group renderSceneGraph; // camera and all actors are added to this
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
@@ -37,6 +38,15 @@ public class ZombieHouseRenderer implements Renderer
   private Group renderSceneGroup;
   private Rotate lightRot = new Rotate(0.0, 0.0, 0.0);
   private double lightRotAngle = 0.0;
+
+  /**
+   * These are set using the global engine settings.
+   */
+  private boolean initSettings = true;
+  private boolean useAdvancedLighting;
+  private boolean useSpecularLighting;
+  private double lightIntensity;
+  private double playerVision; // measured in tiles
 
   private class Model
   {
@@ -246,6 +256,9 @@ public class ZombieHouseRenderer implements Renderer
   @Override
   public void render(Engine engine, DrawMode mode, double deltaSeconds)
   {
+    // check if we need to initialize the renderer from the global engine settings
+    if (initSettings) initSettings(engine);
+
     // orient the player to their rotation/location
     orientPlayerToScene();
 
@@ -259,6 +272,7 @@ public class ZombieHouseRenderer implements Renderer
     camera = null;
     player = null;
     controller = null;
+    initSettings = true;
     largestWall = 0.0;
     ACTOR_MODEL_MAP.clear();
     // doesn't clear textures in case they're needed again for the next frame
@@ -380,22 +394,25 @@ public class ZombieHouseRenderer implements Renderer
     {
       Actor actor = entry.getKey();
       Model model = entry.getValue();
-      double dx = player.getLocation().getX() - actor.getLocation().getX();
-      double dy = player.getLocation().getY() - actor.getLocation().getY();
-      double roughDistance = dx * dx + dy * dy;
-      // TODO replace 49.0 with non-hardcoded player sight value
-      double distanceModifier = 1.0 - roughDistance / 49.0;
-      if (distanceModifier < 0.0) distanceModifier = 0.0;
-      //if (distanceModifier < 0.0) distanceModifier = 0.0;
-      model.material.setDiffuseColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
-      // the reason for this check is so that non-static geometry will not have specular reflection
-      // (looks weird on zombies), and if the distanceModifier is already <= 0.0 there is no reason
-      // to perform the division anyway
-      if ((actor.isStatic() || actor.isPartOfCeiling() || actor.isPartOfFloor()) && distanceModifier > 0.0)
+      double distanceModifier = 0.0;
+      if (useAdvancedLighting)
       {
-        distanceModifier /= 2.0;
+        double dx = player.getLocation().getX() - actor.getLocation().getX();
+        double dy = player.getLocation().getY() - actor.getLocation().getY();
+        double roughDistance = dx * dx + dy * dy;
+        distanceModifier = 1.0 - roughDistance / (playerVision * playerVision);
+        if (distanceModifier < 0.0) distanceModifier = 0.0;
+        //if (distanceModifier < 0.0) distanceModifier = 0.0;
+        model.material.setDiffuseColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
+        // the reason for this check is so that non-static geometry will not have specular reflection
+        // (looks weird on zombies), and if the distanceModifier is already <= 0.0 there is no reason
+        // to perform the division anyway
+        if ((actor.isStatic() || actor.isPartOfCeiling() || actor.isPartOfFloor()) && distanceModifier > 0.0 && useSpecularLighting)
+        {
+          distanceModifier /= 2.0;
+        }
+        else distanceModifier = 0.0;
       }
-      else distanceModifier = 0.0;
       // still need to set specular every frame to make sure it gets hard-reset for objects that
       // are far away
       model.material.setSpecularColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
@@ -451,7 +468,6 @@ public class ZombieHouseRenderer implements Renderer
 
   private void initLighting()
   {
-    AmbientLight ambient = new AmbientLight(Color.color(0.3, 0.3, 0.3));
     ambient.setLightOn(false);
     renderSceneGraph.getChildren().add(ambient);
   }
@@ -465,5 +481,18 @@ public class ZombieHouseRenderer implements Renderer
     Texture texture = new Texture(new Image(stream));
     TEXTURE_LOOKUP.put(textureFile, texture);
     return texture;
+  }
+
+  private void initSettings(Engine engine)
+  {
+    initSettings = false;
+    useAdvancedLighting = engine.getSettings().getValue("advanced_lighting").equals("on");
+    useSpecularLighting = engine.getSettings().getValue("specular_lighting").equals("on");
+    lightIntensity = Float.parseFloat(engine.getSettings().getValue("light_intensity"));
+    playerVision = Float.parseFloat(engine.getSettings().getValue("player_vision"));
+    // set the ambient on/off status
+    //ambient.setLightOn(false);
+    //ambient.setColor(Color.color(lightIntensity, lightIntensity, lightIntensity));
+    playerLight.setColor(Color.color(lightIntensity, lightIntensity, lightIntensity));
   }
 }

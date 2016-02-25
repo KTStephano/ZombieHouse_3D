@@ -67,7 +67,7 @@ public class Game extends Application {
 
   private void initEngine(Stage stage)
   {
-    engine.init(stage, new EnvironmentDemo(), new ZombieHouseSoundEngine(), renderer);
+    engine.init("resources/engine.settings", stage, new EnvironmentDemo(), new ZombieHouseSoundEngine(), renderer);
   }
 
   private void initGameLoop()

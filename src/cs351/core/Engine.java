@@ -44,6 +44,13 @@ public interface Engine
   Renderer getRenderer();
 
   /**
+   * Returns the global engine settings.
+   *
+   * @return global engine settings
+   */
+  Settings getSettings();
+
+  /**
    * Gets the world width in terms of tiles.
    *
    * @return width of the world in tiles
@@ -87,7 +94,7 @@ public interface Engine
 
   /**
    * Initializes the engine and prepares it for the first call to the
-   * frame function.
+   * frame function. Uses whatever values are stored in the settings class.
    *
    * @param stage used to setup any callbacks (such as window exit)
    * @param world World to initialize the engine with
@@ -95,6 +102,18 @@ public interface Engine
    * @param renderer Renderer to initialize the engine with
    */
   void init(Stage stage, World world, SoundEngine soundEngine, Renderer renderer);
+
+  /**
+   * Initializes the engine with a settings file and prepares it for the first call to the
+   * frame function.
+   *
+   * @param settingsFile path to a valid settings file for the engine
+   * @param stage used to setup any callbacks (such as window exit)
+   * @param world World to initialize the engine with
+   * @param soundEngine SoundEngine to initialize the engine with
+   * @param renderer Renderer to initialize the engine with
+   */
+  void init(String settingsFile, Stage stage, World world, SoundEngine soundEngine, Renderer renderer);
 
   /**
    * Kills the engine. Any future calls to any engine methods (unless init is

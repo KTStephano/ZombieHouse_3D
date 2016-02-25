@@ -233,4 +233,14 @@ public abstract class Actor
   {
     return noClip;
   }
+
+  /**
+   * Sets the value of no clip for the actor.
+   *
+   * @param value true if active (can phase through game objects) and false if not
+   */
+  public void setNoClip(boolean value)
+  {
+    noClip = value;
+  }
 }
