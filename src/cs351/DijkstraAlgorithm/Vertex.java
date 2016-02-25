@@ -1,5 +1,6 @@
 package cs351.DijkstraAlgorithm;
 
+
 /*
  * 
  * Lars Vogel
@@ -20,7 +21,7 @@ public class Vertex {
   
   
   public Vertex(int x,int y) {
-    this.id =  ""+x+"!"+y;
+    this.id =  ""+(x*1000+y);
     this.name =  "x: "+ x +"y: "+ y;
     this.x = x;
     this.y = y;

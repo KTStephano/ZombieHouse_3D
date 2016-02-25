@@ -1,4 +1,5 @@
 package cs351.DijkstraAlgorithm;
+
 /*
  * 
  * Lars Vogel
@@ -30,74 +31,39 @@ public class TestDijkstraAlgorithm {
   private Graph graph;
   private DijkstraAlgorithm dijkstra;
 
-  public void executeTest(boolean [][] board, int widthBoard, int heightBoard) {
+  public void executeTest() {
     nodes = new ArrayList<Vertex>();
     edges = new ArrayList<Edge>();
-    int start=0;
-    int end=0;
-    boolean haveStart=false;
-    boolean haveEnd = false;
-    
-    for (int x = 0; x < widthBoard; x++) {
-      for (int y = 0; y < heightBoard; y++) {
-        Vertex location = new Vertex(x,y);
-        nodes.add(location);
+
+    nodes.add(new Vertex(0,0));
+    nodes.add(new Vertex(0,1));
+    nodes.add(new Vertex(1,0));
+    nodes.add(new Vertex(1,1));
        
-        if (board[x][y]) 
-        {
-          if (!haveStart)
-          {
-            start = nodes.indexOf(location);  
-            haveStart = true;
-          }
-          else if (!haveEnd)
-          {
-            haveEnd = true;
-            end = nodes.indexOf(location);          
-          }
-        }
-      }
-    }
 
+    int start = nodes.indexOf(new Vertex(0,0));
+    int end = nodes.indexOf(new Vertex(0,1));
+    
+    addEdge(nodes.indexOf(new Vertex(0,0)) ,nodes.indexOf(new Vertex(0,1)));
+    addEdge(nodes.indexOf(new Vertex(0,0)) ,nodes.indexOf(new Vertex(1,1)));
+    addEdge(nodes.indexOf(new Vertex(0,0)) ,nodes.indexOf(new Vertex(1,0)));
 
-
-    for (int x = 0; x < widthBoard; x++) {
-      for (int y = 0; y < heightBoard; y++) {
-        if (board[x][y]) 
-        {
-
-          for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-
-              if ((i!=0)&&(j!=0))
-              {
-                if ((x+i>=0 )&&(y+j>=0))
-                {
-                  if (board[x+i][y+j]) {  
-                    addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+i,y+j)));
-                  }
-                }
-              }
-            }
-          }
-
-        }
-      }
-    }
-
+       
+    
 
     Graph graph = new Graph(nodes, edges);
     DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
 
     dijkstra.execute(nodes.get(start));
     LinkedList<Vertex> path = dijkstra.getPath(nodes.get(end));
-
+    System.out.println("nothing yet...");
     if (path!=null)
     {
       for (Vertex vertex : path) {
         System.out.println(vertex);
       }
     }
+    System.out.println("...and now we're done.");
 
   }
 
@@ -111,36 +77,29 @@ public class TestDijkstraAlgorithm {
 
     for (int x = 0; x < widthBoard; x++) {
       for (int y = 0; y < heightBoard; y++) {
-        Vertex location = new Vertex(x,y);
-        nodes.add(location);
+        nodes.add(new Vertex(x,y));
       }
     }
 
 
 
-    for (int x = 0; x < widthBoard; x++) {
-      for (int y = 0; y < heightBoard; y++) {
-        if (board[x][y]) 
-        {
+    for (int x = 1; x < widthBoard-1; x++) {
+      for (int y = 1; y < heightBoard-1; y++) {
 
-          for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-
-              if ((i!=0)&&(j!=0))
-              {
-                if ((x+i>=0 )&&(y+j>=0))
-                {
-                  if (board[x+i][y+j]) {  
-                    addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+i,y+j)));
-                  }
-                }
-              }
-            }
-          }
-        }
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+0,y+1)));
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+1,y+1)));
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+1,y+0)));
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+0,y-1)));
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+0,y-1)));
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x-1,y-1)));
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x-1,y+0)));
+        addEdge(nodes.indexOf(new Vertex(x,y)) ,nodes.indexOf(new Vertex(x+0,y-1)));
+      
       }
     }
-
+    
+    
+    
 
     graph = new Graph(nodes, edges);
     dijkstra = new DijkstraAlgorithm(graph);
@@ -166,8 +125,12 @@ public class TestDijkstraAlgorithm {
 
       if (path!=null)
       {
+        
+        path.remove(path.getFirst());
         int x = path.getFirst().getX();
         int y = path.getFirst().getY();
+        
+        
         pt = new Point2D(x,y);
       }  
     }

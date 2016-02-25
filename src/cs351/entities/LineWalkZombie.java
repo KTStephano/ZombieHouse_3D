@@ -17,7 +17,7 @@ public class LineWalkZombie extends Zombie {
   private double yDirection = -1000;
   private boolean setNewDirection = true;
   private double elapsedTime=0;
-
+  private int timerCt = 0;
   @Override
   public void collided(Engine engine, Actor actor) {
     setNewDirection = !actor.isPartOfFloor();
@@ -48,24 +48,25 @@ public class LineWalkZombie extends Zombie {
     if ( elapsedTime > GlobalConstants.zombieDecisionRate)
     {
       elapsedTime = 0;
+      timerCt++;
       int targetX = (int)engine.getWorld().getPlayer().getLocation().getX();
       int targetY = (int)engine.getWorld().getPlayer().getLocation().getY();
 
-      if (canSmellPlayer(engine))
+      if ((timerCt == 20)&&canSmellPlayer(engine))
       {           
+        timerCt = 0;
         double worldWidth = engine.getWorld().getWorldPixelWidth() / engine.getWorld().getTilePixelWidth();
         double worldHeight = engine.getWorld().getWorldPixelHeight() / engine.getWorld().getTilePixelHeight();
         
         engine.getDijkstra().initGraph(engine.getPathingData(), (int)worldWidth, (int)worldHeight);
-        engine.getDijkstra().executeTest(engine.getPathingData(), (int)worldWidth, (int)worldHeight);
-            //getNextLocation(currX,currY,targetX,targetY);
+        engine.getDijkstra().getNextLocation(currX,currY,targetX,targetY);
       }
       
      // if we have a path to player and can smell him
       if (pt!=null)
       {
-        xDirection = (currX - pt.getX())/4;
-        yDirection = (currY - pt.getY())/4;
+        xDirection = (currX - pt.getX())/2000000;
+        yDirection = (currY - pt.getY())/2000000;
       }
       // no path to player or can't smell player 
       else    
