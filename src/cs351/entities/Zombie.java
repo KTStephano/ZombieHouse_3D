@@ -60,10 +60,9 @@ public class Zombie extends Actor
     {
       elapsedSeconds = 0.0;
 
-      String filename = "zombie.wav";
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-      URL url = classLoader.getResource(filename);
-
+      String filename = "sound/zombie.wav";
+      //ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      URL url = Zombie.class.getResource(filename);
       engine.getSoundEngine().queueSoundAtLocation(url, getLocation().getX(), getLocation().getY());
 
     }
