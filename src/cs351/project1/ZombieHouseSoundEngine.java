@@ -8,6 +8,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.SourceDataLine;
 
 import java.awt.Point;
@@ -65,7 +67,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
 
   }
 
-
+ 
   // TODO spawns a thread when sounds are played - went over 200 threads when I tested it - my frame rate D:
   public void playSound(URL url, double vol ) {
 
@@ -73,11 +75,21 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     {
       AudioInputStream input = AudioSystem.getAudioInputStream(url);
       Clip clip = AudioSystem.getClip();
+      clip.addLineListener(new LineListener() {
+        public void update(LineEvent myLineEvent) {
+          if (myLineEvent.getType() == LineEvent.Type.STOP)
+            clip.close();
+        }
+      });
       clip.open(input);
       setVolume((int)(vol*100), clip);
       clip.start();
+     
     } catch (Exception e) {
     }
+    
+    
+
  
   }
   
