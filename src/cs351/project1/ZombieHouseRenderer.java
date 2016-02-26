@@ -91,8 +91,8 @@ public class ZombieHouseRenderer implements Renderer
     private Player player;
     private Translate translation;
     private Rotate rotation;
-    private Point2D direction;
-    private Point2D right;
+    private Vector3 direction = new Vector3(0.0);
+    private Vector3 right = new Vector3(direction);
     private double prevX = 0.0;
     private double angle = 0.0;
     private final double SPEED = 1.0; // for x and y movement
@@ -199,7 +199,7 @@ public class ZombieHouseRenderer implements Renderer
 
       // CAUTION: The values are reversed: direction's x-component should be Math.cos(degreesToRadians(angle)), but it is
       // inverted since the x-component needs to point straight ahead, but straight ahead (for us) is the y-axis
-      direction = new Point2D(Math.sin(degreesToRadians(angle)), Math.cos(degreesToRadians(angle)));
+      direction.set(Math.sin(degreesToRadians(angle)), Math.cos(degreesToRadians(angle)), 0.0);
       direction.normalize(); // with direction vectors you only need their magnitude to be 1.0 since their job is just to point
       // For more information on this, see:
       // http://answers.unity3d.com/questions/228203/getting-vector-which-is-pointing-to-the-rightleft.html
@@ -209,7 +209,7 @@ public class ZombieHouseRenderer implements Renderer
       // CAUTION: The negative sign should be in front of direction.getY(), but since direction's components
       // are reversed I had to swap it around for the math to work inside of the Player class (otherwise right
       // became left and left became right)
-      right = new Point2D(direction.getY(), -direction.getX()); // figure out the direction of right
+      right.set(direction.getY(), -direction.getX(), 0.0); // figure out the direction of right
       // this is flipped (getY first instead of getX) because we start off with a direction vector that points
       // down the x-axis, and we want that initial pointing to represent forward.
       player.setForwardDirection(direction);

@@ -2,6 +2,7 @@ package cs351.entities;
 
 import cs351.core.Actor;
 import cs351.core.Engine;
+import cs351.core.Vector3;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
 
@@ -15,8 +16,8 @@ public class Player extends Actor
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
   private double rightY = 0.0;
-  private Point2D forwardDirection;
-  private Point2D rightDirection;
+  private Vector3 forwardDirection = new Vector3(0.0);
+  private Vector3 rightDirection = new Vector3(forwardDirection);
 
   public Player(double x, double y, int height)
   {
@@ -62,14 +63,14 @@ public class Player extends Actor
     rightY = speedY;
   }
 
-  public void setForwardDirection(Point2D direction)
+  public void setForwardDirection(Vector3 direction)
   {
-    forwardDirection = direction;
+    forwardDirection.set(direction);
   }
 
-  public void setRightDirection(Point2D direction)
+  public void setRightDirection(Vector3 direction)
   {
-    rightDirection = direction;
+    rightDirection.set(direction);
   }
 
   public void keyPressed(KeyEvent event)
