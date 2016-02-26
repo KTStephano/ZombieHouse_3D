@@ -494,5 +494,6 @@ public class ZombieHouseRenderer implements Renderer
     //ambient.setLightOn(false);
     //ambient.setColor(Color.color(lightIntensity, lightIntensity, lightIntensity));
     playerLight.setColor(Color.color(lightIntensity, lightIntensity, lightIntensity));
+    camera.setFarClip(playerVision + 1);
   }
 }
