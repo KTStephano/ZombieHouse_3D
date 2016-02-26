@@ -65,6 +65,7 @@ public class Zombie extends Actor
       URL url = Zombie.class.getResource(filename);
       engine.getSoundEngine().queueSoundAtLocation(url, getLocation().getX(), getLocation().getY());
 
+      
     }
   }
   public void collided(Engine engine, Actor actor)
