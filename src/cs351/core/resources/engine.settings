@@ -22,4 +22,5 @@ what looks best - default = 0.7
 Measured in tiles
 + player_vision 7.0
 
+
 + sound_engine on
