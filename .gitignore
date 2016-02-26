@@ -7,7 +7,6 @@ out
 *.classpath
 *.project
 *.xml
-*.settings
 *.idea
 
 # Mobile Tools for Java (J2ME)

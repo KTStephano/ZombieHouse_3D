@@ -17,7 +17,7 @@ import javafx.scene.shape.TriangleMesh;
 public abstract class Actor
 {
   protected int width, height, depth; // width, height and depth are measured in tiles instead of pixels
-  protected Point2D location = new Point2D(0.0, 0.0); // location of the object in 2D space
+  protected Vector3 location = new Vector3(0.0f); // location of the object in 2D space
   protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn and collide with stuff, though)
   protected boolean isStatic = false; // if true, collision events won't cause the Actor to move at all - renderer also uses this to figure out which are walls and stuff
   protected boolean noClip = false; // if true the object will not collide with anything (phase through walls, zombies, etc.)
@@ -185,7 +185,7 @@ public abstract class Actor
    */
   public void setLocation(double x, double y)
   {
-    location = new Point2D(x, y);
+    location.set(x, y, 0.0);
   }
 
   /**
@@ -193,7 +193,7 @@ public abstract class Actor
    *
    * @return player location
    */
-  public Point2D getLocation()
+  public Vector3 getLocation()
   {
     return location;
   }
@@ -232,5 +232,15 @@ public abstract class Actor
   public boolean noClipActive()
   {
     return noClip;
+  }
+
+  /**
+   * Sets the value of no clip for the actor.
+   *
+   * @param value true if active (can phase through game objects) and false if not
+   */
+  public void setNoClip(boolean value)
+  {
+    noClip = value;
   }
 }

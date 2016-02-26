@@ -18,11 +18,11 @@ public class ZombieHouseEngine implements Engine
   private Renderer renderer;
   private CollisionDetection collision;
   private TestDijkstraAlgorithm dijkstra;
+  private Settings settings;
   private int worldWidth, worldHeight; // measured in tiles
   private final HashSet<Actor> ALL_ACTORS;
   private final HashSet<Actor> UPDATE_ACTORS; // only the actors that want to be updated each frame
   private boolean isInitialized = false;
-  private boolean isPaused = false;
   private boolean isPendingShutdown = false;
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
@@ -31,6 +31,35 @@ public class ZombieHouseEngine implements Engine
   private long millisecondsSinceLastFrame;
   private long millisecondTimeStamp;
   private boolean[][] pathingData;
+
+  /**
+   * The following variables are initialized by accessing the settings class.
+   */
+  final String ENGINE_PAUSED = "engine_paused";
+  final String PLAYER_NO_CLIP = "player_no_clip";
+  final String COLLISION = "collision";
+  final String ADVANCED_LIGHTING = "advanced_lighting";
+  final String SPECULAR_LIGHTING = "specular_lighting";
+  final String LIGHT_INTENSITY = "light_intensity";
+  final String PLAYER_VISION = "player_vision";
+
+  private boolean isPaused;
+  private boolean useCollisionDetection;
+  private boolean playerNoClip;
+
+  // initialize the settings class with default settings
+  {
+    settings = new Settings();
+    settings.registerSetting(ENGINE_PAUSED, "false");
+    settings.registerSetting(PLAYER_NO_CLIP, "off");
+    settings.registerSetting(COLLISION, "on");
+    settings.registerSetting(ADVANCED_LIGHTING, "on");
+    settings.registerSetting(SPECULAR_LIGHTING, "on");
+    settings.registerSetting(LIGHT_INTENSITY, "0.7");
+    settings.registerSetting(PLAYER_VISION, "7"); // measured in tiles
+
+    setEngineVariablesFromSettings();
+  }
 
   public ZombieHouseEngine()
   {
@@ -47,6 +76,7 @@ public class ZombieHouseEngine implements Engine
   @Override
   public TestDijkstraAlgorithm getDijkstra()
   {
+    validateEngineState();
     return dijkstra;
   }
 
@@ -62,6 +92,13 @@ public class ZombieHouseEngine implements Engine
   {
     validateEngineState();
     return renderer;
+  }
+
+  @Override
+  public Settings getSettings()
+  {
+    validateEngineState();
+    return settings;
   }
 
   @Override
@@ -155,6 +192,14 @@ public class ZombieHouseEngine implements Engine
   }
 
   @Override
+  public void init(String settingsFile, Stage stage, World world, SoundEngine soundEngine, Renderer renderer)
+  {
+    init(stage, world, soundEngine, renderer);
+    settings.importSettings(settingsFile);
+    setEngineVariablesFromSettings();
+  }
+
+  @Override
   public void shutdown()
   {
     if (!isInitialized) throw new RuntimeException("Engine was not initialized before the call to shutdown");
@@ -181,6 +226,7 @@ public class ZombieHouseEngine implements Engine
     millisecondTimeStamp = System.currentTimeMillis(); // mark the time when this frame started
     double deltaSeconds = millisecondsSinceLastFrame / 1000.0; // used for the actors
     // update all actors and process their return statements
+    getWorld().getPlayer().setNoClip(playerNoClip);
     for (Actor actor : UPDATE_ACTORS)
     {
       processActorReturnStatement(actor.update(this, deltaSeconds));
@@ -194,15 +240,18 @@ public class ZombieHouseEngine implements Engine
                                      (int)getWorld().getPlayer().getLocation().getY());
     // now that the frame is nearly complete, see if anything collided during
     // the actor update phase
-    HashMap<Actor, LinkedList<Actor>> collisionEvents = collision.detectCollisions();
-    // push all collision events to the appropriate actors
-    for (Map.Entry<Actor, LinkedList<Actor>> entry : collisionEvents.entrySet())
+    if (useCollisionDetection)
     {
-      Actor entryActor = entry.getKey();
-      for (Actor actor : entry.getValue())
+      HashMap<Actor, LinkedList<Actor>> collisionEvents = collision.detectCollisions();
+      // push all collision events to the appropriate actors
+      for (Map.Entry<Actor, LinkedList<Actor>> entry : collisionEvents.entrySet())
       {
-        entryActor.collided(this, actor);
-        actor.collided(this, entryActor);
+        Actor entryActor = entry.getKey();
+        for (Actor actor : entry.getValue())
+        {
+          entryActor.collided(this, actor);
+          actor.collided(this, entryActor);
+        }
       }
     }
     // render the world
@@ -269,6 +318,7 @@ public class ZombieHouseEngine implements Engine
     if (getWorld().getChangeList(false).size() == 0) return;
     Collection<Actor> changeList = getWorld().getChangeList(true);
     ALL_ACTORS.addAll(changeList); // this should contain all actors since nextLevel was called
+    getWorld().getPlayer().setNoClip(playerNoClip);
     for (Actor actor : changeList)
     {
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
@@ -289,5 +339,12 @@ public class ZombieHouseEngine implements Engine
         }
       }
     }
+  }
+
+  private void setEngineVariablesFromSettings()
+  {
+    isPaused = settings.getValue(ENGINE_PAUSED).equals("true");
+    useCollisionDetection = settings.getValue(COLLISION).equals("on");
+    playerNoClip = settings.getValue(PLAYER_NO_CLIP).equals("on");
   }
 }

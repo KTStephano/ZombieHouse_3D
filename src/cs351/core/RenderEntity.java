@@ -174,7 +174,7 @@ public class RenderEntity
     int index = 0;
     for (String file : files)
     {
-      System.out.println("RenderEntity: loading " + file);
+      //System.out.println("RenderEntity: loading " + file);
       models[index] = loadObj(file);
       index++;
     }
