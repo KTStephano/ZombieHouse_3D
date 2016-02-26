@@ -14,7 +14,8 @@ Specular lighting gives objects the shiny look
 + specular_lighting on
 
 Keep light intensity >= 0.0 and <= 1.0 -- 1.0 is maximum brightness
-I would definitely recommend experimenting with brightness and let me know \
+
+I would definitely recommend experimenting with brightness and let me know 
 what looks best - default = 0.7
 + light_intensity 1.0
 
