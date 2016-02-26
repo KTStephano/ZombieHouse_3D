@@ -3,6 +3,7 @@ package cs351.entities;
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
+import cs351.core.Actor.UpdateResult;
 import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import javafx.geometry.Point2D;
 import java.net.URL;
@@ -19,7 +20,9 @@ public class Zombie extends Actor
   private double directionX = DIRECTION;
   private double directionY = DIRECTION;
   private double elapsedSeconds=0.0;
-
+  private double xDirection = 1;
+  private double yDirection = 1;
+ 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile);
@@ -36,6 +39,26 @@ public class Zombie extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
+       
+    // totalSpeed represents the movement speed offset in tiles per second
+    elapsedSeconds += deltaSeconds;
+    // every 5 seconds, switch direction
+    if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
+    {
+      elapsedSeconds = 0.0;
+      // -5.0 to 5.0
+      xDirection = (100-rand.nextInt(200))/20000.0;
+      // -5.0 to 5.0
+      yDirection = (100-rand.nextInt(200))/20000.0;
+    }
+    
+    
+    setLocation(getLocation().getX()+xDirection, getLocation().getY() +yDirection);
+    
+    checkPlaySound(engine, deltaSeconds);
+    return UpdateResult.UPDATE_COMPLETED;
+    
+    /*
     // totalSpeed represents the movement speed offset in tiles per second
     double totalSpeed = deltaSeconds * engine.getWorld().getTilePixelWidth();
     setLocation(getLocation().getX() + totalSpeed * speedX * directionX,
@@ -50,6 +73,7 @@ public class Zombie extends Actor
     }
     checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;
+    */
   }
 
   protected void checkPlaySound(Engine engine, double deltaSeconds)
