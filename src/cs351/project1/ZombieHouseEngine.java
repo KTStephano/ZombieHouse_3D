@@ -35,17 +35,19 @@ public class ZombieHouseEngine implements Engine
   /**
    * The following variables are initialized by accessing the settings class.
    */
-  final String ENGINE_PAUSED = "engine_paused";
-  final String PLAYER_NO_CLIP = "player_no_clip";
-  final String COLLISION = "collision";
-  final String ADVANCED_LIGHTING = "advanced_lighting";
-  final String SPECULAR_LIGHTING = "specular_lighting";
-  final String LIGHT_INTENSITY = "light_intensity";
-  final String PLAYER_VISION = "player_vision";
+  private final String ENGINE_PAUSED = "engine_paused";
+  private final String PLAYER_NO_CLIP = "player_no_clip";
+  private final String COLLISION = "collision";
+  private final String SOUND_ENGINE = "sound_engine";
+  private final String ADVANCED_LIGHTING = "advanced_lighting";
+  private final String SPECULAR_LIGHTING = "specular_lighting";
+  private final String LIGHT_INTENSITY = "light_intensity";
+  private final String PLAYER_VISION = "player_vision";
 
   private boolean isPaused;
   private boolean useCollisionDetection;
   private boolean playerNoClip;
+  private boolean updateSoundEngine;
 
   // initialize the settings class with default settings
   {
@@ -57,6 +59,7 @@ public class ZombieHouseEngine implements Engine
     settings.registerSetting(SPECULAR_LIGHTING, "on");
     settings.registerSetting(LIGHT_INTENSITY, "0.7");
     settings.registerSetting(PLAYER_VISION, "7"); // measured in tiles
+    settings.registerSetting(SOUND_ENGINE, "on");
 
     setEngineVariablesFromSettings();
   }
@@ -234,10 +237,13 @@ public class ZombieHouseEngine implements Engine
       // any static, floor or ceiling actors
       if (!actor.isStatic() && !actor.isPartOfFloor() && !actor.isPartOfCeiling()) collision.insert(actor);
     }
-    getSoundEngine().update();
-    // set the center point for the sound engine
-    getSoundEngine().setCentralPoint((int)getWorld().getPlayer().getLocation().getX(),
-                                     (int)getWorld().getPlayer().getLocation().getY());
+    if (updateSoundEngine)
+    {
+      getSoundEngine().update();
+      // set the center point for the sound engine
+      getSoundEngine().setCentralPoint((int) getWorld().getPlayer().getLocation().getX(),
+                                       (int) getWorld().getPlayer().getLocation().getY());
+    }
     // now that the frame is nearly complete, see if anything collided during
     // the actor update phase
     if (useCollisionDetection)
@@ -346,5 +352,6 @@ public class ZombieHouseEngine implements Engine
     isPaused = settings.getValue(ENGINE_PAUSED).equals("true");
     useCollisionDetection = settings.getValue(COLLISION).equals("on");
     playerNoClip = settings.getValue(PLAYER_NO_CLIP).equals("on");
+    updateSoundEngine = settings.getValue(SOUND_ENGINE).equals("on");
   }
 }

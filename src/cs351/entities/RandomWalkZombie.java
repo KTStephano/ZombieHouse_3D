@@ -12,8 +12,7 @@ public class RandomWalkZombie extends Zombie {
   Random rand = new Random();
   double xDirection = 1;
   double yDirection = 1;
-  double zombieDecisionRate = 2.0;
-
+  
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile, x, y, width, height, depth);
