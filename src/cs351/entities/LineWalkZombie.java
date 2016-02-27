@@ -87,7 +87,7 @@ public class LineWalkZombie extends Zombie {
               yDirection = -0.1; 
             } else
               yDirection = 0;
-            
+            /*
             System.out.println("----");
             System.out.println("zombie x: "+currX);            
             System.out.println("player x: "+targetX);
@@ -98,7 +98,7 @@ public class LineWalkZombie extends Zombie {
             System.out.println("player y: "+targetY);
             System.out.println("next step y: "+pt.getY());
             System.out.println("yDirection: "+yDirection);
-            
+            */
             
           }
         } 
