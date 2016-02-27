@@ -60,7 +60,6 @@ public class LineWalkZombie extends Zombie {
           double targetX = engine.getWorld().getPlayer().getLocation().getX();
           double targetY = engine.getWorld().getPlayer().getLocation().getY();
 
-          engine.getDijkstra().initGraph(engine.getPathingData(), (int)worldWidth, (int)worldHeight);
           Point2D pt = engine.getDijkstra().getNextLocation((int)currX,(int)currY,(int)targetX,(int)targetY);
 
 

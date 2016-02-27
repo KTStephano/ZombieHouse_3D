@@ -200,6 +200,7 @@ public class ZombieHouseEngine implements Engine
     init(stage, world, soundEngine, renderer);
     settings.importSettings(settingsFile);
     setEngineVariablesFromSettings();
+    getDijkstra().initGraph(this.getPathingData(), (int)worldWidth, (int)worldHeight);
   }
 
   @Override
