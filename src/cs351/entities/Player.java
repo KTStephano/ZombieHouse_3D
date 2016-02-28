@@ -3,7 +3,6 @@ package cs351.entities;
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.Vector3;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -11,6 +10,7 @@ import javafx.scene.input.KeyEvent;
  */
 public class Player extends Actor
 {
+  protected boolean isPlayer=true; // true -- this is the Player
   private final double BASE_SPEED = 5.0; // for x and y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first

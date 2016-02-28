@@ -3,17 +3,14 @@ package cs351.project1;
 import cs351.core.SoundEngine;
 import java.util.*;
 
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
-import javax.sound.sampled.SourceDataLine;
 
 import java.awt.Point;
-import java.io.File;
 import java.net.URL;
 
 /**
@@ -55,10 +52,10 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       float soundVolume = 30/relativeDistance;
       if (soundVolume > 0.7) 
       {
-        soundVolume = (float) 0.7;
+        soundVolume = (float) 0.6;
       }
 
-      if ( (soundVolume > 0.5))
+      if ( (soundVolume > 0.2))
       {                
         playSound(tmpSoundStackItem.url,soundVolume);       
       }

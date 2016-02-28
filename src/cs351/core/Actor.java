@@ -1,8 +1,5 @@
 package cs351.core;
 
-import javafx.geometry.Point2D;
-import javafx.scene.shape.TriangleMesh;
-
 /**
  * The Actor class represents any object that can be added to the game
  * and updated each frame. It can be used to represent both moving
@@ -23,7 +20,8 @@ public abstract class Actor
   protected boolean noClip = false; // if true the object will not collide with anything (phase through walls, zombies, etc.)
   protected boolean isPartOfFloor; // true if floor tile
   protected boolean isPartOfCeiling; // true if ceiling
-  protected final String TEXTURE_FILE;
+  protected boolean isPlayer=false; // true if Player
+   protected final String TEXTURE_FILE;
   protected RenderEntity renderEntity = null;
 
   /**
@@ -122,6 +120,17 @@ public abstract class Actor
   public boolean isPartOfCeiling()
   {
     return isPartOfCeiling;
+  }
+  
+  /**
+   * The renderer will use this function to figure out whether the tile is part of
+   * the ceiling so it can draw it properly.
+   *
+   * @return true if it is part of the floor and false if not
+   */
+  public boolean isPlayer()
+  {
+    return isPlayer;
   }
 
   /**
