@@ -34,8 +34,7 @@ public class LineWalkZombie extends Zombie {
   public UpdateResult update(Engine engine, double deltaSeconds)
   { 
 
-       System.out.println("--fps: "+1/deltaSeconds);
-    //   System.out.println("--one 60th--"+1.0/60.0);
+    //   System.out.println("--fps: "+1/deltaSeconds);
 
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
