@@ -14,8 +14,8 @@ public class LineWalkZombie extends Zombie {
   //initialize to something we set
   private double elapsedSeconds=0;
   private Random rand = new Random();
-  private double xDirection = 1;
-  private double yDirection = 1;
+  private double xDirection = 0;
+  private double yDirection = 0;
   private boolean setNewDirection = true;
   private double elapsedTime=0;
   private int timerCt = 0;
@@ -38,49 +38,110 @@ public class LineWalkZombie extends Zombie {
 
     // super.update(engine, deltaSeconds);
 
-
+ //   System.out.println("--deltaSeconds--"+deltaSeconds);
+ //   System.out.println("--one 60th--"+1.0/60.0);
+       
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
     // every zombieDecisionRate seconds, switch direction
     if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
     {
       elapsedSeconds = 0.0;
-      
-      if (false&&canSmellPlayer(engine))
+      //timerCt++;
+      if (canSmellPlayer(engine))
       {
-        double worldWidth = engine.getWorld().getWorldPixelWidth() / engine.getWorld().getTilePixelWidth();
-        double worldHeight = engine.getWorld().getWorldPixelHeight() / engine.getWorld().getTilePixelHeight();
-        
-        double currX = getLocation().getX();
-        double currY = getLocation().getY();
-        
-        double targetX = engine.getWorld().getPlayer().getLocation().getX();
-        double targetY = engine.getWorld().getPlayer().getLocation().getY();
-       
-        engine.getDijkstra().initGraph(engine.getPathingData(), (int)worldWidth, (int)worldHeight);
-        Point2D pt = engine.getDijkstra().getNextLocation((int)currX,(int)currY,(int)targetX,(int)targetY);
-
-
-        // if we have a path to player and can smell him
-        if (pt!=null)
+        if (timerCt++ % 6==0) 
         {
 
+       //   double worldWidth = engine.getWorld().getWorldPixelWidth() / engine.getWorld().getTilePixelWidth();
+       //   double worldHeight = engine.getWorld().getWorldPixelHeight() / engine.getWorld().getTilePixelHeight();
 
-          xDirection = (currX - pt.getX())/2000000;
-          yDirection = (currY - pt.getY())/2000000;
-        }
-         
+          double currX = getLocation().getX();
+          double currY = getLocation().getY();
+
+          double targetX = engine.getWorld().getPlayer().getLocation().getX();
+          double targetY = engine.getWorld().getPlayer().getLocation().getY();
+/*
+          System.out.println("----");
+          System.out.println("start zombie x: "+currX);            
+          System.out.println("----");
+          System.out.println("start zombie y: "+currY);
+          */
+            
+          if (currX<targetX)
+          {
+            currX = currX+1;
+          } else
+          {
+            currX = currX-1; 
+          }
+          
+          if (currY<targetY)
+          {
+            currY = currY+1;
+          } else
+          {
+            currY = currY - 1;
+          }
+          
+          
+          
+          Point2D pt = engine.getDijkstra().getNextLocation((int)currX,(int)currY,(int)targetX,(int)targetY);
+
+
+          // if we have a path to player and can smell him
+          if (pt!=null)
+          {
+            
+            if ( pt.getX() > currX+0.02) 
+            {
+              xDirection = 0.02;
+            } else if ( pt.getX() < currX-0.02) 
+            {
+              xDirection = -0.02; 
+            }else
+              xDirection = 0;
         
-      } else
+
+            
+            if ( pt.getY() > currY+0.02) 
+            {
+              yDirection = 0.02;
+            } else if ( pt.getY() < currY-0.02) 
+            {
+              yDirection = -0.02; 
+            } else
+              yDirection = 0;
+            /*
+            System.out.println("----");
+            System.out.println("zombie x: "+currX);            
+            System.out.println("player x: "+targetX);
+            System.out.println("next step x: "+pt.getX());
+            System.out.println("xDirection: "+xDirection);
+            System.out.println("----");
+            System.out.println("zombie y: "+currY);
+            System.out.println("player y: "+targetY);
+            System.out.println("next step y: "+pt.getY());
+            System.out.println("yDirection: "+yDirection);
+            */
+            
+          }
+        } 
+      }
+      
+      /*
+      else if (setNewDirection)
       {
+        setNewDirection = false;
         // left or right random
         xDirection = (100-rand.nextInt(200))/20000.0;
+       // System.out.println("random xDirection: "+xDirection);
+
         // forward or back random
         yDirection = (100-rand.nextInt(200))/20000.0;
-      }
+      }*/
+      
     }
-
-
     setLocation(getLocation().getX()+xDirection, getLocation().getY() +yDirection);
 
     checkPlaySound(engine, deltaSeconds);
