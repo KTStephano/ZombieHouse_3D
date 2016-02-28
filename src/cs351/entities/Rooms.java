@@ -79,10 +79,10 @@ public class Rooms extends Application
    */
   public void initializeBoard(Stage stage)
   {
-    xStartPt     = 10;
-    yStartPt     = 10;
     totalWidth   = 300;  
     totalHeight  = 200;
+    xStartPt     = 10;
+    yStartPt     = 10;
     
     unConnectingRoomsQueue.add( new Rooms( xStartPt, yStartPt, totalWidth, totalHeight) );
     
@@ -103,6 +103,7 @@ public class Rooms extends Application
     stage.show();
   }
   
+  
   /*
    ======================================================================
    This will carve out large sections, or Blocks of the board, that will 
@@ -118,7 +119,7 @@ public class Rooms extends Application
     while(!unConnectingRoomsQueue.isEmpty())
     {
       //remove the first two "Areas" from the list
-      Rooms firstInQueue = unConnectingRoomsQueue.remove();      
+      Rooms firstInQueue  = unConnectingRoomsQueue.remove();      
       Rooms secondInQueue = unConnectingRoomsQueue.remove();
       
       divideAreas(firstInQueue, secondInQueue);
@@ -136,9 +137,9 @@ public class Rooms extends Application
   
   
   /*
-  =================================================
-  So far the rooms are created but not accessible.
-  We will need to 
+  ===================================================
+  Doorways are created on the horizontal and vertical
+  edges of each room.
   =================================================
   */
   void connectRooms()
@@ -164,7 +165,7 @@ public class Rooms extends Application
             root.getChildren().add(r8);
           }
           
-          if(   x == remainingRooms.width / 2 
+          if(    x == remainingRooms.width / 2 
               && y == remainingRooms.height
               && y != totalHeight)
            {
@@ -182,10 +183,11 @@ public class Rooms extends Application
   }
   
   /************************ START HELPER METHODS ***************************/
+ 
   /*
    ===========================================
    Alternate between vertical and horizontal
-   division of rooms
+   division of rooms.
    ===========================================
    */
   public boolean splitDirection_IsVertical()
@@ -197,8 +199,12 @@ public class Rooms extends Application
   
   /*
    =================================================
-   If more hallways are needed, carve more hallways.
-   Otherwise split the remaining rooms
+   Divide the initial room you start with. There is
+   only one area to slice, so there is no need to 
+   get the first and second objects int the queue. 
+   After the two chunks are split in half, the two
+   pieces are put in the queue and the whole process
+   will begin.
    =================================================
    */
   public void divideAreaOne( Rooms firstInQueue )
@@ -207,26 +213,39 @@ public class Rooms extends Application
       verticalDivide(firstInQueue, randomNumber);
   }
   
+  
+  /*
+  =================================================
+  If more hallways are needed, carve more hallways.
+  Otherwise split the remaining rooms.
+  =================================================
+  */
   public void divideAreas( Rooms firstInQueue, Rooms secondInQueue )
   {
-    if (splitDirection_IsVertical() && roomIsLargeEnough(firstInQueue, VERTICAL) && roomIsLargeEnough(secondInQueue, VERTICAL))
+    if (splitDirection_IsVertical() && roomIsLargeEnough(firstInQueue, VERTICAL) 
+                                    && roomIsLargeEnough(secondInQueue, VERTICAL))
     {
-      randomNumber = getRandomNumber(firstInQueue, VERTICAL);
+      randomNumber  = getRandomNumber(firstInQueue, VERTICAL);
       randomNumber2 = getRandomNumber(secondInQueue, VERTICAL);
       verticalDivide( firstInQueue, randomNumber );
       verticalDivide( secondInQueue, randomNumber2 );
     }
-    else if ( roomIsLargeEnough(firstInQueue, HORIZONTAL)&& roomIsLargeEnough(secondInQueue, HORIZONTAL))
+    else if ( roomIsLargeEnough(firstInQueue, HORIZONTAL) && roomIsLargeEnough(secondInQueue, HORIZONTAL))
     {
-      randomNumber = getRandomNumber(firstInQueue, HORIZONTAL);
+      randomNumber  = getRandomNumber(firstInQueue, HORIZONTAL);
       randomNumber2 = getRandomNumber(secondInQueue, HORIZONTAL);
       horizontalDivide( firstInQueue, randomNumber );
       horizontalDivide( secondInQueue, randomNumber2 );
-      
     }
   }
   
   
+  /*
+   =======================================
+   Vertical hallway is created by dividing
+   room in half.
+   =======================================
+   */
   public void verticalDivide(Rooms firstInQueue, int randomNumber)
   {
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
@@ -276,8 +295,13 @@ public class Rooms extends Application
     rSize++;
   }
   
-  
-  
+    
+  /*
+   =========================================
+   Horizontal hallway is created by dividing
+   Area in half.
+   =========================================
+   */
   public void horizontalDivide( Rooms firstInQueue, int randomNumber )
   {
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
@@ -326,10 +350,11 @@ public class Rooms extends Application
     
     /* splits chunks into two areas and puts them back into queue */
     addToQueue(firstInQueue, randomNumber, HORIZONTAL);
-    rSize++;
 
+    rSize++;
   }
   
+ 
   void addToQueue(Rooms firstInQueue, int randomNumber, boolean splitIsVertical)
   {
     int xStartPt = firstInQueue.xStartPt;
@@ -375,7 +400,7 @@ public class Rooms extends Application
    y axis. The upper and lower bound variables 
    restrict the line division between 1/3 and 2/3. the
    reason for this is so the hallways and borders 
-   don't end up too close to another wall
+   don't end up too close to another wall.
    ===================================================
    */
   public int getRandomNumber(Rooms firstInQueue, boolean splitIsVertical)
@@ -414,21 +439,20 @@ public class Rooms extends Application
         System.err.println("upperBound_Y = "+upperBound_Y+" lowerBound_X = "+lowerBound_X+" randInt = "+randInt);
       }
     }
-    
     return randInt;
   }
+  
   
   /*
    ===========================================================
    Checks to see that the minimum size room is not going to be 
    divided. A room that is too narrow, but still has a long 
    length can still be divided. In this case, we could still 
-   divide it horizontally
+   divide it horizontally.
    ===========================================================
    */
   public boolean roomIsLargeEnough( Rooms firstInQueue, boolean checkWidth)
   {
-    
     // check the width since we want to make a vertical line
     if( checkWidth )
     {
