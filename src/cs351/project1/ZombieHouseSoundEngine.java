@@ -50,7 +50,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
           *((float)tmpSoundStackItem.x-centralPoint.x)+((float)tmpSoundStackItem.y-centralPoint.y)
           *((float)tmpSoundStackItem.y-centralPoint.y);      
       float soundVolume = 30/relativeDistance;
-      if (soundVolume > 0.7) 
+      if (soundVolume > 0.6) 
       {
         soundVolume = (float) 0.6;
       }
