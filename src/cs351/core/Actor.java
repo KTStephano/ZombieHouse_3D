@@ -13,6 +13,10 @@ package cs351.core;
 // @todo Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
 public abstract class Actor
 {
+  // All actors are considered unique, so comparing them does not make sense - give
+  // each actor a completely unique hash code from other Actor objects
+  private static int unique_id = 1;
+  private final int id;
   protected int width, height, depth; // width, height and depth are measured in tiles instead of pixels
   protected Vector3 location = new Vector3(0.0f); // location of the object in 2D space
   protected boolean shouldUpdate = true; // if false the Engine will ignore this Actor (it will still be drawn and collide with stuff, though)
@@ -42,6 +46,8 @@ public abstract class Actor
    */
   public Actor(String textureFile)
   {
+    id = unique_id;
+    unique_id++;
     TEXTURE_FILE = textureFile;
   }
 
@@ -59,7 +65,8 @@ public abstract class Actor
   @Override
   public int hashCode()
   {
-    return TEXTURE_FILE.hashCode();
+    //return TEXTURE_FILE.hashCode();
+    return id;
   }
 
   @Override
