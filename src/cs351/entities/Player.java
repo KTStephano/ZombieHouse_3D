@@ -73,6 +73,11 @@ public class Player extends Actor
     rightDirection.set(direction);
   }
 
+  public Vector3 getForwardVector()
+  {
+    return forwardDirection;
+  }
+
   public void keyPressed(KeyEvent event)
   {
     /**

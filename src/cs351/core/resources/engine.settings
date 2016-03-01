@@ -8,7 +8,7 @@ If no clip is on the player can walk through all game objects except the floor/c
 
 Advanced lighting is what enables the decrease in brightness with distance
 Without advanced lighting it is just pure ambient - default = on
-+ advanced_lighting off
++ advanced_lighting on
 
 Specular lighting gives objects the shiny look
 + specular_lighting on

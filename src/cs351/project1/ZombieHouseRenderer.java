@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class ZombieHouseRenderer implements Renderer
@@ -34,10 +35,12 @@ public class ZombieHouseRenderer implements Renderer
   private SubScene renderScene; // renderSceneGraph added to this for redraw each frame
   private final HashMap<Actor, Model> ACTOR_MODEL_MAP = new HashMap<>(50);
   private final HashMap<String, Texture> TEXTURE_LOOKUP = new HashMap<>(50);
+  private final HashSet<Actor> DYNAMIC_ACTORS = new HashSet<>(50);
+  private final HashSet<Actor> STATIC_ACTORS = new HashSet<>(50);
+  private RenderTree environment;
   private double largestWall = 0.0; // used to calculate where the ceiling should be
   private Group renderSceneGroup;
-  private Rotate lightRot = new Rotate(0.0, 0.0, 0.0);
-  private double lightRotAngle = 0.0;
+  private boolean isInitialized = false;
 
   /**
    * These are set using the global engine settings.
@@ -231,7 +234,7 @@ public class ZombieHouseRenderer implements Renderer
     scene = new Scene(renderSceneGroup);
     stage.setScene(scene);
 
-    initLighting();
+    //initLighting();
   }
 
   public ZombieHouseRenderer(Stage stage, StackPane pane, int width, int height)
@@ -241,7 +244,7 @@ public class ZombieHouseRenderer implements Renderer
     //pane.setContent(renderSceneGroup);
     pane.getChildren().add(renderSceneGroup);
 
-    initLighting();
+    //initLighting();
   }
 
   private ZombieHouseRenderer(int width, int height)
@@ -256,19 +259,36 @@ public class ZombieHouseRenderer implements Renderer
   @Override
   public void render(Engine engine, DrawMode mode, double deltaSeconds)
   {
+    if (!isInitialized) throw new IllegalStateException("Renderer not initialized - call init");
     // check if we need to initialize the renderer from the global engine settings
     if (initSettings) initSettings(engine);
+
+    // prepare the scene for this frame
+    renderSceneGraph.getChildren().clear();
+    initLighting();
 
     // orient the player to their rotation/location
     orientPlayerToScene();
 
-    // render the actors
+    // render the dynamic actors
     renderActors(engine, mode, deltaSeconds);
+
+    // render the static geometry
+    renderStaticGeometry(engine, mode, deltaSeconds);
+  }
+
+  @Override
+  public void init(Engine engine)
+  {
+    isInitialized = true;
+    environment = new RenderTree(engine.getWorld().getWorldPixelWidth(), engine.getWorld().getWorldPixelHeight(),
+                                 engine.getWorld().getTilePixelWidth(), engine.getWorld().getTilePixelHeight());
   }
 
   @Override
   public void reset()
   {
+    isInitialized = false;
     camera = null;
     player = null;
     controller = null;
@@ -278,7 +298,7 @@ public class ZombieHouseRenderer implements Renderer
     // doesn't clear textures in case they're needed again for the next frame
     renderSceneGraph.getChildren().clear();
     // clearing the scene graph kills the lighting
-    initLighting();
+    //initLighting();
   }
 
   @Override
@@ -295,7 +315,7 @@ public class ZombieHouseRenderer implements Renderer
     // TODO did 0.7 and 0.5
     playerLight = new PointLight(Color.color(1.0, 1.0, 1.0));
     playerLight.setLightOn(true);
-    renderSceneGraph.getChildren().add(playerLight);
+    //renderSceneGraph.getChildren().add(playerLight);
     //light.getTransforms().add(new Translate(this.player.getLocation().getX(), -this.player.getHeight() / 2.0, this.player.getLocation().getY()));
     controller.getTranslation().setX(this.player.getLocation().getX());
     controller.getTranslation().setY(-this.player.getHeight() / 2.0);
@@ -313,8 +333,9 @@ public class ZombieHouseRenderer implements Renderer
     Model model = generateModel(actor, shape, diffuseColor, specularColor, ambientColor);
     // renderer uses largestWall to calculate where it should put the ceiling
     if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
+    if (!addStaticGeometry(actor)) DYNAMIC_ACTORS.add(actor);
     ACTOR_MODEL_MAP.put(actor, model);
-    renderSceneGraph.getChildren().addAll(model.shape);
+    //renderSceneGraph.getChildren().addAll(model.shape);
   }
 
   @Override
@@ -322,6 +343,7 @@ public class ZombieHouseRenderer implements Renderer
   {
     Model model = generateModel(actor, null, diffuseColor, specularColor, ambientColor);
     if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
+    if (!addStaticGeometry(actor)) DYNAMIC_ACTORS.add(actor);
     ACTOR_MODEL_MAP.put(actor, model);
     model.entity = entity;
     // A RenterEntity stores its meshes in the form of a list where each element in the list
@@ -336,11 +358,11 @@ public class ZombieHouseRenderer implements Renderer
       meshView.setMaterial(model.material);
       meshView.getTransforms().addAll(model.rotation, model.translation);
       meshView.setCullFace(CullFace.NONE);
-      meshView.setVisible(false);
-      renderSceneGraph.getChildren().addAll(meshView);
+      //meshView.setVisible(false);
+      //renderSceneGraph.getChildren().addAll(meshView);
     }
     model.currMeshView = model.meshViewMap.get(meshList[0]);
-    model.currMeshView.setVisible(true);
+    //model.currMeshView.setVisible(true);
   }
 
   @Override
@@ -385,63 +407,75 @@ public class ZombieHouseRenderer implements Renderer
     return model;
   }
 
+  private void renderStaticGeometry(Engine engine, DrawMode mode, double deltaSeconds)
+  {
+    STATIC_ACTORS.clear();
+    environment.buildRenderData(STATIC_ACTORS, player, playerVision);
+    //System.out.println(STATIC_ACTORS.size());
+    for (Actor actor : STATIC_ACTORS) renderActor(actor, mode, deltaSeconds);
+  }
+
   private void renderActors(Engine engine, DrawMode mode, double deltaSeconds)
+  {
+    for (Actor actor : DYNAMIC_ACTORS) renderActor(actor, mode, deltaSeconds);
+  }
+
+  private void renderActor(Actor actor, DrawMode mode, double deltaSeconds)
   {
     //double floorDepthOffset = engine.getWorld().getTilePixelHeight();
     double floorDepthOffset = 0.5;
     double floorHeightOffset = largestWall;
-    for (Map.Entry<Actor, Model> entry : ACTOR_MODEL_MAP.entrySet())
+    Model model = ACTOR_MODEL_MAP.get(actor);
+    double distanceModifier = 0.0;
+    if (useAdvancedLighting)
     {
-      Actor actor = entry.getKey();
-      Model model = entry.getValue();
-      double distanceModifier = 0.0;
-      if (useAdvancedLighting)
+      double dx = player.getLocation().getX() - actor.getLocation().getX();
+      double dy = player.getLocation().getY() - actor.getLocation().getY();
+      double roughDistance = dx * dx + dy * dy;
+      distanceModifier = 1.0 - roughDistance / (playerVision * playerVision);
+      if (distanceModifier < 0.0) distanceModifier = 0.0;
+      //if (distanceModifier < 0.0) distanceModifier = 0.0;
+      model.material.setDiffuseColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
+      // the reason for this check is so that non-static geometry will not have specular reflection
+      // (looks weird on zombies), and if the distanceModifier is already <= 0.0 there is no reason
+      // to perform the division anyway
+      if ((actor.isStatic() || actor.isPartOfCeiling() || actor.isPartOfFloor()) && distanceModifier > 0.0 && useSpecularLighting)
       {
-        double dx = player.getLocation().getX() - actor.getLocation().getX();
-        double dy = player.getLocation().getY() - actor.getLocation().getY();
-        double roughDistance = dx * dx + dy * dy;
-        distanceModifier = 1.0 - roughDistance / (playerVision * playerVision);
-        if (distanceModifier < 0.0) distanceModifier = 0.0;
-        //if (distanceModifier < 0.0) distanceModifier = 0.0;
-        model.material.setDiffuseColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
-        // the reason for this check is so that non-static geometry will not have specular reflection
-        // (looks weird on zombies), and if the distanceModifier is already <= 0.0 there is no reason
-        // to perform the division anyway
-        if ((actor.isStatic() || actor.isPartOfCeiling() || actor.isPartOfFloor()) && distanceModifier > 0.0 && useSpecularLighting)
-        {
-          distanceModifier /= 2.0;
-        }
-        else distanceModifier = 0.0;
+        distanceModifier /= 2.0;
       }
-      // still need to set specular every frame to make sure it gets hard-reset for objects that
-      // are far away
-      model.material.setSpecularColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
-      //translate.setX(actor.getLocation().getX() - model.translation.getX());
-      //translate.setY(model.translation.getY());
-      //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
-      //model.shape.getTransforms().clear();
-      //model.shape.getTransforms().addAll(translate);
-      double actorHeightOffset = model.shape != null ? -actor.getHeight() / 2.0 : 0.0;
-      // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
-      if (actor.isPartOfFloor()) setTranslationValuesForModel(model, actor.getLocation().getX(),
-                                                              floorDepthOffset,
-                                                              actor.getLocation().getY());
-      else if (actor.isPartOfCeiling()) setTranslationValuesForModel(model, actor.getLocation().getX(),
-                                                                     floorHeightOffset - actor.getHeight() / 2.0,
-                                                                     actor.getLocation().getY());
-      else setTranslationValuesForModel(model, actor.getLocation().getX(),
-                                        actorHeightOffset,
-                                        actor.getLocation().getY());
-      if (model.shape != null) model.shape.setDrawMode(mode);
-      else
-      {
-        model.entity.animate(deltaSeconds);
-        model.currMeshView.setVisible(false); // this is now the old mesh view - disable its visibility
-        model.currMeshView = model.meshViewMap.get(model.entity.getMesh());
-        model.currMeshView.setVisible(true); // only the current one
-        model.currMeshView.setDrawMode(mode);
-        model.currMeshView.setCullFace(CullFace.BACK);
-      }
+      else distanceModifier = 0.0;
+    }
+    // still need to set specular every frame to make sure it gets hard-reset for objects that
+    // are far away
+    model.material.setSpecularColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
+    //translate.setX(actor.getLocation().getX() - model.translation.getX());
+    //translate.setY(model.translation.getY());
+    //translate.setZ(actor.getLocation().getY() - model.translation.getZ());
+    //model.shape.getTransforms().clear();
+    //model.shape.getTransforms().addAll(translate);
+    double actorHeightOffset = model.shape != null ? -actor.getHeight() / 2.0 : 0.0;
+    // TODO come up with a better way to make the player see eye-to-eye with things the same height as them
+    if (actor.isPartOfFloor()) setTranslationValuesForModel(model, actor.getLocation().getX(),
+                                                            floorDepthOffset,
+                                                            actor.getLocation().getY());
+    else if (actor.isPartOfCeiling()) setTranslationValuesForModel(model, actor.getLocation().getX(),
+                                                                   floorHeightOffset - actor.getHeight() / 2.0,
+                                                                   actor.getLocation().getY());
+    else setTranslationValuesForModel(model, actor.getLocation().getX(),
+                                      actorHeightOffset,
+                                      actor.getLocation().getY());
+    if (model.shape != null)
+    {
+      model.shape.setDrawMode(mode);
+      renderSceneGraph.getChildren().add(model.shape);
+    }
+    else
+    {
+      model.entity.animate(deltaSeconds);
+      model.currMeshView = model.meshViewMap.get(model.entity.getMesh());
+      model.currMeshView.setDrawMode(mode);
+      model.currMeshView.setCullFace(CullFace.BACK);
+      renderSceneGraph.getChildren().add(model.currMeshView);
     }
   }
 
@@ -470,6 +504,7 @@ public class ZombieHouseRenderer implements Renderer
   {
     ambient.setLightOn(false);
     renderSceneGraph.getChildren().add(ambient);
+    renderSceneGraph.getChildren().add(playerLight);
   }
 
   private Texture registerTexture(String textureFile)
@@ -495,5 +530,15 @@ public class ZombieHouseRenderer implements Renderer
     //ambient.setColor(Color.color(lightIntensity, lightIntensity, lightIntensity));
     playerLight.setColor(Color.color(lightIntensity, lightIntensity, lightIntensity));
     camera.setFarClip(playerVision + 1);
+  }
+
+  private boolean addStaticGeometry(Actor actor)
+  {
+    if (actor.isStatic() || actor.isPartOfFloor() || actor.isPartOfCeiling())
+    {
+      environment.insert(actor);
+      return true;
+    }
+    return false;
   }
 }

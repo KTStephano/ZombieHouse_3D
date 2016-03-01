@@ -308,6 +308,7 @@ public class ZombieHouseEngine implements Engine
     ALL_ACTORS.clear();
     UPDATE_ACTORS.clear();
     getRenderer().reset();
+    getRenderer().init(this);
     // queue up the next level/restart the current level
     if (shouldGetNextLevel) getWorld().nextLevel(this);
     else getWorld().restartLevel(this);

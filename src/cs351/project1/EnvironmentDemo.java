@@ -23,8 +23,8 @@ public class EnvironmentDemo implements World
 {
   private Random rand = new Random();
   private HashSet<Actor> actors = new HashSet<>(250);
-  private int worldPixelWidth = 31;
-  private int worldPixelHeight = 31;
+  private int worldPixelWidth = 100;
+  private int worldPixelHeight = 100;
   private int tileWidthHeight = 1; // measured in pixels
   private Actor player;
   

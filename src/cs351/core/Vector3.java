@@ -91,10 +91,21 @@ final public class Vector3
 
   public void normalize()
   {
-    if (calcMagnitude) magnitude = (float)Math.sqrt(x * x + y * y + z * z);
-    calcMagnitude = false;
+    magnitude();
     x /= magnitude;
     y /= magnitude;
     z /= magnitude;
+  }
+
+  public double magnitude()
+  {
+    if (calcMagnitude) magnitude = (float)Math.sqrt(x * x + y * y + z * z);
+    calcMagnitude = false;
+    return magnitude;
+  }
+
+  public Vector3 subtract(Vector3 other)
+  {
+    return new Vector3(this.x - other.x, this.y - other.y, this.z - other.y);
   }
 }
