@@ -23,8 +23,8 @@ public class EnvironmentDemo implements World
 {
   private Random rand = new Random();
   private HashSet<Actor> actors = new HashSet<>(250);
-  private int worldPixelWidth = 31;
-  private int worldPixelHeight = 31;
+  private int worldPixelWidth = 100;
+  private int worldPixelHeight = 100;
   private int tileWidthHeight = 1; // measured in pixels
   private Actor player;
   
@@ -314,8 +314,20 @@ public class EnvironmentDemo implements World
         "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
         "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
     String[] lineWalker = { "textures/zombie.jpg" };
-    for (int i = 0; i < numZombies/2; i++)
+    String[] Master = { "textures/masterZombie.jpg" };
+    Zombie wall3 = new MasterZombie(Master[0],
+        rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
+        rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
+        getTilePixelWidth(), // sets width to be 1 tile
+        getTilePixelWidth(), // sets height to be 1 tile
+        getTilePixelWidth()); // sets depth to be 1 tile
+    actors.add(wall3);
+
+   for (int i = 0; i < numZombies/2; i++)
     {
+      
+
+  
       Zombie wall1 = new RandomWalkZombie(textures[currTexture],
               "resources/Zombie1_Animated.txt",
           rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)

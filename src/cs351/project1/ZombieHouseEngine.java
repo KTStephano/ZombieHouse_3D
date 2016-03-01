@@ -174,12 +174,12 @@ public class ZombieHouseEngine implements Engine
     /********************** temporary  *********************/
 
     
-    dijkstra = new  TestDijkstraAlgorithm();
+    //dijkstra = new  TestDijkstraAlgorithm();
 
     int w = world.getWorldPixelWidth() / world.getTilePixelWidth();
     int h = world.getWorldPixelHeight() / world.getTilePixelHeight();
 
-    dijkstra.initGraph(getPathingData(),w, h);
+    //dijkstra.initGraph(getPathingData(),w, h);
   
    
     
@@ -200,7 +200,7 @@ public class ZombieHouseEngine implements Engine
     init(stage, world, soundEngine, renderer);
     settings.importSettings(settingsFile);
     setEngineVariablesFromSettings();
-    getDijkstra().initGraph(this.getPathingData(), (int)worldWidth, (int)worldHeight);
+    //getDijkstra().initGraph(this.getPathingData(), (int)worldWidth, (int)worldHeight);
   }
 
   @Override
@@ -308,6 +308,7 @@ public class ZombieHouseEngine implements Engine
     ALL_ACTORS.clear();
     UPDATE_ACTORS.clear();
     getRenderer().reset();
+    getRenderer().init(this);
     // queue up the next level/restart the current level
     if (shouldGetNextLevel) getWorld().nextLevel(this);
     else getWorld().restartLevel(this);

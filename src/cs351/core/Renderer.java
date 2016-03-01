@@ -24,6 +24,13 @@ public interface Renderer
   void render(Engine engine, DrawMode mode, double deltaSeconds);
 
   /**
+   * Initializes the renderer.
+   *
+   * @param engine reference to the main engine
+   */
+  void init(Engine engine);
+
+  /**
    * Resets the renderer to its default starting state.
    */
   void reset();

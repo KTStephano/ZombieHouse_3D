@@ -7,7 +7,7 @@ import javafx.geometry.Point2D;
 import java.util.Random;
 
 
-public class RandomWalkZombie extends Zombie {
+public class MasterZombie extends Zombie {
   // initialize to something we set
   private double elapsedSeconds=0;
   private Random rand = new Random();
@@ -15,13 +15,15 @@ public class RandomWalkZombie extends Zombie {
   private double yDirection = 0;
   private int timerCt = 0;
 
-
-  public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
+/*
+ * 
+ */
+  public MasterZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile, x, y, width, height, depth);
   }
 
-  public RandomWalkZombie(String textureFile, String modelFile, double x, double y, int width, int height, int depth)
+  public MasterZombie(String textureFile, String modelFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile, modelFile, x, y, width, height, depth);
   }
