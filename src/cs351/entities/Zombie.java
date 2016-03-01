@@ -32,7 +32,7 @@ public class Zombie extends Actor
 
   protected Point2D PathfindToThePlayer(Engine engine)
   {
-
+    /** TODO Rewrite the pathing to use AStar or something - Dijkstra has been killing us :(
     Point2D result = null;
     double currX = getLocation().getX();
     double currY = getLocation().getY();
@@ -90,7 +90,8 @@ public class Zombie extends Actor
     {
       result = new Point2D(0,0);
     }
-    return result;
+     */
+    return null;
   } 
 
 
@@ -155,6 +156,8 @@ public class Zombie extends Actor
 
   protected boolean canSmellPlayer(Engine engine)
   {
+    return false;
+    /** TODO Rewrite this with AStar or something
     int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
 
@@ -170,7 +173,7 @@ public class Zombie extends Actor
     {
       return false;
     }   
-
+    */
   }
 
 
