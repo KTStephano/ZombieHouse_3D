@@ -1,3 +1,10 @@
+/*
+ =======================================
+ Game.java line 70 must be changed to 
+ EnvDemo2_0.java to use this class
+ =======================================
+ */
+
 package cs351.project1;
 
 import cs351.core.Actor;

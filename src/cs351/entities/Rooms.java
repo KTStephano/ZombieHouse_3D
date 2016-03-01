@@ -16,7 +16,7 @@
      b.) Else-If the area is still too big
            Then cut the area in half (pick a random spot) and add both
                 sides back into the queue.
-         Else carve out the final room and stop because you have enough
+     c.) Else carve out the final room and stop because you have enough
               rooms.
               
               
@@ -222,15 +222,15 @@ public class Rooms extends Application
   */
   public void divideAreas( Rooms firstInQueue, Rooms secondInQueue )
   {
-    if (splitDirection_IsVertical() && roomIsLargeEnough(firstInQueue, VERTICAL) 
-                                    && roomIsLargeEnough(secondInQueue, VERTICAL))
+    if ( splitDirection_IsVertical() && roomIsLargeEnough(firstInQueue, VERTICAL) 
+                                     && roomIsLargeEnough(secondInQueue, VERTICAL) )
     {
       randomNumber  = getRandomNumber(firstInQueue, VERTICAL);
       randomNumber2 = getRandomNumber(secondInQueue, VERTICAL);
       verticalDivide( firstInQueue, randomNumber );
       verticalDivide( secondInQueue, randomNumber2 );
     }
-    else if ( roomIsLargeEnough(firstInQueue, HORIZONTAL) && roomIsLargeEnough(secondInQueue, HORIZONTAL))
+    else if ( roomIsLargeEnough(firstInQueue, HORIZONTAL) && roomIsLargeEnough(secondInQueue, HORIZONTAL) )
     {
       randomNumber  = getRandomNumber(firstInQueue, HORIZONTAL);
       randomNumber2 = getRandomNumber(secondInQueue, HORIZONTAL);
@@ -292,6 +292,7 @@ public class Rooms extends Application
     
     /* split Chunks and put them back into queue */
     addToQueue(firstInQueue, randomNumber, VERTICAL);
+    
     rSize++;
   }
   
@@ -308,10 +309,10 @@ public class Rooms extends Application
     {
       for (int y = firstInQueue.yStartPt; y < firstInQueue.height; y++)
       {
-        if (   ( x == firstInQueue.xStartPt  )       
-            || ( y == firstInQueue.yStartPt  )       
-            || ( x == firstInQueue.width - 1 )   
-            || ( y == firstInQueue.height - 1) )
+        if (   ( x == firstInQueue.xStartPt   )       
+            || ( y == firstInQueue.yStartPt   )       
+            || ( x == firstInQueue.width - 1  )   
+            || ( y == firstInQueue.height - 1 ) )
         { 
           Rectangle r4 = new Rectangle(x, y, 1, 1);
           r4.setFill(Color.BLUE);
@@ -419,7 +420,7 @@ public class Rooms extends Application
     {
       try
       {
-       randInt = rand.nextInt(( upperBound_X - lowerBound_X ) ) + lowerBound_X;
+       randInt = rand.nextInt( ( upperBound_X - lowerBound_X ) ) + lowerBound_X;
       }
       catch(IllegalArgumentException e)
       {
