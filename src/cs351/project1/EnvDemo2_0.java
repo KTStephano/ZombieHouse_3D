@@ -23,8 +23,8 @@ public class EnvDemo2_0 implements World
 {
   private Random rand = new Random();
   private HashSet<Actor> actors = new HashSet<>(250);
-  private int worldPixelWidth = 31;
-  private int worldPixelHeight = 31;
+  private int worldPixelWidth = 100;
+  private int worldPixelHeight = 100;
   private int tileWidthHeight = 1; // measured in pixels
   private Actor player;
   
@@ -33,7 +33,7 @@ public class EnvDemo2_0 implements World
   
   /* ===============MY STUFF TODO===================================*/
    
-  private int [][] testArray = new int [31][31];
+  private int [][] testArray = new int [100][100];
  
   /*======================================================*/
   @Override
@@ -225,10 +225,10 @@ public class EnvDemo2_0 implements World
         }
       
         /*================================================================================================*/  
-          if( (x < 31) && (y < 31)){
+          if( (x < 100) && (y < 100)){
            if (testArray[x][y] == 1) 
            {
-             if(index < 250)
+             if(index < 100)
              {
                Actor wall = new Wall("textures/bikiniBabe.jpg",
                x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels

@@ -1,5 +1,8 @@
 package cs351.entities;
 
+ 
+
+import javafx.animation.AnimationTimer;
 
 /*
  =======================================================================
@@ -31,15 +34,20 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import java.util.LinkedList;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Random;
+
+import cs351.core.Actor;
+import cs351.project1.ZombieHouseEngine;
+
 import java.util.Queue;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class ProceduralRoomTestThingy extends Application
 {
   private Group root = new Group();
+  private Scene scene = new Scene(root, 500, 500, Color.BLACK);
   private Queue<ProceduralRoomTestThingy> divideRoomsQueue = new LinkedList<>();
   
   private Queue<ProceduralRoomTestThingy> unReachableRooms = new LinkedList<>();
@@ -60,6 +68,8 @@ public class ProceduralRoomTestThingy extends Application
   private int randInt;
   private int height;
   private int width;
+  
+  Stage stage;
   
   
   private int n = 1;
@@ -89,6 +99,7 @@ public class ProceduralRoomTestThingy extends Application
    */
   public void initializeBoard()
   {
+    Player p = new Player(BOARD_HEIGHT, BOARD_HEIGHT, BOARD_HEIGHT);
     xStartPt     = 1;
     yStartPt     = 1;
     totalWidth   = 99;  
@@ -118,12 +129,29 @@ public class ProceduralRoomTestThingy extends Application
     
     carveBlockArea();
 
- //  System.out.println("number of rooms: " + numRooms);
-//    System.out.println("exponent: " + Math.pow(2, 4));
+    Stage stage = new Stage();
+    ZombieHouseEngine engine = new ZombieHouseEngine();
     
-//    stage.setTitle("Level Map");
-//    stage.setScene(scene);
-//    stage.show();
+    new AnimationTimer(){
+
+      @Override
+      public void handle(long arg0)
+      {
+     //  System.out.println("player location x"+ p.getLocation().getX() + "y is "+ p.getLocation().getY());
+       //System.out.println("> " + engine.getWorld().getPlayer().getLocation().getX());
+      
+      
+      }
+    }.start();
+
+
+    Rectangle r7 = new Rectangle(p.getLocation().getX(), 100, 3, 3);
+    r7.setFill(Color.WHITE);
+    root.getChildren().add(r7);
+    
+    stage.setTitle("Level Map");
+    stage.setScene(scene);
+    stage.show();
   }
   
   /*
@@ -150,7 +178,7 @@ public class ProceduralRoomTestThingy extends Application
       divideAreas(firstInQueue, secondInQueue);
       
       //TODO change value below to determine how many rooms get created
-      if( divideRoomsQueue.size()  > 12 )
+      if( divideRoomsQueue.size()  > 14 )
       {
         break;
       }
@@ -187,9 +215,6 @@ public class ProceduralRoomTestThingy extends Application
              && y == remainingRooms.height / 2
              && x != totalWidth)
           {
-            Rectangle r7 = new Rectangle(x, y, 1, 3);
-            r7.setFill(Color.ORANGE);
-            root.getChildren().add(r7);
             boardArray[x][y] = 0;
             boardArray[x][y + 1] = 0;
             
@@ -201,10 +226,6 @@ public class ProceduralRoomTestThingy extends Application
               && x != xStartPt
                )
            {
-             Rectangle r7 = new Rectangle(x, y, 1, 3);
-             r7.setFill(Color.ORANGE);
-             root.getChildren().add(r7);
-             
              boardArray[x][y] = 0;
              boardArray[x][y + 1] = 0;
   
@@ -216,10 +237,6 @@ public class ProceduralRoomTestThingy extends Application
               && y != yStartPt
               )
            {
-             Rectangle r7 = new Rectangle(x, y, 3, 1);
-             r7.setFill(Color.ORANGE);
-             root.getChildren().add(r7);
-             
              boardArray[x][y] = 0;
              boardArray[x + 1][y] = 0;
 
@@ -231,13 +248,8 @@ public class ProceduralRoomTestThingy extends Application
               && y != totalHeight
               )
            {
-             Rectangle r7 = new Rectangle(x, y, 3, 1);
-             r7.setFill(Color.ORANGE);
-             root.getChildren().add(r7);
-             
              boardArray[x][y] = 0;
              boardArray[x + 1][y] = 0;
-
            }
           
         }
@@ -342,17 +354,6 @@ public class ProceduralRoomTestThingy extends Application
         {
           if( numberOfExistingHallways < 6 )
           {
-            Rectangle hall = new Rectangle(x , y + 1, 1, 1);
-            hall.setFill(Color.RED);
-            root.getChildren().add(hall);
-            
-            Rectangle hall2 = new Rectangle(x + 1, y, 1, 1);
-            hall2.setFill(Color.RED);
-            root.getChildren().add(hall2);
-            
-            Rectangle hall6 = new Rectangle(x + 2, y , 1, 1);
-            hall6.setFill(Color.RED);
-            root.getChildren().add(hall6);
           }
           else 
           {
@@ -403,21 +404,6 @@ public class ProceduralRoomTestThingy extends Application
         {
           if(numberOfExistingHallways < 6)
           {
-            /* there is a weird offset issue that intitializing the first
-             * x takes care of. The only way to see it is drawing the 
-             * pixels by hand
-             */
-            Rectangle hall3 = new Rectangle(x + 1, y, 1, 1);
-            hall3.setFill(Color.RED);
-            root.getChildren().add(hall3);
-            
-            Rectangle hall4 = new Rectangle(x, y + 1, 1, 1);
-            hall4.setFill(Color.RED);
-            root.getChildren().add(hall4);
-            
-            Rectangle hall5 = new Rectangle(x, y + 2, 1, 1);
-            hall5.setFill(Color.RED);
-            root.getChildren().add(hall5);
           }
           else
           {
@@ -634,12 +620,44 @@ public class ProceduralRoomTestThingy extends Application
   @Override
   public void start(Stage stage)
   {
-    initializeBoard();
+   // initializeBoard();
   }
   
   
-  public static void main(String[] args)
-  {
-    launch(args);
-  }
+//  public static void main(String[] args)
+//  {
+//    System.out.println("This is being reached");
+//    launch(args);
+//  }
+  
+  
+  
+//  private class BoundingCircle
+//  {
+//    private final Actor ACTOR;
+//    private final double RADIUS;
+//    private final double RADIUS_SQUARED;
+//    private double actorX;
+//    private double actorY;
+//    private double otherActorX;
+//    private double otherActorY;
+//    private double otherActorRadius;
+//    private double roughDistance;
+//    private double combinedRadii_Squared;
+//
+//    public BoundingCircle(Actor actor)
+//    {
+//      ACTOR = actor;
+//      RADIUS = actor.getWidth() / 2.0;
+//      RADIUS_SQUARED = RADIUS * RADIUS;
+//    }
+//  }
+  
+  
+  
 }
+
+
+
+
+
