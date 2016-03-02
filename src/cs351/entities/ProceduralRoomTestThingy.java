@@ -47,7 +47,7 @@ import javafx.stage.Stage;
 public class ProceduralRoomTestThingy extends Application
 {
   private Group root = new Group();
-  private Scene scene = new Scene(root, 500, 500, Color.BLACK);
+  private Scene scene = new Scene(root, 200, 200, Color.BLACK);
   private Queue<ProceduralRoomTestThingy> divideRoomsQueue = new LinkedList<>();
   
   private Queue<ProceduralRoomTestThingy> unReachableRooms = new LinkedList<>();
@@ -99,11 +99,10 @@ public class ProceduralRoomTestThingy extends Application
    */
   public void initializeBoard()
   {
-    Player p = new Player(BOARD_HEIGHT, BOARD_HEIGHT, BOARD_HEIGHT);
-    xStartPt     = 1;
-    yStartPt     = 1;
-    totalWidth   = 99;  
-    totalHeight  = 99;
+    xStartPt     = 0;
+    yStartPt     = 0;
+    totalWidth   = 100;  
+    totalHeight  = 100;
     
     
     System.out.println("initialize Array");
@@ -139,15 +138,11 @@ public class ProceduralRoomTestThingy extends Application
       {
      //  System.out.println("player location x"+ p.getLocation().getX() + "y is "+ p.getLocation().getY());
        //System.out.println("> " + engine.getWorld().getPlayer().getLocation().getX());
-      
-      
       }
     }.start();
 
 
-    Rectangle r7 = new Rectangle(p.getLocation().getX(), 100, 3, 3);
-    r7.setFill(Color.WHITE);
-    root.getChildren().add(r7);
+
     
     stage.setTitle("Level Map");
     stage.setScene(scene);
@@ -178,7 +173,7 @@ public class ProceduralRoomTestThingy extends Application
       divideAreas(firstInQueue, secondInQueue);
       
       //TODO change value below to determine how many rooms get created
-      if( divideRoomsQueue.size()  > 14 )
+      if( divideRoomsQueue.size()  > 35 )
       {
         break;
       }
@@ -218,6 +213,10 @@ public class ProceduralRoomTestThingy extends Application
             boardArray[x][y] = 0;
             boardArray[x][y + 1] = 0;
             
+            Rectangle r = new Rectangle(x, y, 3, 3);
+            r.setFill(Color.PURPLE);
+            root.getChildren().add(r);
+            
           }
           
           // door on left side of area, could be an exit
@@ -228,6 +227,10 @@ public class ProceduralRoomTestThingy extends Application
            {
              boardArray[x][y] = 0;
              boardArray[x][y + 1] = 0;
+             
+             Rectangle r = new Rectangle(x, y, 3, 3);
+             r.setFill(Color.PURPLE);
+             root.getChildren().add(r);
   
            }
           
@@ -239,6 +242,10 @@ public class ProceduralRoomTestThingy extends Application
            {
              boardArray[x][y] = 0;
              boardArray[x + 1][y] = 0;
+             
+             Rectangle r = new Rectangle(x, y, 3, 3);
+             r.setFill(Color.PURPLE);
+             root.getChildren().add(r);
 
            }
           
@@ -250,6 +257,10 @@ public class ProceduralRoomTestThingy extends Application
            {
              boardArray[x][y] = 0;
              boardArray[x + 1][y] = 0;
+             
+             Rectangle r = new Rectangle(x, y, 3, 3);
+             r.setFill(Color.PURPLE);
+             root.getChildren().add(r);
            }
           
         }
@@ -329,7 +340,6 @@ public class ProceduralRoomTestThingy extends Application
   
   public void verticalDivide(ProceduralRoomTestThingy firstInQueue, int randomNumber)
   {
-    System.err.println(numberOfExistingHallways);
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
     {
       for (int y = firstInQueue.yStartPt; y < firstInQueue.height; y++)
@@ -381,7 +391,6 @@ public class ProceduralRoomTestThingy extends Application
   
   public void horizontalDivide( ProceduralRoomTestThingy firstInQueue, int randomNumber )
   {
-    System.err.println(numberOfExistingHallways);
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
     {
       for (int y = firstInQueue.yStartPt; y < firstInQueue.height; y++)
@@ -478,8 +487,7 @@ public class ProceduralRoomTestThingy extends Application
     
     numRooms = divideRoomsQueue.size();
     if(numRooms == Math.pow(2, n)){
-     // System.err.println("Queue size =" + unConnectingRoomsQueue.size());
-      System.out.println("boolean " + changeSplitDir() );
+      changeSplitDir();
       n++;
     }
    // connectRooms();

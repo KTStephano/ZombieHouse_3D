@@ -228,7 +228,7 @@ public class EnvDemo2_0 implements World
           if( (x < 100) && (y < 100)){
            if (testArray[x][y] == 1) 
            {
-             if(index < 100)
+             if(index < 50)
              {
                Actor wall = new Wall("textures/bikiniBabe.jpg",
                x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
