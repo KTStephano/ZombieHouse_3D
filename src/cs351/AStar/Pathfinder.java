@@ -6,6 +6,9 @@ import java.util.List;
 
 /*
 Self-explanatory. Comes with 2 methods you can use, one for integer positions and another for nodes as positions. paths return are lists of nodes, but using my class should be very simple :)
+
+*https://github.com/xSmallDeadGuyx/SimpleAStar
+*
 */
 
 
@@ -31,10 +34,15 @@ public class Pathfinder {
   public static List<Node> generate(Node start, Node finish, boolean[][] mapWalls) {
     
     if (start.x > mapWalls.length) return new ArrayList<Node>();
-    if (start.x > mapWalls.length) return new ArrayList<Node>();
-    if (start.x > mapWalls.length) return new ArrayList<Node>();
-    if (start.x > mapWalls.length) return new ArrayList<Node>();
-     
+    if (start.y > mapWalls.length) return new ArrayList<Node>();
+    if (finish.x > mapWalls.length) return new ArrayList<Node>();
+    if (finish.y > mapWalls.length) return new ArrayList<Node>();
+  
+    if (start.x < 0) return new ArrayList<Node>();
+    if (start.y < 0) return new ArrayList<Node>();
+    if (finish.x < 0) return new ArrayList<Node>();
+    if (finish.y < 0) return new ArrayList<Node>();
+        
     List<Node> openNodes = new ArrayList<Node>();
     List<Node> closedNodes = new ArrayList<Node>();
     walls = mapWalls;

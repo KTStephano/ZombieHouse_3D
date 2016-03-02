@@ -44,7 +44,7 @@ public class Zombie extends Actor
 
     double targetX = engine.getWorld().getPlayer().getLocation().getX();
     double targetY = engine.getWorld().getPlayer().getLocation().getY();
-
+/*
     if (currX<targetX)
     {
       currX = currX+1;
@@ -60,6 +60,7 @@ public class Zombie extends Actor
     {
       currY = currY - 1;
     }
+    */
     boolean[][] map = engine.getPathingData();
   
    
