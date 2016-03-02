@@ -33,10 +33,10 @@ public class Pathfinder {
   
   public static List<Node> generate(Node start, Node finish, boolean[][] mapWalls) {
     
-    if (start.x > mapWalls.length) return new ArrayList<Node>();
-    if (start.y > mapWalls.length) return new ArrayList<Node>();
-    if (finish.x > mapWalls.length) return new ArrayList<Node>();
-    if (finish.y > mapWalls.length) return new ArrayList<Node>();
+    if (start.x >= mapWalls.length) return new ArrayList<Node>();
+    if (start.y >= mapWalls.length) return new ArrayList<Node>();
+    if (finish.x >= mapWalls.length) return new ArrayList<Node>();
+    if (finish.y >= mapWalls.length) return new ArrayList<Node>();
   
     if (start.x < 0) return new ArrayList<Node>();
     if (start.y < 0) return new ArrayList<Node>();
