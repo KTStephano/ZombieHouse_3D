@@ -150,7 +150,7 @@ public class ZombieHouseEngine implements Engine
     for (int x = 0; x < pathingData.length; x++)
     {
       // start off assuming each location can be visited
-      Arrays.fill(pathingData[x], true);
+      Arrays.fill(pathingData[x], false);
     }
 
     isInitialized = true;
@@ -343,7 +343,7 @@ public class ZombieHouseEngine implements Engine
           // if the current actor is not static (which is for walls) and it is part of
           // the floor and the pathing data at the current location is still true (otherwise
           // it was already covered by a wall), then leave the current location as valid
-          pathingData[x][y] = !actor.isStatic() && actor.isPartOfFloor() && pathingData[x][y];
+          pathingData[x][y] = !(!actor.isStatic() && actor.isPartOfFloor() && pathingData[x][y]);
         }
       }
     }
