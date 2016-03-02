@@ -1,12 +1,18 @@
 package cs351.entities;
 
+
+
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
+import cs351.AStar.Node;
+import cs351.AStar.Pathfinder;
 import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import javafx.geometry.Point2D;
 import java.net.URL;
+import java.util.List;
 import java.util.Random;
+
 
 
 public class Zombie extends Actor
@@ -32,14 +38,13 @@ public class Zombie extends Actor
 
   protected Point2D PathfindToThePlayer(Engine engine)
   {
-    /** TODO Rewrite the pathing to use AStar or something - Dijkstra has been killing us :(
     Point2D result = null;
     double currX = getLocation().getX();
     double currY = getLocation().getY();
 
     double targetX = engine.getWorld().getPlayer().getLocation().getX();
     double targetY = engine.getWorld().getPlayer().getLocation().getY();
-
+/*
     if (currX<targetX)
     {
       currX = currX+1;
@@ -55,20 +60,47 @@ public class Zombie extends Actor
     {
       currY = currY - 1;
     }
+    */
+    boolean[][] map = engine.getPathingData();
+    for (int i=0;i<map.length;i++)
+      for (int j=0;j<map.length;j++)
+    {
+      map[i][j] = false;
+    }
+   
 
-
-
-    Point2D pt = engine.getDijkstra().getNextLocation((int)currX,(int)currY,(int)targetX,(int)targetY);
+    List<Node> aNodeList =  Pathfinder.generate((int)currX,(int)currY,(int)targetX,(int)targetY, map);
+    System.out.println("check point 1");
+    Node pt = null;
+    //if (aNodeList.size() > 1)
+    //{
+      try
+      {
+      System.out.println("check point 2");
+      aNodeList.remove(0);
+      pt = aNodeList.get(0);
+      for (Node nod: aNodeList)
+      {
+        System.out.println("x: "+nod.x  + "y: "+nod.y);
+      } 
+      }
+      catch (Exception e)
+      {
+      
+      }
+ //   }
+    
+    //Point2D pt = engine.getDijkstra().getNextLocation();
     
 
     // if we have a path to player and can smell him
     if (pt!=null)
     {
 
-      if ( pt.getX() > currX+0.02) 
+      if ( pt.x > currX+0.02) 
       {
         xDirection = 0.02;
-      } else if ( pt.getX() < currX-0.02) 
+      } else if ( pt.x < currX-0.02) 
       {
         xDirection = -0.02; 
       }else
@@ -76,10 +108,10 @@ public class Zombie extends Actor
 
 
 
-      if ( pt.getY() > currY+0.02) 
+      if ( pt.y > currY+0.02) 
       {
         yDirection = 0.02;
-      } else if ( pt.getY() < currY-0.02) 
+      } else if ( pt.y < currY-0.02) 
       {
         yDirection = -0.02; 
       } else
@@ -90,8 +122,8 @@ public class Zombie extends Actor
     {
       result = new Point2D(0,0);
     }
-     */
-    return null;
+   
+    return result;
   } 
 
 
@@ -156,8 +188,7 @@ public class Zombie extends Actor
 
   protected boolean canSmellPlayer(Engine engine)
   {
-    return false;
-    /** TODO Rewrite this with AStar or something
+
     int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
 
@@ -173,7 +204,7 @@ public class Zombie extends Actor
     {
       return false;
     }   
-    */
+    
   }
 
 
