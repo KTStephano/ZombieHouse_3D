@@ -28,6 +28,8 @@ import java.net.URL;
  *
  * Citation: http://what-when-how.com/javafx-2/playing-audio-using-the-media-classes-javafx-2-part-1/
  *
+ * Citation: https://www.daniweb.com/programming/game-development/threads/139450/3d-sound-calculating-pan
+ *
  * @author Scott Cooper
  */
 public class ZombieHouseSoundEngine implements SoundEngine {
@@ -40,8 +42,8 @@ public class ZombieHouseSoundEngine implements SoundEngine {
   private int maxActiveSounds = 2;
   private HashSet<MediaPlayer> soundBackBuffer = new HashSet<>(); // sounds waiting to be pushed to activeSounds
   static SoundStackItem  tmpSoundStackItem;
-  private float playerHearing = 1.0f;
-  private Vector3 playerLookDir = new Vector3(0.0), playerRightDir = new Vector3(0.0);
+  private double playerHearing = 1.0f;
+  private Vector3 playerLookDir = new Vector3(0.0), playerRightDir = new Vector3(0.0), playerLocation;
 
   @Override
   public void setCentralPoint(double x, double y) 
@@ -62,31 +64,38 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     // Get the look direction and right direction of the player for left-right headphone calculations
     playerLookDir.set(((Player)engine.getWorld().getPlayer()).getForwardVector());
     playerRightDir.set(((Player)engine.getWorld().getPlayer()).getRightVector());
+    playerLocation = engine.getWorld().getPlayer().getLocation();
     playerRightDir.normalize();
     // NOTE: x, y distance to centralPoint = sqrt((cp.x - x)^2 + (cp.y-y)^2)
     // determines volume during playback
 
+    final double VOL_DIVISION_NEAR = 0.25f;
+    final double VOL_DIVISION_FAR = 0.1;
     while (!soundStack.isEmpty()) 
     {
       tmpSoundStackItem = soundStack.pop();
 
-      float relativeDistance = (float)Math.sqrt(
-               ((float)tmpSoundStackItem.x-centralPoint.x)*((float)tmpSoundStackItem.x-centralPoint.x)
-              +((float)tmpSoundStackItem.y-centralPoint.y) *((float)tmpSoundStackItem.y-centralPoint.y));
+      double relativeDistance = Math.sqrt(
+               (tmpSoundStackItem.x-centralPoint.x)*(tmpSoundStackItem.x-centralPoint.x)
+              +(tmpSoundStackItem.y-centralPoint.y) *(tmpSoundStackItem.y-centralPoint.y));
       //if (relativeDistance < playerHearing) System.out.println("DIST: " + relativeDistance);
       if (relativeDistance == 0.0) relativeDistance = 1.0f;
-      float soundVolume = 1.0f - relativeDistance / playerHearing;
+      double soundVolume = 1.0f - relativeDistance / playerHearing;
       //System.out.println("RAW VOL: " + soundVolume);
       if (soundVolume < 0.0f) continue;
+      // If the distance is greater than a third of the player's hearing, cut it down by a lot
+      // volume-wise
+      else if (relativeDistance > playerHearing / 3.0) soundVolume *= VOL_DIVISION_FAR;
+      // Otherwise, still dampen it, but not by as much
+      else soundVolume *= VOL_DIVISION_NEAR;
       playSound(tmpSoundStackItem, soundVolume);
     }
 
     //HashMap<String, MediaPlayer> availableSounds = this.availableSounds.get(frameNumber);
     activeSounds.get(currentActiveSoundList).addAll(soundBackBuffer);
-    final float VOL_DIVISION = 0.25f;
     for (MediaPlayer player : soundBackBuffer)
     {
-      player.setVolume(player.getVolume() * VOL_DIVISION);
+      //player.setVolume(player.getVolume() * VOL_DIVISION_NEAR);
       player.play();
     }
     soundBackBuffer.clear();
@@ -141,7 +150,8 @@ public class ZombieHouseSoundEngine implements SoundEngine {
         player.setOnEndOfMedia(() ->
         {
           player.setVolume(0.0);
-          player.seek(new Duration(0));
+          player.balanceProperty().set(0.0);
+          player.seek(new Duration(0.0));
           player.stop();
           activeSounds.get(CURR_ACTIVE_SOUNDS_LIST).remove(player);
           //System.out.println("SIZE : " + activeSounds.size());
@@ -151,13 +161,19 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       }
       if (activeSounds.get(currentActiveSoundList).contains(player)) return; // already playing, let it finish
       soundBackBuffer.add(player);
-      float mergedVolume = (float)(player.getVolume() + vol - player.getVolume() * vol);
-      //float leftRightBalance = (float)()
+      double mergedVolume = player.getVolume() + vol - player.getVolume() * vol;
+      Vector3 soundLoc = new Vector3(item.x, item.y, 0.0);
+      Vector3 soundLocToPlayerLoc = soundLoc.subtract(playerLocation);
+      soundLocToPlayerLoc.normalize();
+      double leftRightBalance = playerRightDir.dot(soundLocToPlayerLoc);
+      leftRightBalance = player.getBalance() + leftRightBalance - player.getBalance() * leftRightBalance;
+      //System.out.println("BALANCE: " + leftRightBalance);
       //System.out.println("VOL: " + mergedVolume);
       //if (mergedVolume < 0.1) return;
       //final float MAX = 0.5f;
       //if (mergedVolume > MAX) mergedVolume = MAX;
       player.setVolume(mergedVolume);
+      player.setBalance(leftRightBalance);
       //player.play();
       /*
       AudioInputStream input = AudioSystem.getAudioInputStream(url);
