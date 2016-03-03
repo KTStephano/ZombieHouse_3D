@@ -58,7 +58,7 @@ public class LineWalkZombie extends Zombie {
       else if (canSmellPlayer(engine))
       {
         // every 6th zombieDecisionRate - save frame rate
-        if (timerCt >=6) 
+        //if (timerCt >=6) 
         {
           setNewDirection = false;
           timerCt = 0;

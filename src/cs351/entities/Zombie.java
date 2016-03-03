@@ -44,45 +44,44 @@ public class Zombie extends Actor
 
     double targetX = engine.getWorld().getPlayer().getLocation().getX();
     double targetY = engine.getWorld().getPlayer().getLocation().getY();
-/*
-    if (currX<targetX)
-    {
-      currX = currX+1;
-    } else
-    {
-      currX = currX-1; 
-    }
 
-    if (currY<targetY)
-    {
-      currY = currY+1;
-    } else
-    {
-      currY = currY - 1;
-    }
-    */
     boolean[][] map = engine.getPathingData();
-    for (int i=0;i<map.length;i++)
+   
+    /* for (int i=0;i<map.length;i++)
       for (int j=0;j<map.length;j++)
     {
       map[i][j] = false;
     }
-   
-
-    List<Node> aNodeList =  Pathfinder.generate((int)currX,(int)currY,(int)targetX,(int)targetY, map);
-    System.out.println("check point 1");
+   */
+    List<Node> aNodeList=null;
+    currX = (int)currX;
+    currY = (int)currY;
+    
+    if ((currX > 0)&&(currY > 0)&&(targetX>0)&&(targetY>0))
+    {
+      if ((currX < map.length)&&(currY < map.length)&&(targetX < map.length)&&(targetY < map.length))
+      {
+       // System.out.println("Current:"+currX+","+currY+" Player: "+targetX+","+targetY);
+        aNodeList =  Pathfinder.generate((int)currX,(int)currY,(int)targetX,(int)targetY, map);
+      }
+    }
+    
+    
+    //List<Node> aNodeList =  Pathfinder.generate(3,1,10,2, map);
+     //  System.out.println("check point 1");
     Node pt = null;
-    //if (aNodeList.size() > 1)
+    if ((aNodeList!=null)&&(aNodeList.size() > 1))
     //{
       try
       {
-      System.out.println("check point 2");
+      //System.out.println("check point 2");
       aNodeList.remove(0);
       pt = aNodeList.get(0);
       for (Node nod: aNodeList)
       {
-        System.out.println("x: "+nod.x  + "y: "+nod.y);
+       // System.out.println("x: "+nod.x  + "y: "+nod.y);
       } 
+     // System.out.println("check point 3");     
       }
       catch (Exception e)
       {
@@ -96,26 +95,34 @@ public class Zombie extends Actor
     // if we have a path to player and can smell him
     if (pt!=null)
     {
+      //System.out.println("I'm at: "+currX+","+currY);     
+      //System.out.println("My next step is: "+pt.x+","+pt.y);     
 
-      if ( pt.x > currX+0.02) 
+      if ( (int)pt.x > (int)currX) 
       {
         xDirection = 0.02;
-      } else if ( pt.x < currX-0.02) 
+      } else if ( (int)pt.x < (int)currX) 
       {
-        xDirection = -0.02; 
-      }else
-        xDirection = 0;
+        xDirection = -0.02;
+      } else
+      {
+        xDirection = 0;        
+      }
 
-
-
-      if ( pt.y > currY+0.02) 
+      if ( (int)pt.y > (int)currY) 
       {
         yDirection = 0.02;
-      } else if ( pt.y < currY-0.02) 
+      } else if ( (int)pt.y < (int)currY) 
       {
-        yDirection = -0.02; 
+        yDirection = -0.02;
       } else
-        yDirection = 0;   
+      {
+        yDirection = 0;        
+      }
+
+
+
+ 
 
       result=new Point2D(xDirection,yDirection);
     } else

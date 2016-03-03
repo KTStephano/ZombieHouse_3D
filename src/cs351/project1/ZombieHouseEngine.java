@@ -343,7 +343,9 @@ public class ZombieHouseEngine implements Engine
           // if the current actor is not static (which is for walls) and it is part of
           // the floor and the pathing data at the current location is still true (otherwise
           // it was already covered by a wall), then leave the current location as valid
-          pathingData[x][y] = !(!actor.isStatic() && actor.isPartOfFloor() && pathingData[x][y]);
+          
+          // true if wall or static actor
+          pathingData[x][y] = actor.isStatic() || !actor.isPartOfFloor();
         }
       }
     }
