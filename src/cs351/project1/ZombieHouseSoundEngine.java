@@ -83,7 +83,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
 
     //HashMap<String, MediaPlayer> availableSounds = this.availableSounds.get(frameNumber);
     activeSounds.get(currentActiveSoundList).addAll(soundBackBuffer);
-    final float VOL_DIVISION = 0.5f;
+    final float VOL_DIVISION = 0.25f;
     for (MediaPlayer player : soundBackBuffer)
     {
       player.setVolume(player.getVolume() * VOL_DIVISION);

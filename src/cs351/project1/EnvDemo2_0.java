@@ -302,7 +302,7 @@ public class EnvDemo2_0 implements World
 
   private void initZombies()
   {
-    int numZombies = 50;
+    int numZombies = 10;
     int currTexture = 0;
     String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
         "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
