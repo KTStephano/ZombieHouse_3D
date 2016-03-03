@@ -18,6 +18,8 @@ public class Player extends Actor
   private double rightY = 0.0;
   private Vector3 forwardDirection = new Vector3(0.0);
   private Vector3 rightDirection = new Vector3(forwardDirection);
+  private double stepSoundTimer = 0.0;
+  private boolean rightFoot = false;
 
   public Player(double x, double y, int height)
   {
@@ -31,6 +33,20 @@ public class Player extends Actor
   {
     //System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
+    stepSoundTimer += BASE_SPEED * forwardX * deltaSeconds;
+    if (stepSoundTimer > 1.0)
+    {
+      stepSoundTimer = 0.0;
+      double stepLocX, stepLocY;
+      double multiplier;
+      if (rightFoot) multiplier = 5;
+      else multiplier = -5;
+      rightFoot = !rightFoot;
+
+      stepLocX = getLocation().getX() + multiplier * rightDirection.getX();
+      stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
+      engine.getSoundEngine().queueSoundAtLocation("sound/player_step.mp3", stepLocX, stepLocY);
+    }
     double totalSpeed = BASE_SPEED * deltaSeconds * engine.getWorld().getTilePixelWidth();
     setLocation(getLocation().getX() + totalSpeed * forwardX * forwardDirection.getX(),
                 getLocation().getY() + totalSpeed * forwardY * forwardDirection.getY());

@@ -98,6 +98,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       //player.setVolume(player.getVolume() * VOL_DIVISION_NEAR);
       player.play();
     }
+    //System.out.println(activeSounds.get(currentActiveSoundList));
     soundBackBuffer.clear();
     //activeSounds.clear();
     currentActiveSoundList++;
@@ -147,13 +148,15 @@ public class ZombieHouseSoundEngine implements SoundEngine {
         player = new MediaPlayer(new Media(resource.toString()));
         player.setVolume(0.0);
         final int CURR_ACTIVE_SOUNDS_LIST = currentActiveSoundList;
-        player.setOnEndOfMedia(() ->
+        final MediaPlayer PLAYER = player;
+        PLAYER.setOnEndOfMedia(() ->
         {
-          player.setVolume(0.0);
-          player.balanceProperty().set(0.0);
-          player.seek(new Duration(0.0));
-          player.stop();
-          activeSounds.get(CURR_ACTIVE_SOUNDS_LIST).remove(player);
+          PLAYER.setVolume(0.0);
+          PLAYER.balanceProperty().set(0.0);
+          PLAYER.seek(new Duration(0.0));
+          PLAYER.stop();
+          //System.out.println(activeSounds.get(CURR_ACTIVE_SOUNDS_LIST).contains(PLAYER));
+          activeSounds.get(CURR_ACTIVE_SOUNDS_LIST).remove(PLAYER);
           //System.out.println("SIZE : " + activeSounds.size());
         });
         availableSounds.get(CURR_ACTIVE_SOUNDS_LIST).put(item.soundFile, player);
