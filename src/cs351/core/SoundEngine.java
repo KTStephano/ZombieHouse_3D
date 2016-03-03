@@ -32,17 +32,23 @@ public interface SoundEngine
    * The reason for this delay is so that the SoundEngine can blend/merge/etc. the
    * sounds it gets so that they sound better to the user.
    *
-   * @param URL of sound to play
+   * @param sound sound to play (should be of the form "containingFile/sound.x")
    * @param x x-coordinate where the sound started
    * @param y y-coordinate where the sound started
    */
-  void queueSoundAtLocation(URL url, double x, double y);
+  void queueSoundAtLocation(String sound, double x, double y);
 
   /**
    * When this function is called, all sounds that were added to the sound queue
    * through the queueSoundAtLocation function should be played appropriately.
    */
-  void update();
+  void update(Engine engine);
 
 
+  /**
+   * Initializes the sound engine.
+   *
+   * @param engine reference to the main engine
+   */
+  void init(Engine engine);
 }

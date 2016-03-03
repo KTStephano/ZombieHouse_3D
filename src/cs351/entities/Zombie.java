@@ -9,7 +9,7 @@ import cs351.AStar.Node;
 import cs351.AStar.Pathfinder;
 import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import javafx.geometry.Point2D;
-import java.net.URL;
+
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +18,8 @@ import java.util.Random;
 public class Zombie extends Actor
 {
   private Random rand = new Random();
-  private double elapsedSeconds=0.0;
+  private double timeElapsed =0.0;
+  private double soundTimer = 0.0;
   private double xDirection = 0;
   private double yDirection = 0;
 
@@ -139,11 +140,12 @@ public class Zombie extends Actor
   {
 
     // totalSpeed represents the movement speed offset in tiles per second
-    elapsedSeconds += deltaSeconds;
+    timeElapsed += deltaSeconds;
     // every 5 seconds, switch direction
-    if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
+    if (timeElapsed > GlobalConstants.zombieDecisionRate)
     {
-      elapsedSeconds = 0.0;
+      checkPlaySound(engine, deltaSeconds);
+      timeElapsed = 0.0;
       // -5.0 to 5.0
       xDirection = (100-rand.nextInt(200))/20000.0;
       // -5.0 to 5.0
@@ -160,16 +162,15 @@ public class Zombie extends Actor
 
   protected void checkPlaySound(Engine engine, double deltaSeconds)
   {
-    elapsedSeconds+= deltaSeconds;
+    soundTimer += deltaSeconds;
 
-    if (elapsedSeconds >= 4.0)
+    if (soundTimer >= GlobalConstants.zombieDecisionRate * 2)
     {
-      elapsedSeconds = 0.0;
+      soundTimer = 0.0;
 
-      String filename = "sound/zombie.wav";
-      URL url = Zombie.class.getResource(filename);
-      engine.getSoundEngine().queueSoundAtLocation(url, getLocation().getX(), getLocation().getY());
-
+      //String filename = "sound/zombie.wav";
+      //URL url = Zombie.class.getResource(filename);
+      engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
 
     }
   }

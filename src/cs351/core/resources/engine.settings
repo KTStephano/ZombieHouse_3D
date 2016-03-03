@@ -2,6 +2,8 @@ Note: anything without a '+' in front of it is treated as a comment
 
 + engine_paused false
 
++ player_hearing 20.0
+
 If no clip is on the player can walk through all game objects except the floor/ceiling
 + player_no_clip on
 + collision on

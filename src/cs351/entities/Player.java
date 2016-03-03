@@ -29,6 +29,7 @@ public class Player extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
+    //System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
     double totalSpeed = BASE_SPEED * deltaSeconds * engine.getWorld().getTilePixelWidth();
     setLocation(getLocation().getX() + totalSpeed * forwardX * forwardDirection.getX(),
@@ -76,6 +77,11 @@ public class Player extends Actor
   public Vector3 getForwardVector()
   {
     return forwardDirection;
+  }
+
+  public Vector3 getRightVector()
+  {
+    return rightDirection;
   }
 
   public void keyPressed(KeyEvent event)
