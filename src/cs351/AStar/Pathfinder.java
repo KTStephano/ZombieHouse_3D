@@ -103,14 +103,44 @@ public class Pathfinder {
     }
   }
 
+  
   private static List<Node> getNeighborNodes(Node n) {
     List<Node> found = new ArrayList<Node>();
-    if ((n.x + 1<walls.length)&&!walls[n.x + 1][n.y]) found.add(toNode(n.x + 1, n.y));
-    if ((n.x - 1>=0)&&(!walls[n.x - 1][n.y])) found.add(toNode(n.x - 1, n.y));
-    if ((n.y + 1<walls.length)&&!walls[n.x][n.y + 1]) found.add(toNode(n.x, n.y + 1));
-    if ((n.y - 1>=0)&&!walls[n.x][n.y - 1]) found.add(toNode(n.x, n.y - 1));
+    if(!walls[n.x + 1][n.y]) found.add(toNode(n.x + 1, n.y));
+    if(!walls[n.x - 1][n.y]) found.add(toNode(n.x - 1, n.y));
+    if(!walls[n.x][n.y + 1]) found.add(toNode(n.x, n.y + 1));
+    if(!walls[n.x][n.y - 1]) found.add(toNode(n.x, n.y - 1));
     if(canCutCorners) {
-      if ((n.y + 1<walls.length)&&(n.x + 1<walls.length)&&!walls[n.x + 1][n.y + 1] && (!walls[n.x + 1][n.y] || !walls[n.x][n.y + 1])) found.add(toNode(n.x + 1, n.y + 1));
+      if(!walls[n.x + 1][n.y + 1] && (!walls[n.x + 1][n.y] || !walls[n.x][n.y + 1])) found.add(toNode(n.x + 1, n.y + 1));
+      if(!walls[n.x - 1][n.y + 1] && (!walls[n.x - 1][n.y] || !walls[n.x][n.y + 1])) found.add(toNode(n.x - 1, n.y + 1));
+      if(!walls[n.x - 1][n.y - 1] && (!walls[n.x - 1][n.y] || !walls[n.x][n.y - 1])) found.add(toNode(n.x - 1, n.y - 1));
+      if(!walls[n.x + 1][n.y - 1] && (!walls[n.x + 1][n.y] || !walls[n.x][n.y - 1])) found.add(toNode(n.x + 1, n.y - 1));
+    }
+    else {
+      if(!walls[n.x + 1][n.y + 1] && (!walls[n.x + 1][n.y] && !walls[n.x][n.y + 1])) found.add(toNode(n.x + 1, n.y + 1));
+      if(!walls[n.x - 1][n.y + 1] && (!walls[n.x - 1][n.y] && !walls[n.x][n.y + 1])) found.add(toNode(n.x - 1, n.y + 1));
+      if(!walls[n.x - 1][n.y - 1] && (!walls[n.x - 1][n.y] && !walls[n.x][n.y - 1])) found.add(toNode(n.x - 1, n.y - 1));
+      if(!walls[n.x + 1][n.y - 1] && (!walls[n.x + 1][n.y] && !walls[n.x][n.y - 1])) found.add(toNode(n.x + 1, n.y - 1));
+    }
+    return found;
+  }
+
+  
+  /*
+  private static List<Node> getNeighborNodes(Node n) {
+    List<Node> found = new ArrayList<Node>();
+//    if ((n.x + 1<walls.length)&&
+    !walls[n.x + 1][n.y]) 
+      found.add(toNode(n.x + 1, n.y));
+ //   if ((n.x - 1>=0)&&(!walls[n.x - 1][n.y])) 
+      found.add(toNode(n.x - 1, n.y));
+   // if ((n.y + 1<walls.length)&&!walls[n.x][n.y + 1]) 
+      found.add(toNode(n.x, n.y + 1));
+    //if ((n.y - 1>=0)&&!walls[n.x][n.y - 1]) 
+      found.add(toNode(n.x, n.y - 1));
+    if(canCutCorners) {
+      if ((n.y + 1<walls.length)&&(n.x + 1<walls.length)&&!walls[n.x + 1][n.y + 1] && (!walls[n.x + 1][n.y] || !walls[n.x][n.y + 1])) 
+        found.add(toNode(n.x + 1, n.y + 1));
       if ((n.y + 1<walls.length)&&(n.x - 1>=0)&&!walls[n.x - 1][n.y + 1] && (!walls[n.x - 1][n.y] || !walls[n.x][n.y + 1])) found.add(toNode(n.x - 1, n.y + 1));
       if ((n.y - 1>=0)&&(n.x - 1>=0)&&!walls[n.x - 1][n.y - 1] && (!walls[n.x - 1][n.y] || !walls[n.x][n.y - 1])) found.add(toNode(n.x - 1, n.y - 1));
       if ((n.y - 1>=0)&&(n.x + 1<walls.length)&&!walls[n.x + 1][n.y - 1] && (!walls[n.x + 1][n.y] || !walls[n.x][n.y - 1])) found.add(toNode(n.x + 1, n.y - 1));
@@ -123,7 +153,9 @@ public class Pathfinder {
     }
     return found;
   }
-
+*/
+  
+  
   private static Node getLowestNodeIn(List<Node> nodes) {
     int lowest = -1;
     Node found = null;

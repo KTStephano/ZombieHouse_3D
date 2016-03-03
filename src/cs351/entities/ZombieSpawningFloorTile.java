@@ -46,7 +46,7 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
     if ( (elapsedTime > 2.0)  && (this.tileIsEmpty())&&(rand.nextInt(1000000)/1000.0< GlobalConstants.zombieSpawn))
     {
       elapsedTime = 0;
-      spawnZombie();
+      //spawnZombie();
     }
 
     return UpdateResult.UPDATE_COMPLETED;

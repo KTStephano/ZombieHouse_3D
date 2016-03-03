@@ -9,7 +9,7 @@ import cs351.AStar.Node;
 import cs351.AStar.Pathfinder;
 import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import javafx.geometry.Point2D;
-import java.net.URL;
+
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +18,8 @@ import java.util.Random;
 public class Zombie extends Actor
 {
   private Random rand = new Random();
-  private double elapsedSeconds=0.0;
+  private double timeElapsed =0.0;
+  private double soundTimer = 0.0;
   private double xDirection = 0;
   private double yDirection = 0;
 
@@ -44,45 +45,44 @@ public class Zombie extends Actor
 
     double targetX = engine.getWorld().getPlayer().getLocation().getX();
     double targetY = engine.getWorld().getPlayer().getLocation().getY();
-/*
-    if (currX<targetX)
-    {
-      currX = currX+1;
-    } else
-    {
-      currX = currX-1; 
-    }
 
-    if (currY<targetY)
-    {
-      currY = currY+1;
-    } else
-    {
-      currY = currY - 1;
-    }
-    */
     boolean[][] map = engine.getPathingData();
-    for (int i=0;i<map.length;i++)
+   
+    /* for (int i=0;i<map.length;i++)
       for (int j=0;j<map.length;j++)
     {
       map[i][j] = false;
     }
-   
-
-    List<Node> aNodeList =  Pathfinder.generate((int)currX,(int)currY,(int)targetX,(int)targetY, map);
-    System.out.println("check point 1");
+   */
+    List<Node> aNodeList=null;
+    currX = (int)currX;
+    currY = (int)currY;
+    
+    if ((currX > 0)&&(currY > 0)&&(targetX>0)&&(targetY>0))
+    {
+      if ((currX < map.length)&&(currY < map.length)&&(targetX < map.length)&&(targetY < map.length))
+      {
+       // System.out.println("Current:"+currX+","+currY+" Player: "+targetX+","+targetY);
+        aNodeList =  Pathfinder.generate((int)currX,(int)currY,(int)targetX,(int)targetY, map);
+      }
+    }
+    
+    
+    //List<Node> aNodeList =  Pathfinder.generate(3,1,10,2, map);
+     //  System.out.println("check point 1");
     Node pt = null;
-    //if (aNodeList.size() > 1)
+    if ((aNodeList!=null)&&(aNodeList.size() > 1))
     //{
       try
       {
-      System.out.println("check point 2");
+      //System.out.println("check point 2");
       aNodeList.remove(0);
       pt = aNodeList.get(0);
       for (Node nod: aNodeList)
       {
-        System.out.println("x: "+nod.x  + "y: "+nod.y);
+       // System.out.println("x: "+nod.x  + "y: "+nod.y);
       } 
+     // System.out.println("check point 3");     
       }
       catch (Exception e)
       {
@@ -96,26 +96,34 @@ public class Zombie extends Actor
     // if we have a path to player and can smell him
     if (pt!=null)
     {
+      //System.out.println("I'm at: "+currX+","+currY);     
+      //System.out.println("My next step is: "+pt.x+","+pt.y);     
 
-      if ( pt.x > currX+0.02) 
+      if ( (int)pt.x > (int)currX) 
       {
         xDirection = 0.02;
-      } else if ( pt.x < currX-0.02) 
+      } else if ( (int)pt.x < (int)currX) 
       {
-        xDirection = -0.02; 
-      }else
-        xDirection = 0;
+        xDirection = -0.02;
+      } else
+      {
+        xDirection = 0;        
+      }
 
-
-
-      if ( pt.y > currY+0.02) 
+      if ( (int)pt.y > (int)currY) 
       {
         yDirection = 0.02;
-      } else if ( pt.y < currY-0.02) 
+      } else if ( (int)pt.y < (int)currY) 
       {
-        yDirection = -0.02; 
+        yDirection = -0.02;
       } else
-        yDirection = 0;   
+      {
+        yDirection = 0;        
+      }
+
+
+
+ 
 
       result=new Point2D(xDirection,yDirection);
     } else
@@ -132,11 +140,12 @@ public class Zombie extends Actor
   {
 
     // totalSpeed represents the movement speed offset in tiles per second
-    elapsedSeconds += deltaSeconds;
+    timeElapsed += deltaSeconds;
     // every 5 seconds, switch direction
-    if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
+    if (timeElapsed > GlobalConstants.zombieDecisionRate)
     {
-      elapsedSeconds = 0.0;
+      checkPlaySound(engine, deltaSeconds);
+      timeElapsed = 0.0;
       // -5.0 to 5.0
       xDirection = (100-rand.nextInt(200))/20000.0;
       // -5.0 to 5.0
@@ -153,16 +162,15 @@ public class Zombie extends Actor
 
   protected void checkPlaySound(Engine engine, double deltaSeconds)
   {
-    elapsedSeconds+= deltaSeconds;
+    soundTimer += deltaSeconds;
 
-    if (elapsedSeconds >= 4.0)
+    if (soundTimer >= GlobalConstants.zombieDecisionRate * 2)
     {
-      elapsedSeconds = 0.0;
+      soundTimer = 0.0;
 
-      String filename = "sound/zombie.wav";
-      URL url = Zombie.class.getResource(filename);
-      engine.getSoundEngine().queueSoundAtLocation(url, getLocation().getX(), getLocation().getY());
-
+      //String filename = "sound/zombie.wav";
+      //URL url = Zombie.class.getResource(filename);
+      engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
 
     }
   }

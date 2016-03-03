@@ -7,13 +7,25 @@ import java.net.URL;
  * @author Scott Cooper
  */
 public class SoundStackItem {
-  URL url;
+  String soundFile;
   double x;
   double y;
-  public SoundStackItem(URL url, double x, double y)
+  public SoundStackItem(String soundFile, double x, double y)
   {
-    this.url = url;
+    this.soundFile = soundFile;
     this.x = x;
     this.y = y;
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return soundFile.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object other)
+  {
+    return other instanceof SoundStackItem && soundFile.equals(((SoundStackItem)other).soundFile);
   }
 }

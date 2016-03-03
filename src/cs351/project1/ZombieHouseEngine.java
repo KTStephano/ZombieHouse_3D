@@ -43,6 +43,7 @@ public class ZombieHouseEngine implements Engine
   private final String SPECULAR_LIGHTING = "specular_lighting";
   private final String LIGHT_INTENSITY = "light_intensity";
   private final String PLAYER_VISION = "player_vision";
+  private final String PLAYER_HEARING = "player_hearing";
 
   private boolean isPaused;
   private boolean useCollisionDetection;
@@ -60,6 +61,7 @@ public class ZombieHouseEngine implements Engine
     settings.registerSetting(LIGHT_INTENSITY, "0.7");
     settings.registerSetting(PLAYER_VISION, "7"); // measured in tiles
     settings.registerSetting(SOUND_ENGINE, "on");
+    settings.registerSetting(PLAYER_HEARING, "20.0");
 
     setEngineVariablesFromSettings();
   }
@@ -162,6 +164,7 @@ public class ZombieHouseEngine implements Engine
     togglePause(false);
     stage.setOnCloseRequest(this::windowClosed);
     collision = new CollisionDetection(this); // init the collision detection system
+    getSoundEngine().init(this);
     initEngineState(); // init the initial engine state from the world
     
     
@@ -200,6 +203,7 @@ public class ZombieHouseEngine implements Engine
     init(stage, world, soundEngine, renderer);
     settings.importSettings(settingsFile);
     setEngineVariablesFromSettings();
+    getSoundEngine().init(this); // call this again so it can check the *new* values of the engine.settings
     //getDijkstra().initGraph(this.getPathingData(), (int)worldWidth, (int)worldHeight);
   }
 
@@ -240,7 +244,7 @@ public class ZombieHouseEngine implements Engine
     }
     if (updateSoundEngine)
     {
-      getSoundEngine().update();
+      getSoundEngine().update(this);
       // set the center point for the sound engine
       getSoundEngine().setCentralPoint((int) getWorld().getPlayer().getLocation().getX(),
                                        (int) getWorld().getPlayer().getLocation().getY());
@@ -343,7 +347,9 @@ public class ZombieHouseEngine implements Engine
           // if the current actor is not static (which is for walls) and it is part of
           // the floor and the pathing data at the current location is still true (otherwise
           // it was already covered by a wall), then leave the current location as valid
-          pathingData[x][y] = !(!actor.isStatic() && actor.isPartOfFloor() && pathingData[x][y]);
+          
+          // true if wall or static actor
+          pathingData[x][y] = actor.isStatic() || !actor.isPartOfFloor();
         }
       }
     }
