@@ -15,10 +15,15 @@ public class LineWalkZombie extends Zombie {
   private double xDirection = 0;
   private double yDirection = 0;
   private boolean setNewDirection = true;
-  private int timerCt = 0;
+
   @Override
   public void collided(Engine engine, Actor actor) {
     // direction should be maintained if floor or if we hit player
+    if (!actor.isPartOfFloor()&&!actor.isPlayer())
+    {
+      setNewDirection = true;
+      //elapsedSeconds = 0;
+    }    // direction should be maintained if floor or if we hit player
     if (!actor.isPartOfFloor()&&!actor.isPlayer())
     {
       setNewDirection = true;
@@ -42,7 +47,7 @@ public class LineWalkZombie extends Zombie {
     // every zombieDecisionRate seconds, switch direction
     if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
     {
-      timerCt++;
+   
 
       elapsedSeconds = 0.0;
       if (!canSmellPlayer(engine)  && setNewDirection)
@@ -57,18 +62,10 @@ public class LineWalkZombie extends Zombie {
       } 
       else if (canSmellPlayer(engine))
       {
-        // every 6th zombieDecisionRate - save frame rate
-        //if (timerCt >=6) 
-        {
           setNewDirection = false;
-          timerCt = 0;
-
           Point2D pt = super.PathfindToThePlayer(engine);
           xDirection = pt.getX();
           yDirection = pt.getY();
-        }    
-
-
       }
 
 

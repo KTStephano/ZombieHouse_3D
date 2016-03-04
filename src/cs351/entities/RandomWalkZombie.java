@@ -13,7 +13,7 @@ public class RandomWalkZombie extends Zombie {
   private Random rand = new Random();
   private double xDirection = 0;
   private double yDirection = 0;
-  private int timerCt = 0;
+
 
 
   public RandomWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
@@ -35,7 +35,7 @@ public class RandomWalkZombie extends Zombie {
     // every zombieDecisionRate seconds, switch direction
     if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
     {
-      timerCt++;
+   
       elapsedSeconds = 0.0;
       if (!canSmellPlayer(engine))
       {
@@ -46,15 +46,9 @@ public class RandomWalkZombie extends Zombie {
       } 
       else
       {
-        // every 6th zombieDecisionRate - in order to save frame rate
-        if (timerCt >=6) 
-        {
-          timerCt = 0;
           Point2D pt = super.PathfindToThePlayer(engine);
           xDirection = pt.getX();
-          yDirection = pt.getY();
-
-        }    
+          yDirection = pt.getY();        
       }
 
     }
