@@ -7,7 +7,6 @@ import cs351.core.Engine;
 import cs351.core.GlobalConstants;
 import cs351.AStar.Node;
 import cs351.AStar.Pathfinder;
-import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import javafx.geometry.Point2D;
 
 import java.util.List;
@@ -47,57 +46,38 @@ public class Zombie extends Actor
     double targetY = engine.getWorld().getPlayer().getLocation().getY();
 
     boolean[][] map = engine.getPathingData();
-   
-    /* for (int i=0;i<map.length;i++)
-      for (int j=0;j<map.length;j++)
-    {
-      map[i][j] = false;
-    }
-   */
+
     List<Node> aNodeList=null;
     currX = (int)currX;
     currY = (int)currY;
-    
+
     if ((currX > 0)&&(currY > 0)&&(targetX>0)&&(targetY>0))
     {
       if ((currX < map.length)&&(currY < map.length)&&(targetX < map.length)&&(targetY < map.length))
       {
-       // System.out.println("Current:"+currX+","+currY+" Player: "+targetX+","+targetY);
         aNodeList =  Pathfinder.generate((int)currX,(int)currY,(int)targetX,(int)targetY, map);
       }
     }
-    
-    
-    //List<Node> aNodeList =  Pathfinder.generate(3,1,10,2, map);
-     //  System.out.println("check point 1");
+
+
     Node pt = null;
     if ((aNodeList!=null)&&(aNodeList.size() > 1))
-    //{
+    {
       try
       {
-      //System.out.println("check point 2");
-      aNodeList.remove(0);
-      pt = aNodeList.get(0);
-      for (Node nod: aNodeList)
-      {
-       // System.out.println("x: "+nod.x  + "y: "+nod.y);
-      } 
-     // System.out.println("check point 3");     
+        aNodeList.remove(0);
+        pt = aNodeList.get(0);
       }
       catch (Exception e)
       {
-      
+
       }
- //   }
-    
-    //Point2D pt = engine.getDijkstra().getNextLocation();
-    
+    }
+
 
     // if we have a path to player and can smell him
     if (pt!=null)
     {
-      //System.out.println("I'm at: "+currX+","+currY);     
-      //System.out.println("My next step is: "+pt.x+","+pt.y);     
 
       if ( (int)pt.x > (int)currX) 
       {
@@ -121,16 +101,12 @@ public class Zombie extends Actor
         yDirection = 0;        
       }
 
-
-
- 
-
       result=new Point2D(xDirection,yDirection);
     } else
     {
       result = new Point2D(0,0);
     }
-   
+
     return result;
   } 
 
@@ -212,10 +188,12 @@ public class Zombie extends Actor
     {
       return false;
     }   
-    
+
   }
 
 
+  
+  /*
 
   protected Point2D getNextLocation(Engine engine, boolean canSmellPlayer, int [][] gameBoard)
   {
@@ -259,6 +237,8 @@ public class Zombie extends Actor
     return pt;
 
   }
+  
+  */
 
 
 }

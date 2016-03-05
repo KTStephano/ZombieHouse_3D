@@ -24,12 +24,7 @@ import java.awt.Point;
 import java.net.URL;
 
 /**
- * Citation: http://www.vttoth.com/CMS/index.php/technical-notes/68
- *
- * Citation: http://what-when-how.com/javafx-2/playing-audio-using-the-media-classes-javafx-2-part-1/
- *
- * Citation: https://www.daniweb.com/programming/game-development/threads/139450/3d-sound-calculating-pan
- *
+ * 
  * @author Scott Cooper
  */
 public class ZombieHouseSoundEngine implements SoundEngine {
@@ -99,6 +94,7 @@ public class ZombieHouseSoundEngine implements SoundEngine {
       player.play();
     }
     //System.out.println(activeSounds.get(currentActiveSoundList));
+    //System.out.println(activeSounds.get(currentActiveSoundList));
     soundBackBuffer.clear();
     //activeSounds.clear();
     currentActiveSoundList++;
@@ -149,6 +145,22 @@ public class ZombieHouseSoundEngine implements SoundEngine {
         player.setVolume(0.0);
         final int CURR_ACTIVE_SOUNDS_LIST = currentActiveSoundList;
         final MediaPlayer PLAYER = player;
+        PLAYER.setOnEndOfMedia(new Runnable()
+        {
+          private final MediaPlayer PLAYER = player;
+          private final int CURR_ACTIVE_SOUND_LIST = currentActiveSoundList;
+          @Override
+          public void run()
+          {
+            PLAYER.setVolume(0.0);
+            PLAYER.balanceProperty().set(0.0);
+            PLAYER.seek(new Duration(0.0));
+            PLAYER.stop();
+            PLAYER.setOnEndOfMedia(this);
+            activeSounds.get(CURR_ACTIVE_SOUND_LIST).remove(PLAYER);
+          }
+        });
+        /*
         PLAYER.setOnEndOfMedia(() ->
         {
           PLAYER.setVolume(0.0);
@@ -159,10 +171,11 @@ public class ZombieHouseSoundEngine implements SoundEngine {
           activeSounds.get(CURR_ACTIVE_SOUNDS_LIST).remove(PLAYER);
           //System.out.println("SIZE : " + activeSounds.size());
         });
+        */
         availableSounds.get(CURR_ACTIVE_SOUNDS_LIST).put(item.soundFile, player);
         player.balanceProperty().set(0.0);
       }
-      if (activeSounds.get(currentActiveSoundList).contains(player)) return; // already playing, let it finish
+      //if (activeSounds.get(currentActiveSoundList).contains(player)) return; // already playing, let it finish
       soundBackBuffer.add(player);
       double mergedVolume = player.getVolume() + vol - player.getVolume() * vol;
       Vector3 soundLoc = new Vector3(item.x, item.y, 0.0);
@@ -218,6 +231,4 @@ public class ZombieHouseSoundEngine implements SoundEngine {
     float value = percent * range / 100F;
     volume.setValue(min + value);
   }
-
-
 }
