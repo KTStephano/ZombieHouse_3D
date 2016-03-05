@@ -1,9 +1,3 @@
-package cs351.entities;
-
- 
-
-import javafx.animation.AnimationTimer;
-
 /*
  =======================================================================
  This class creates a procedurally generated level map. The following
@@ -29,6 +23,9 @@ import javafx.animation.AnimationTimer;
  =====================================================================
  */
 
+package cs351.entities;
+import cs351.project1.ZombieHouseEngine;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
@@ -37,12 +34,10 @@ import javafx.scene.Group;
 import java.util.HashMap;
 import java.util.Random;
 
-import cs351.core.Actor;
-import cs351.project1.ZombieHouseEngine;
 
-import java.util.Queue;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.util.Queue;
 
 public class ProceduralRoomTestThingy extends Application
 {
@@ -52,12 +47,12 @@ public class ProceduralRoomTestThingy extends Application
   
   private Queue<ProceduralRoomTestThingy> unReachableRooms = new LinkedList<>();
   private int numberOfExistingHallways = 0;
-  static final boolean VERTICAL   = true;
-  static final boolean HORIZONTAL = false;
-  private boolean ROTATION        = true;
-  private int BOARD_WIDTH         = 100;
-  private int BOARD_HEIGHT        = 100;
-  private int splitRotation       = 1;
+  static final boolean VERTICAL        = true;
+  static final boolean HORIZONTAL      = false;
+  private boolean ROTATION             = true;
+  private int BOARD_WIDTH              = 100;
+  private int BOARD_HEIGHT             = 100;
+  private int splitRotation            = 1;
   private int randomNumber2;
   private int randomNumber;
   private int totalHeight;
@@ -165,21 +160,23 @@ public class ProceduralRoomTestThingy extends Application
     {
       
       //remove the first two from the list
-      ProceduralRoomTestThingy firstInQueue = divideRoomsQueue.remove();
+      ProceduralRoomTestThingy firstInQueue  = divideRoomsQueue.remove();
       ProceduralRoomTestThingy secondInQueue = divideRoomsQueue.remove();
 
       //connectRooms();
       
       divideAreas(firstInQueue, secondInQueue);
       
+     // connectRooms();
+      
       //TODO change value below to determine how many rooms get created
-      if( divideRoomsQueue.size()  > 35 )
+      if( divideRoomsQueue.size()  > 12)
       {
         break;
       }
     }
     
-    connectRooms();
+   // connectRooms();
     
     printArray();
     //ALSO connectRooms is being called in add to queue
@@ -205,45 +202,46 @@ public class ProceduralRoomTestThingy extends Application
       {
         for ( int y = remainingRooms.yStartPt; y <= remainingRooms.height; y++)
         {
+          //TODO width - 1 will make an perimeter exist
         //door on right side of area
           if(   x == remainingRooms.width 
              && y == remainingRooms.height / 2
              && x != totalWidth)
           {
-            boardArray[x][y] = 0;
-            boardArray[x][y + 1] = 0;
+            boardArray[x - 1][y]  = 5;
+            boardArray[x-1][y +1] = 5;
             
-            Rectangle r = new Rectangle(x, y, 3, 3);
-            r.setFill(Color.PURPLE);
+            Rectangle r = new Rectangle(x - 1, y, 3, 3);
+            r.setFill(Color.RED);
             root.getChildren().add(r);
             
           }
           
           // door on left side of area, could be an exit
-          if(   x == remainingRooms.xStartPt
+          if(    x == remainingRooms.xStartPt
               && y == remainingRooms.height / 2
               && x != xStartPt
                )
            {
-             boardArray[x][y] = 0;
-             boardArray[x][y + 1] = 0;
+             boardArray[x][y]     = 6;
+             boardArray[x][y + 1] = 6;
              
-             Rectangle r = new Rectangle(x, y, 3, 3);
-             r.setFill(Color.PURPLE);
+             Rectangle r = new Rectangle(x, y + 1, 3, 3);
+             r.setFill(Color.GREEN);
              root.getChildren().add(r);
   
            }
           
           //door on top of area
-          if(   x == remainingRooms.width / 2 
+          if(    x == remainingRooms.width / 2 
               && y == remainingRooms.yStartPt 
               && y != yStartPt
               )
            {
-             boardArray[x][y] = 0;
-             boardArray[x + 1][y] = 0;
+             boardArray[x][y]     = 7;
+             boardArray[x + 1][y] = 7;
              
-             Rectangle r = new Rectangle(x, y, 3, 3);
+             Rectangle r = new Rectangle(x + 1, y, 3, 3);
              r.setFill(Color.PURPLE);
              root.getChildren().add(r);
 
@@ -255,11 +253,11 @@ public class ProceduralRoomTestThingy extends Application
               && y != totalHeight
               )
            {
-             boardArray[x][y] = 0;
-             boardArray[x + 1][y] = 0;
+             boardArray[x][y - 1]     = 9;
+             boardArray[x + 1][y - 1] = 9;
              
-             Rectangle r = new Rectangle(x, y, 3, 3);
-             r.setFill(Color.PURPLE);
+             Rectangle r = new Rectangle(x, y - 1, 3, 3);
+             r.setFill(Color.ORANGE);
              root.getChildren().add(r);
            }
           
@@ -444,11 +442,11 @@ public class ProceduralRoomTestThingy extends Application
     if( ( numberOfExistingHallways < 6 ) && splitIsVertical )
     {
       divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber - 1, height ) );
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( randomNumber + 3, yStartPt, width, height ) );
+      divideRoomsQueue.add( new ProceduralRoomTestThingy( randomNumber + 2, yStartPt, width, height ) );
       
 
       unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber - 1, height ) );
-      unReachableRooms.add( new ProceduralRoomTestThingy( randomNumber + 3, yStartPt, width, height ) );
+      unReachableRooms.add( new ProceduralRoomTestThingy( randomNumber + 2, yStartPt, width, height ) );
     
       numberOfExistingHallways++;
     }
@@ -459,17 +457,17 @@ public class ProceduralRoomTestThingy extends Application
       divideRoomsQueue.add( new ProceduralRoomTestThingy( randomNumber , yStartPt, width, height ) );
       
 
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber - 1, height ) );
+      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber, height ) );
       unReachableRooms.add( new ProceduralRoomTestThingy( randomNumber , yStartPt, width, height ) );
     }
     //HALLWAY HORIZONTAL
     else if ( ( numberOfExistingHallways < 6 ) && (!splitIsVertical) )
     {
       divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber - 1 ) );
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt,randomNumber + 3 , width, height ) );
+      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt,randomNumber + 2 , width, height ) );
       
       unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber - 1 ) );
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt,randomNumber + 3 , width, height ) );
+      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt,randomNumber + 2 , width, height ) );
       
       numberOfExistingHallways++;
     }
@@ -477,12 +475,11 @@ public class ProceduralRoomTestThingy extends Application
     else if ( numberOfExistingHallways >= 6 && ( !splitIsVertical ) )
     {
       divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber ) );
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt,randomNumber -1  , width, height ) );
+      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt,randomNumber  , width, height ) );
       
       unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber ) );
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt,randomNumber  , width, height ) );
+      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt,randomNumber, width, height ) );
     }
-   // numRooms++;
     
     
     numRooms = divideRoomsQueue.size();
@@ -490,7 +487,7 @@ public class ProceduralRoomTestThingy extends Application
       changeSplitDir();
       n++;
     }
-   // connectRooms();
+    connectRooms();
   }
   
   
@@ -580,14 +577,15 @@ public class ProceduralRoomTestThingy extends Application
  }
  
  
- public void printArray(){
-   System.out.println("print Array");
+ public void printArray()
+ {
    for (int x = 0; x < BOARD_WIDTH; x++)
    {
      for (int y = 0; y < BOARD_HEIGHT; y++)
      {
-       System.out.print(boardArray[x][y]);
-     }System.out.println("\n");
+       System.out.print(boardArray[y][x]);
+     }
+     System.out.println("\n");
    }System.out.println("\n");
  }
  
@@ -637,31 +635,6 @@ public class ProceduralRoomTestThingy extends Application
 //    System.out.println("This is being reached");
 //    launch(args);
 //  }
-  
-  
-  
-//  private class BoundingCircle
-//  {
-//    private final Actor ACTOR;
-//    private final double RADIUS;
-//    private final double RADIUS_SQUARED;
-//    private double actorX;
-//    private double actorY;
-//    private double otherActorX;
-//    private double otherActorY;
-//    private double otherActorRadius;
-//    private double roughDistance;
-//    private double combinedRadii_Squared;
-//
-//    public BoundingCircle(Actor actor)
-//    {
-//      ACTOR = actor;
-//      RADIUS = actor.getWidth() / 2.0;
-//      RADIUS_SQUARED = RADIUS * RADIUS;
-//    }
-//  }
-  
-  
   
 }
 
