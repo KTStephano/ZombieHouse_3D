@@ -230,7 +230,7 @@ public class EnvDemo2_0 implements World
            {
              if(index < 50)
              {
-               Actor wall = new Wall("textures/bikiniBabe.jpg",
+               Actor wall = new Wall("textures/wall_dirty.jpg",
                x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
                y * getTilePixelHeight(), // same as above but for y
                getTilePixelWidth(), // sets the width to be 1 tile

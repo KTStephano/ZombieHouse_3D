@@ -24,12 +24,7 @@ import java.awt.Point;
 import java.net.URL;
 
 /**
- * Citation: http://www.vttoth.com/CMS/index.php/technical-notes/68
- *
- * Citation: http://what-when-how.com/javafx-2/playing-audio-using-the-media-classes-javafx-2-part-1/
- *
- * Citation: https://www.daniweb.com/programming/game-development/threads/139450/3d-sound-calculating-pan
- *
+ * 
  * @author Scott Cooper
  */
 public class ZombieHouseSoundEngine implements SoundEngine {
