@@ -3,7 +3,6 @@ package cs351.entities;
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.Vector3;
-import javafx.scene.input.KeyEvent;
 
 /**
  * TODO using this as a test for the renderer - need to flesh this out later when the engine is up
@@ -11,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 public class Player extends Actor
 {
   protected boolean isPlayer=true; // true -- this is the Player
-  private final double BASE_SPEED = 2.0; // for x and y movement - measured in tiles per second
+  private double baseSpeed = 2.0; // for x and y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
@@ -31,10 +30,11 @@ public class Player extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
+    baseSpeed = Double.parseDouble(engine.getSettings().getValue("player_speed"));
     //System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
     //System.out.println(forwardX);
-    stepSoundTimer += BASE_SPEED * forwardX * deltaSeconds;
+    stepSoundTimer += baseSpeed * forwardX * deltaSeconds;
     if (stepSoundTimer > 1.0)
     {
       stepSoundTimer = 0.0;
@@ -49,7 +49,7 @@ public class Player extends Actor
       engine.getSoundEngine().queueSoundAtLocation("sound/player_step.mp3", stepLocX, stepLocY);
       //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
-    double totalSpeed = BASE_SPEED * deltaSeconds * engine.getWorld().getTilePixelWidth();
+    double totalSpeed = baseSpeed * deltaSeconds * engine.getWorld().getTilePixelWidth();
     setLocation(getLocation().getX() + totalSpeed * forwardX * forwardDirection.getX(),
                 getLocation().getY() + totalSpeed * forwardY * forwardDirection.getY());
     setLocation(getLocation().getX() + totalSpeed * rightX * rightDirection.getX(),
@@ -65,7 +65,6 @@ public class Player extends Actor
   public void setForwardSpeedX(double speedX)
   {
     forwardX = speedX;
-    System.out.println("SPEED: " + forwardX);
   }
 
   public void setForwardSpeedY(double speedY)

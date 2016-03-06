@@ -147,12 +147,10 @@ public class ZombieHouseRenderer implements Renderer
       //else if (event.getText().equals("s")) player.setLocation(player.getLocation().getX() + -direction.getY(), player.getLocation().getY() + -direction.getX());
       if (event.isShiftDown())
       {
-        System.out.println("true");
         currentSpeed = doubleSpeed;
       }
 
       double playerSpeed = currentSpeed;
-      System.out.println(playerSpeed);
 
       if (event.getText().equals("w")||event.getText().equals("W"))
       {
@@ -182,7 +180,6 @@ public class ZombieHouseRenderer implements Renderer
 
       if (!event.isShiftDown())
       {
-        System.out.println("true");
         currentSpeed = SPEED;
       }
 
