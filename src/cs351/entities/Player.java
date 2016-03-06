@@ -11,7 +11,7 @@ import javafx.scene.input.KeyEvent;
 public class Player extends Actor
 {
   protected boolean isPlayer=true; // true -- this is the Player
-  private final double BASE_SPEED = 5.0; // for x and y movement - measured in tiles per second
+  private final double BASE_SPEED = 2.0; // for x and y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
