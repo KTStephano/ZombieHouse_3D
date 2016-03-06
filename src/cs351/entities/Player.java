@@ -33,6 +33,7 @@ public class Player extends Actor
   {
     //System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
+    //System.out.println(forwardX);
     stepSoundTimer += BASE_SPEED * forwardX * deltaSeconds;
     if (stepSoundTimer > 1.0)
     {
@@ -64,6 +65,7 @@ public class Player extends Actor
   public void setForwardSpeedX(double speedX)
   {
     forwardX = speedX;
+    System.out.println("SPEED: " + forwardX);
   }
 
   public void setForwardSpeedY(double speedY)
@@ -99,21 +101,5 @@ public class Player extends Actor
   public Vector3 getRightVector()
   {
     return rightDirection;
-  }
-
-  public void keyPressed(KeyEvent event)
-  {
-    /**
-    if (event.getText().equals("w")) forwardY = SPEED;
-    else if (event.getText().equals("s")) forwardY = -SPEED;
-    else if (event.getText().equals("a")) forwardX = -SPEED;
-    else if (event.getText().equals("d")) forwardX = SPEED;
-     */
-  }
-
-  public void keyReleased(KeyEvent event)
-  {
-    forwardX = 0.0;
-    forwardY = 0.0;
   }
 }

@@ -2,7 +2,6 @@ package cs351.project1;
 
 import cs351.core.*;
 import cs351.entities.Player;
-import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
@@ -13,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
@@ -21,7 +19,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class ZombieHouseRenderer implements Renderer
 {
@@ -98,7 +95,9 @@ public class ZombieHouseRenderer implements Renderer
     private Vector3 right = new Vector3(direction);
     private double prevX = 0.0;
     private double angle = 0.0;
-    private final double SPEED = 1.0; // for x and y movement
+    private final double SPEED = 1.0;
+    private double currentSpeed = SPEED; // for x and y movement
+    private double doubleSpeed = currentSpeed * 2.0;
 
     public PlayerController(Player player)
     {
@@ -146,20 +145,24 @@ public class ZombieHouseRenderer implements Renderer
     {
       //if (event.getText().equals("w")) player.setLocation(player.getLocation().getX() + direction.getY(), player.getLocation().getY() + direction.getX());
       //else if (event.getText().equals("s")) player.setLocation(player.getLocation().getX() + -direction.getY(), player.getLocation().getY() + -direction.getX());
-      double playerSpeed = SPEED;     
       if (event.isShiftDown())
       {
-        playerSpeed = SPEED*2;
+        System.out.println("true");
+        currentSpeed = doubleSpeed;
       }
+
+      double playerSpeed = currentSpeed;
+      System.out.println(playerSpeed);
+
       if (event.getText().equals("w")||event.getText().equals("W"))
       {
-        player.setForwardSpeedX(playerSpeed); //speedY = SPEED;
-        player.setForwardSpeedY(playerSpeed); //speedY = SPEED;
+        player.setForwardSpeedX(playerSpeed); //speedY = currentSpeed;
+        player.setForwardSpeedY(playerSpeed); //speedY = currentSpeed;
       }
       else if (event.getText().equals("s")||event.getText().equals("S"))
       {
-        player.setForwardSpeedX(-playerSpeed); //speedY = SPEED;
-        player.setForwardSpeedY(-playerSpeed); //speedY = -SPEED;
+        player.setForwardSpeedX(-playerSpeed); //speedY = currentSpeed;
+        player.setForwardSpeedY(-playerSpeed); //speedY = -currentSpeed;
       }
       else if (event.getText().equals("a")||event.getText().equals("A"))
       {
@@ -176,6 +179,12 @@ public class ZombieHouseRenderer implements Renderer
     public void keyReleased(KeyEvent event)
     {
       double playerSpeed = 0.0;
+
+      if (!event.isShiftDown())
+      {
+        System.out.println("true");
+        currentSpeed = SPEED;
+      }
 
       if (event.getText().equals("w") || event.getText().equals("W") || event.getText().equals("S") || event.getText().equals("s"))
       {
