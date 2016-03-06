@@ -46,6 +46,7 @@ public class ProceduralRoomTestThingy extends Application
   private Queue<ProceduralRoomTestThingy> divideRoomsQueue = new LinkedList<>();
   
   private Queue<ProceduralRoomTestThingy> unReachableRooms = new LinkedList<>();
+  private Queue<ProceduralRoomTestThingy> quadQueue = new LinkedList<>();
   private int numberOfExistingHallways = 0;
   static final boolean VERTICAL        = true;
   static final boolean HORIZONTAL      = false;
@@ -169,11 +170,14 @@ public class ProceduralRoomTestThingy extends Application
       
      // connectRooms();
       
+      if( divideRoomsQueue.size() == 4) printQuadrant(divideRoomsQueue);
+      
       //TODO change value below to determine how many rooms get created
-      if( divideRoomsQueue.size()  > 12)
+      if( divideRoomsQueue.size()  > 14)
       {
         break;
       }
+      
     }
     
    // connectRooms();
@@ -182,6 +186,29 @@ public class ProceduralRoomTestThingy extends Application
     //ALSO connectRooms is being called in add to queue
   }
   
+  
+  void printQuadrant(Queue<ProceduralRoomTestThingy> divideRoomsQueue)
+  {
+    int quadRantNumber = 2;
+
+    for (ProceduralRoomTestThingy r : divideRoomsQueue)
+    {
+      for (int x = r.xStartPt; x <= r.width; x++)
+      {
+        for (int y = r.yStartPt; y <= r.height; y++)
+        {
+          if ((x > r.xStartPt) && (y > r.yStartPt ) && (x < r.width - 1) && (y < r.height - 1))
+          {
+//            Rectangle r2 = new Rectangle(x, y, 1, 1);
+//            r2.setFill(Color.RED);
+//            root.getChildren().add(r2);
+            if(x == r.width-2 && (y == r.height - 2)) quadRantNumber++;
+            else boardArray[x][y] = quadRantNumber;
+          }
+        }
+      }
+    }
+  }
   
   /*
   =================================================
@@ -208,8 +235,8 @@ public class ProceduralRoomTestThingy extends Application
              && y == remainingRooms.height / 2
              && x != totalWidth)
           {
-            boardArray[x - 1][y]  = 5;
-            boardArray[x-1][y +1] = 5;
+            boardArray[x - 1][y]  = 0;
+            boardArray[x-1][y +1] = 0;
             
             Rectangle r = new Rectangle(x - 1, y, 3, 3);
             r.setFill(Color.RED);
@@ -223,8 +250,8 @@ public class ProceduralRoomTestThingy extends Application
               && x != xStartPt
                )
            {
-             boardArray[x][y]     = 6;
-             boardArray[x][y + 1] = 6;
+             boardArray[x][y]     = 0;
+             boardArray[x][y + 1] = 0;
              
              Rectangle r = new Rectangle(x, y + 1, 3, 3);
              r.setFill(Color.GREEN);
@@ -238,8 +265,8 @@ public class ProceduralRoomTestThingy extends Application
               && y != yStartPt
               )
            {
-             boardArray[x][y]     = 7;
-             boardArray[x + 1][y] = 7;
+             boardArray[x][y]     = 0;
+             boardArray[x + 1][y] = 0;
              
              Rectangle r = new Rectangle(x + 1, y, 3, 3);
              r.setFill(Color.PURPLE);
@@ -253,8 +280,8 @@ public class ProceduralRoomTestThingy extends Application
               && y != totalHeight
               )
            {
-             boardArray[x][y - 1]     = 9;
-             boardArray[x + 1][y - 1] = 9;
+             boardArray[x][y - 1]     = 0;
+             boardArray[x + 1][y - 1] = 0;
              
              Rectangle r = new Rectangle(x, y - 1, 3, 3);
              r.setFill(Color.ORANGE);

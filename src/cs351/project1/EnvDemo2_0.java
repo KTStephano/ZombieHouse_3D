@@ -260,23 +260,34 @@ public class EnvDemo2_0 implements World
 
         /*============================================================================================================*/
          
+        //  System.out.print(testArray[x][y]);
          
         FloorCeilingTile floor;
         
-        if (rand.nextInt(50)<10)
-        {
-        // add a ZombieSpawningFloorTile and ceiling tile
-        floor = new ZombieSpawningFloorTile("textures/red_zombie.jpg",//block_texture_dark.jpg",
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // same as above but for y
-            getTilePixelWidth(), // sets the width to be 1 tile
-            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-            getTilePixelHeight()); // sets the depth to be 1 tile
+//        if (rand.nextInt(50)<10 )
+//        {
+//        // add a ZombieSpawningFloorTile and ceiling tile
+//        floor = new ZombieSpawningFloorTile("textures/red_zombie.jpg",//block_texture_dark.jpg",
+//            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+//            y * getTilePixelHeight(), // same as above but for y
+//            getTilePixelWidth(), // sets the width to be 1 tile
+//            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+//            getTilePixelHeight()); // sets the depth to be 1 tile
+//        }
+        if(testArray[x][y] == 2){
+          floor = new FloorCeilingTile("textures/brick_texture.jpg",
+              true, // is part of floor
+              false, // is not part of ceiling
+              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for y
+              getTilePixelWidth(), // sets the width to be 1 tile
+              1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+              getTilePixelHeight()); // sets the depth to be 1 tile
         }
-        else
+        else if(testArray[x][y] == 3)
         {
         // add a floor and ceiling tile
-        floor = new FloorCeilingTile("textures/block_texture_dark.jpg",
+        floor = new FloorCeilingTile("textures/rock_texture.jpg",
             true, // is part of floor
             false, // is not part of ceiling
             x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
@@ -285,6 +296,33 @@ public class EnvDemo2_0 implements World
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
             getTilePixelHeight()); // sets the depth to be 1 tile
         }
+        
+        else if(testArray[x][y] == 4)
+        {
+        // add a floor and ceiling tile
+        floor = new FloorCeilingTile("textures/stone_texture.jpg",
+            true, // is part of floor
+            false, // is not part of ceiling
+            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // same as above but for y
+            getTilePixelWidth(), // sets the width to be 1 tile
+            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+            getTilePixelHeight()); // sets the depth to be 1 tile
+        }
+        else{
+          floor = new FloorCeilingTile("textures/brick_texture2.jpg",
+              true, // is part of floor
+              false, // is not part of ceiling
+              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for y
+              getTilePixelWidth(), // sets the width to be 1 tile
+              1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+              getTilePixelHeight()); // sets the depth to be 1 tile
+        }
+        
+
+        
+        
         FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
             false, // is not part of floor
             true, // is part of ceiling
