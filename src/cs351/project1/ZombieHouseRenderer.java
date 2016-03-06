@@ -108,8 +108,8 @@ public class ZombieHouseRenderer implements Renderer
       rotation.setAngle(angle);
       buildDirectionVectors();
       scene.setOnMouseMoved(this::mouseMoved);
-      scene.setOnKeyPressed(this::keyPressed);
-      scene.setOnKeyReleased(this::keyReleased);
+      //scene.setOnKeyPressed(this::keyPressed);
+      //scene.setOnKeyReleased(this::keyReleased);
     }
 
     public Translate getTranslation()
@@ -122,8 +122,9 @@ public class ZombieHouseRenderer implements Renderer
       return rotation;
     }
 
-    public void update()
+    public void update(Engine engine)
     {
+      checkKeyStates(engine);
       rotation.setAngle(angle);
       buildDirectionVectors();
     }
@@ -141,57 +142,47 @@ public class ZombieHouseRenderer implements Renderer
       prevX = event.getX();
     }
 
-    public void keyPressed(KeyEvent event)
+    public void checkKeyStates(Engine engine)
     {
-      //if (event.getText().equals("w")) player.setLocation(player.getLocation().getX() + direction.getY(), player.getLocation().getY() + direction.getX());
-      //else if (event.getText().equals("s")) player.setLocation(player.getLocation().getX() + -direction.getY(), player.getLocation().getY() + -direction.getX());
-      if (event.isShiftDown())
+      KeyboardInput keyInput = engine.getKeyInputSystem();
+      double playerSpeed = SPEED;
+      if (keyInput.isKeyPressed(KeyboardInput.Keys.SHIFT_KEY))
       {
-        currentSpeed = doubleSpeed;
+        playerSpeed *= 2.0;
       }
 
-      double playerSpeed = currentSpeed;
-
-      if (event.getText().equals("w")||event.getText().equals("W"))
+      // Deal with forward/backward movement
+      if (keyInput.isKeyPressed(KeyboardInput.Keys.W_KEY))
       {
         player.setForwardSpeedX(playerSpeed); //speedY = currentSpeed;
         player.setForwardSpeedY(playerSpeed); //speedY = currentSpeed;
       }
-      else if (event.getText().equals("s")||event.getText().equals("S"))
+      else if (keyInput.isKeyPressed(KeyboardInput.Keys.S_KEY))
       {
         player.setForwardSpeedX(-playerSpeed); //speedY = currentSpeed;
-        player.setForwardSpeedY(-playerSpeed); //speedY = -currentSpeed;
+        player.setForwardSpeedY(-playerSpeed); //speedY = currentSpeed;
       }
-      else if (event.getText().equals("a")||event.getText().equals("A"))
+      else
+      {
+        player.setForwardSpeedX(0.0); //speedY = currentSpeed;
+        player.setForwardSpeedY(0.0); //speedY = currentSpeed;
+      }
+
+      // Deal with side-side movement
+      if (keyInput.isKeyPressed(KeyboardInput.Keys.D_KEY))
+      {
+        player.setRightSpeedX(playerSpeed);
+        player.setRightSpeedY(playerSpeed);
+      }
+      else if (keyInput.isKeyPressed(KeyboardInput.Keys.A_KEY))
       {
         player.setRightSpeedX(-playerSpeed);
         player.setRightSpeedY(-playerSpeed);
       }
-      else if (event.getText().equals("d")||event.getText().equals("D"))
+      else
       {
-        player.setRightSpeedX(playerSpeed);
-        player.setRightSpeedY(playerSpeed);
-      }
-    }
-
-    public void keyReleased(KeyEvent event)
-    {
-      double playerSpeed = 0.0;
-
-      if (!event.isShiftDown())
-      {
-        currentSpeed = SPEED;
-      }
-
-      if (event.getText().equals("w") || event.getText().equals("W") || event.getText().equals("S") || event.getText().equals("s"))
-      {
-        player.setForwardSpeedX(playerSpeed);
-        player.setForwardSpeedY(playerSpeed);
-      }
-      else if (event.getText().equals("a") || event.getText().equals("d") || event.getText().equals("A") || event.getText().equals("D"))
-      {
-        player.setRightSpeedX(playerSpeed);
-        player.setRightSpeedY(playerSpeed);
+        player.setRightSpeedX(0.0);
+        player.setRightSpeedY(0.0);
       }
     }
 
@@ -281,7 +272,7 @@ public class ZombieHouseRenderer implements Renderer
     initLighting();
 
     // orient the player to their rotation/location
-    orientPlayerToScene();
+    orientPlayerToScene(engine);
 
     // render the dynamic actors
     renderActors(engine, mode, deltaSeconds);
@@ -492,7 +483,7 @@ public class ZombieHouseRenderer implements Renderer
     }
   }
 
-  private void orientPlayerToScene()
+  private void orientPlayerToScene(Engine engine)
   {
     if (player == null) return;
     // calculate the amount of displacement between the current location the camera thinks
@@ -503,7 +494,7 @@ public class ZombieHouseRenderer implements Renderer
     //camera.getTransforms().addAll(translate);
     controller.getTranslation().setX(player.getLocation().getX());
     controller.getTranslation().setZ(player.getLocation().getY());
-    controller.update();
+    controller.update(engine);
   }
 
   private void setTranslationValuesForModel(Model model, double x, double y, double z)

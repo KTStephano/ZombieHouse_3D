@@ -28,6 +28,14 @@ public interface Engine
    * @return dijkstra's class
    */
   TestDijkstraAlgorithm getDijkstra();
+
+  /**
+   * Returns the keyboard input system to ask which keys are pressed.
+   *
+   * @return reference to KeyboardInput instance
+   */
+  KeyboardInput getKeyInputSystem();
+
  
   /**
    * Returns the sound engine associated with the engine.

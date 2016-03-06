@@ -18,6 +18,7 @@ public class ZombieHouseEngine implements Engine
   private Renderer renderer;
   private CollisionDetection collision;
   private TestDijkstraAlgorithm dijkstra;
+  private KeyboardInput keyInput;
   private Settings settings;
   private int worldWidth, worldHeight; // measured in tiles
   private final HashSet<Actor> ALL_ACTORS;
@@ -70,6 +71,7 @@ public class ZombieHouseEngine implements Engine
   {
     ALL_ACTORS = new HashSet<>(500);
     UPDATE_ACTORS = new HashSet<>(500);
+    keyInput = new KeyboardInput();
   }
 
   @Override
@@ -83,6 +85,12 @@ public class ZombieHouseEngine implements Engine
   {
     validateEngineState();
     return dijkstra;
+  }
+
+  @Override
+  public KeyboardInput getKeyInputSystem()
+  {
+    return keyInput;
   }
 
   @Override
@@ -166,6 +174,7 @@ public class ZombieHouseEngine implements Engine
     collision = new CollisionDetection(this); // init the collision detection system
     getSoundEngine().init(this);
     initEngineState(); // init the initial engine state from the world
+    keyInput.init(stage);
     
     
     
