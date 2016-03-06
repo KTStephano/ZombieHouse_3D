@@ -34,7 +34,9 @@ public class Player extends Actor
     //System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
     //System.out.println(forwardX);
-    stepSoundTimer += baseSpeed * forwardX * deltaSeconds;
+    double stepTimerOffset = forwardX > 0.0 ? forwardX : -forwardX;
+    if (forwardX == 0.0 && rightX != 0.0) stepTimerOffset = rightX > 0.0 ? rightX : -rightX;
+    stepSoundTimer += baseSpeed * stepTimerOffset * deltaSeconds;
     if (stepSoundTimer > 1.0)
     {
       stepSoundTimer = 0.0;
