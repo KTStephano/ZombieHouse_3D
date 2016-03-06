@@ -146,39 +146,46 @@ public class ZombieHouseRenderer implements Renderer
     {
       //if (event.getText().equals("w")) player.setLocation(player.getLocation().getX() + direction.getY(), player.getLocation().getY() + direction.getX());
       //else if (event.getText().equals("s")) player.setLocation(player.getLocation().getX() + -direction.getY(), player.getLocation().getY() + -direction.getX());
-      if (event.getText().equals("w"))
+      double playerSpeed = SPEED;     
+      if (event.isShiftDown())
       {
-        player.setForwardSpeedX(SPEED); //speedY = SPEED;
-        player.setForwardSpeedY(SPEED); //speedY = SPEED;
+        playerSpeed = SPEED*2;
       }
-      else if (event.getText().equals("s"))
+      if (event.getText().equals("w")||event.getText().equals("W"))
       {
-        player.setForwardSpeedX(-SPEED); //speedY = SPEED;
-        player.setForwardSpeedY(-SPEED); //speedY = -SPEED;
+        player.setForwardSpeedX(playerSpeed); //speedY = SPEED;
+        player.setForwardSpeedY(playerSpeed); //speedY = SPEED;
       }
-      else if (event.getText().equals("a"))
+      else if (event.getText().equals("s")||event.getText().equals("S"))
       {
-        player.setRightSpeedX(-SPEED);
-        player.setRightSpeedY(-SPEED);
+        player.setForwardSpeedX(-playerSpeed); //speedY = SPEED;
+        player.setForwardSpeedY(-playerSpeed); //speedY = -SPEED;
       }
-      else if (event.getText().equals("d"))
+      else if (event.getText().equals("a")||event.getText().equals("A"))
       {
-        player.setRightSpeedX(SPEED);
-        player.setRightSpeedY(SPEED);
+        player.setRightSpeedX(-playerSpeed);
+        player.setRightSpeedY(-playerSpeed);
+      }
+      else if (event.getText().equals("d")||event.getText().equals("D"))
+      {
+        player.setRightSpeedX(playerSpeed);
+        player.setRightSpeedY(playerSpeed);
       }
     }
 
     public void keyReleased(KeyEvent event)
     {
-      if (event.getText().equals("w") || event.getText().equals("s"))
+      double playerSpeed = 0.0;
+
+      if (event.getText().equals("w") || event.getText().equals("W") || event.getText().equals("S") || event.getText().equals("s"))
       {
-        player.setForwardSpeedX(0.0);
-        player.setForwardSpeedY(0.0);
+        player.setForwardSpeedX(playerSpeed);
+        player.setForwardSpeedY(playerSpeed);
       }
-      else if (event.getText().equals("a") || event.getText().equals("d"))
+      else if (event.getText().equals("a") || event.getText().equals("d") || event.getText().equals("A") || event.getText().equals("D"))
       {
-        player.setRightSpeedX(0.0);
-        player.setRightSpeedY(0.0);
+        player.setRightSpeedX(playerSpeed);
+        player.setRightSpeedY(playerSpeed);
       }
     }
 
