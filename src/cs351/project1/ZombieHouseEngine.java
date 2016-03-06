@@ -1,7 +1,5 @@
 package cs351.project1;
 
-
-import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
 import cs351.core.*;
 import cs351.project1.CollisionDetection;
 import javafx.scene.shape.DrawMode;
@@ -17,7 +15,6 @@ public class ZombieHouseEngine implements Engine
   private SoundEngine soundEngine;
   private Renderer renderer;
   private CollisionDetection collision;
-  private TestDijkstraAlgorithm dijkstra;
   private KeyboardInput keyInput;
   private Settings settings;
   private int worldWidth, worldHeight; // measured in tiles
@@ -80,13 +77,7 @@ public class ZombieHouseEngine implements Engine
     validateEngineState();
     return world;
   }
-  @Override
-  public TestDijkstraAlgorithm getDijkstra()
-  {
-    validateEngineState();
-    return dijkstra;
-  }
-
+ 
   @Override
   public KeyboardInput getKeyInputSystem()
   {
@@ -175,35 +166,7 @@ public class ZombieHouseEngine implements Engine
     getSoundEngine().init(this);
     initEngineState(); // init the initial engine state from the world
     keyInput.init(stage);
-    
-    
-    
-    
-    
-    
-    
-    
-    /********************** temporary  *********************/
-
-    
-    //dijkstra = new  TestDijkstraAlgorithm();
-
-    int w = world.getWorldPixelWidth() / world.getTilePixelWidth();
-    int h = world.getWorldPixelHeight() / world.getTilePixelHeight();
-
-    //dijkstra.initGraph(getPathingData(),w, h);
-  
-   
-    
-    /********************************************************/
-    
-    
-    
-    
-    
-    
-    
-    
+ 
   }
 
   @Override
@@ -213,7 +176,6 @@ public class ZombieHouseEngine implements Engine
     settings.importSettings(settingsFile);
     setEngineVariablesFromSettings();
     getSoundEngine().init(this); // call this again so it can check the *new* values of the engine.settings
-    //getDijkstra().initGraph(this.getPathingData(), (int)worldWidth, (int)worldHeight);
   }
 
   @Override

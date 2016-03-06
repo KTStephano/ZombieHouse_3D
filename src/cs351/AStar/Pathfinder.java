@@ -105,7 +105,10 @@ public class Pathfinder {
 
   
   private static List<Node> getNeighborNodes(Node n) {
+    
     List<Node> found = new ArrayList<Node>();
+    try
+    {
     if(!walls[n.x + 1][n.y]) found.add(toNode(n.x + 1, n.y));
     if(!walls[n.x - 1][n.y]) found.add(toNode(n.x - 1, n.y));
     if(!walls[n.x][n.y + 1]) found.add(toNode(n.x, n.y + 1));
@@ -122,6 +125,11 @@ public class Pathfinder {
       if(!walls[n.x - 1][n.y - 1] && (!walls[n.x - 1][n.y] && !walls[n.x][n.y - 1])) found.add(toNode(n.x - 1, n.y - 1));
       if(!walls[n.x + 1][n.y - 1] && (!walls[n.x + 1][n.y] && !walls[n.x][n.y - 1])) found.add(toNode(n.x + 1, n.y - 1));
     }
+    }
+    catch (Exception e)
+    {
+    }
+   
     return found;
   }
 
