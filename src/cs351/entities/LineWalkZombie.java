@@ -66,14 +66,15 @@ public class LineWalkZombie extends Zombie {
       }
       else if (canSmellPlayer(engine))
       {
-          setNewDirection = false;
-          Point2D pt = super.PathfindToThePlayer(engine);
-          xDirection = pt.getX();
-          yDirection = pt.getY();
-          if (xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
-          if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
-          directionXY.set(xDirection, yDirection, 0.0);
-          //directionXY.normalize();
+        setNewDirection = false;
+        Point2D pt = super.PathfindToThePlayer(engine);
+        xDirection = pt.getX();
+        yDirection = pt.getY();
+        if (yDirection == 0.0 && xDirection != 0.0) xDirection = xDirection < 0.0 ? -1.0 : 1.0;
+        else if (xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+        if (xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
+        else if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
+        directionXY.set(xDirection, yDirection, 0.0);
       }
 
 

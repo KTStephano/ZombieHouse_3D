@@ -9,7 +9,7 @@ Note: anything without a '+' in front of it is treated as a comment
 + zombie_speed 0.5
 
 If no clip is on the player can walk through all game objects except the floor/ceiling
-+ player_no_clip on
++ player_no_clip off
 + collision on
 
 Advanced lighting is what enables the decrease in brightness with distance
