@@ -46,6 +46,7 @@ public class Player extends Actor
       stepLocX = getLocation().getX() + multiplier * rightDirection.getX();
       stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
       engine.getSoundEngine().queueSoundAtLocation("sound/player_step.mp3", stepLocX, stepLocY);
+      //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
     double totalSpeed = BASE_SPEED * deltaSeconds * engine.getWorld().getTilePixelWidth();
     setLocation(getLocation().getX() + totalSpeed * forwardX * forwardDirection.getX(),
