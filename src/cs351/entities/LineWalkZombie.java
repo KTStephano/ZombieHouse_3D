@@ -5,6 +5,7 @@ import java.util.Random;
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
+import cs351.core.Vector3;
 import javafx.geometry.Point2D;
 
 
@@ -14,7 +15,10 @@ public class LineWalkZombie extends Zombie {
   private Random rand = new Random();
   private double xDirection = 0;
   private double yDirection = 0;
+  private Vector3 directionXY = new Vector3(0.0);
   private boolean setNewDirection = true;
+  private int[] directionsX = { 1, -1, 0, 0 };
+  private int[] directionsY = { 0, 0, 1, -1 };
 
   @Override
   public void collided(Engine engine, Actor actor) {
@@ -40,14 +44,14 @@ public class LineWalkZombie extends Zombie {
   { 
 
     //   System.out.println("--fps: "+1/deltaSeconds);
-
+    double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
-   
+
     // every zombieDecisionRate seconds, switch direction
     if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
     {
-   
+
 
       elapsedSeconds = 0.0;
       if (!canSmellPlayer(engine)  && setNewDirection)
@@ -55,23 +59,31 @@ public class LineWalkZombie extends Zombie {
 
         setNewDirection = false;
         // left or right random
-        xDirection = (100-rand.nextInt(200))/20000.0;
-
-        // forward or back random
-        yDirection = (100-rand.nextInt(200))/20000.0;
-      } 
+        int direction = rand.nextInt(directionsX.length);
+        xDirection = directionsX[direction];
+        yDirection = directionsX[direction];
+        directionXY.set(xDirection, yDirection, 0.0);
+      }
       else if (canSmellPlayer(engine))
       {
-          setNewDirection = false;
-          Point2D pt = super.PathfindToThePlayer(engine);
-          xDirection = pt.getX();
-          yDirection = pt.getY();
+        setNewDirection = false;
+        Point2D pt = super.PathfindToThePlayer(engine);
+        xDirection = pt.getX();
+        yDirection = pt.getY();
+        if (yDirection == 0.0 && xDirection != 0.0) xDirection = xDirection < 0.0 ? -1.0 : 1.0;
+        else if (xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
+        if (xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
+        else if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
+        directionXY.set(xDirection, yDirection, 0.0);
       }
 
 
 
     }
-    setLocation(getLocation().getX()+xDirection, getLocation().getY() +yDirection);
+    //directionXY.set(.7, -0.7, 0.0);
+    double totalSpeed = zombieSpeed * deltaSeconds;
+    setLocation(getLocation().getX()+directionXY.getX() * totalSpeed,
+                getLocation().getY() + directionXY.getY() * totalSpeed);
 
     checkPlaySound(engine, deltaSeconds);
     return UpdateResult.UPDATE_COMPLETED;

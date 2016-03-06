@@ -2,7 +2,6 @@ package cs351.project1;
 
 import cs351.core.*;
 import cs351.entities.Player;
-import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
@@ -13,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 
@@ -21,7 +19,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class ZombieHouseRenderer implements Renderer
 {
@@ -98,7 +95,9 @@ public class ZombieHouseRenderer implements Renderer
     private Vector3 right = new Vector3(direction);
     private double prevX = 0.0;
     private double angle = 0.0;
-    private final double SPEED = 1.0; // for x and y movement
+    private final double SPEED = 1.0;
+    private double currentSpeed = SPEED; // for x and y movement
+    private double doubleSpeed = currentSpeed * 2.0;
 
     public PlayerController(Player player)
     {
@@ -146,39 +145,53 @@ public class ZombieHouseRenderer implements Renderer
     {
       //if (event.getText().equals("w")) player.setLocation(player.getLocation().getX() + direction.getY(), player.getLocation().getY() + direction.getX());
       //else if (event.getText().equals("s")) player.setLocation(player.getLocation().getX() + -direction.getY(), player.getLocation().getY() + -direction.getX());
-      if (event.getText().equals("w"))
+      if (event.isShiftDown())
       {
-        player.setForwardSpeedX(SPEED); //speedY = SPEED;
-        player.setForwardSpeedY(SPEED); //speedY = SPEED;
+        currentSpeed = doubleSpeed;
       }
-      else if (event.getText().equals("s"))
+
+      double playerSpeed = currentSpeed;
+
+      if (event.getText().equals("w")||event.getText().equals("W"))
       {
-        player.setForwardSpeedX(-SPEED); //speedY = SPEED;
-        player.setForwardSpeedY(-SPEED); //speedY = -SPEED;
+        player.setForwardSpeedX(playerSpeed); //speedY = currentSpeed;
+        player.setForwardSpeedY(playerSpeed); //speedY = currentSpeed;
       }
-      else if (event.getText().equals("a"))
+      else if (event.getText().equals("s")||event.getText().equals("S"))
       {
-        player.setRightSpeedX(-SPEED);
-        player.setRightSpeedY(-SPEED);
+        player.setForwardSpeedX(-playerSpeed); //speedY = currentSpeed;
+        player.setForwardSpeedY(-playerSpeed); //speedY = -currentSpeed;
       }
-      else if (event.getText().equals("d"))
+      else if (event.getText().equals("a")||event.getText().equals("A"))
       {
-        player.setRightSpeedX(SPEED);
-        player.setRightSpeedY(SPEED);
+        player.setRightSpeedX(-playerSpeed);
+        player.setRightSpeedY(-playerSpeed);
+      }
+      else if (event.getText().equals("d")||event.getText().equals("D"))
+      {
+        player.setRightSpeedX(playerSpeed);
+        player.setRightSpeedY(playerSpeed);
       }
     }
 
     public void keyReleased(KeyEvent event)
     {
-      if (event.getText().equals("w") || event.getText().equals("s"))
+      double playerSpeed = 0.0;
+
+      if (!event.isShiftDown())
       {
-        player.setForwardSpeedX(0.0);
-        player.setForwardSpeedY(0.0);
+        currentSpeed = SPEED;
       }
-      else if (event.getText().equals("a") || event.getText().equals("d"))
+
+      if (event.getText().equals("w") || event.getText().equals("W") || event.getText().equals("S") || event.getText().equals("s"))
       {
-        player.setRightSpeedX(0.0);
-        player.setRightSpeedY(0.0);
+        player.setForwardSpeedX(playerSpeed);
+        player.setForwardSpeedY(playerSpeed);
+      }
+      else if (event.getText().equals("a") || event.getText().equals("d") || event.getText().equals("A") || event.getText().equals("D"))
+      {
+        player.setRightSpeedX(playerSpeed);
+        player.setRightSpeedY(playerSpeed);
       }
     }
 
