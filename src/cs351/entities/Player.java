@@ -3,6 +3,7 @@ package cs351.entities;
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.Vector3;
+import cs351.core.KeyboardInput;
 
 /**
  * TODO using this as a test for the renderer - need to flesh this out later when the engine is up
@@ -15,6 +16,10 @@ public class Player extends Actor
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
   private double rightY = 0.0;
+  private double maxStamina = -1.0;
+  private double staminaRegen;
+  private double currentStamina;
+  private boolean currentlyRegeneratingStamina = false;
   private Vector3 forwardDirection = new Vector3(0.0);
   private Vector3 rightDirection = new Vector3(forwardDirection);
   private double stepSoundTimer = 0.0;
@@ -30,6 +35,15 @@ public class Player extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
+    if (maxStamina < 0.0)
+    {
+      maxStamina = Double.parseDouble(engine.getSettings().getValue("player_stamina"));
+      staminaRegen = Double.parseDouble(engine.getSettings().getValue("stamina_regen"));
+      currentStamina = maxStamina;
+    }
+
+    updateStamina(engine, deltaSeconds);
+
     baseSpeed = Double.parseDouble(engine.getSettings().getValue("player_speed"));
     //System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
@@ -102,5 +116,46 @@ public class Player extends Actor
   public Vector3 getRightVector()
   {
     return rightDirection;
+  }
+
+  public double getCurrentStamina()
+  {
+    return currentStamina;
+  }
+
+  private void updateStamina(Engine engine, double deltaSeconds)
+  {
+    double forwardX = this.forwardX;
+    double forwardY = this.forwardY;
+    double rightX = this.rightX;
+    double rightY = this.rightY;
+    if (engine.getKeyInputSystem().isKeyPressed(KeyboardInput.Keys.SHIFT_KEY) && currentStamina > 0.0 &&
+            !currentlyRegeneratingStamina)
+    {
+      forwardX = this.forwardX * 2.0;
+      forwardY = this.forwardY * 2.0;
+      rightX = this.rightX * 2.0;
+      rightY = this.rightY * 2.0;
+      currentStamina -= deltaSeconds;
+    }
+    else if (currentStamina <= 0.0)
+    {
+      currentlyRegeneratingStamina = true;
+      forwardX = this.forwardX / 2.0;
+      forwardY = this.forwardY / 2.0;
+      rightX = this.rightX / 2.0;
+      rightY = this.rightY / 2.0;
+      currentStamina += staminaRegen * deltaSeconds;
+      if (currentStamina > maxStamina)
+      {
+        currentlyRegeneratingStamina = false;
+        currentStamina = maxStamina;
+      }
+    }
+
+    setForwardSpeedX(forwardX);
+    setForwardSpeedY(forwardY);
+    setRightSpeedX(rightX);
+    setRightSpeedY(rightY);
   }
 }

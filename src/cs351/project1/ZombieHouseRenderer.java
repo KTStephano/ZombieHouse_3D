@@ -146,10 +146,6 @@ public class ZombieHouseRenderer implements Renderer
     {
       KeyboardInput keyInput = engine.getKeyInputSystem();
       double playerSpeed = SPEED;
-      if (keyInput.isKeyPressed(KeyboardInput.Keys.SHIFT_KEY))
-      {
-        playerSpeed *= 2.0;
-      }
 
       // Deal with forward/backward movement
       if (keyInput.isKeyPressed(KeyboardInput.Keys.W_KEY))

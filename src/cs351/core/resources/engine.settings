@@ -8,6 +8,10 @@ Note: anything without a '+' in front of it is treated as a comment
 
 + zombie_speed 0.5
 
++ player_stamina 5.0
+
++ stamina_regen 0.2
+
 If no clip is on the player can walk through all game objects except the floor/ceiling
 + player_no_clip off
 + collision on
