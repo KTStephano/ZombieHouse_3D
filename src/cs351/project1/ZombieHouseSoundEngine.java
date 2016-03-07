@@ -129,7 +129,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
       // player for the sound
       player.setRate(item.RATE);
       /**
-       * Right now the SoundEngine supports playing 2 different streams of sounds where each stream
+       * Right now the SoundEngine supports playing 3 different streams of sounds where each stream
        * can contain a sound that is in another stream. This lets actors queue duplicate sounds
        * without us being overwhelmed by their audio.
        */
