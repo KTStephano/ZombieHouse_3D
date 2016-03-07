@@ -351,7 +351,7 @@ public class EnvDemo2_0 implements World
     for (int i = 0; i < numZombies/2; i++)
     {
       Zombie wall1 = new RandomWalkZombie(textures[currTexture],
-              "resources/Zombie1_Animated.txt",
+              "resources/Zombie2_Animated.txt",
           rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
           rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
           getTilePixelWidth(), // sets width to be 1 tile
@@ -361,6 +361,7 @@ public class EnvDemo2_0 implements World
 
 
       Zombie wall2 = new LineWalkZombie(lineWalker[0],
+              "resources/Zombie1_Animated.txt",
           rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
           rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
           getTilePixelWidth(), // sets width to be 1 tile
