@@ -47,7 +47,7 @@ public class CollisionDetection
     /**
      * The idea with this function is that it first checks to see if
      * the actor stored in the class has overlapped with the given actor. If it has
-     * it calculates x and y offsets and pushes this actor away from the other.
+     * it calculates LOCATION_X and LOCATION_Y offsets and pushes this actor away from the other.
      *
      * @param other actor to check for collision with
      * @return true if the given actor collided with the stored actor and false if not

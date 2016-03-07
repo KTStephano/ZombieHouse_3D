@@ -1,31 +1,34 @@
 package cs351.project1;
 
-import java.net.URL;
-
 
 /**
  * @author Scott Cooper
  */
 public class SoundStackItem {
-  String soundFile;
-  double x;
-  double y;
-  public SoundStackItem(String soundFile, double x, double y)
+  public final String SOUND_FILE;
+  public final double LOCATION_X;
+  public final double LOCATION_Y;
+  public final double MAX_VOLUME;
+  public final double RATE;
+
+  public SoundStackItem(String soundFile, double x, double y, double maxVolume, double rate)
   {
-    this.soundFile = soundFile;
-    this.x = x;
-    this.y = y;
+    SOUND_FILE = soundFile;
+    LOCATION_X = x;
+    LOCATION_Y = y;
+    MAX_VOLUME = maxVolume;
+    RATE = rate;
   }
 
   @Override
   public int hashCode()
   {
-    return soundFile.hashCode();
+    return SOUND_FILE.hashCode();
   }
 
   @Override
   public boolean equals(Object other)
   {
-    return other instanceof SoundStackItem && soundFile.equals(((SoundStackItem)other).soundFile);
+    return other instanceof SoundStackItem && SOUND_FILE.equals(((SoundStackItem)other).SOUND_FILE);
   }
 }

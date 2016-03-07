@@ -6,7 +6,6 @@ import cs351.core.Vector3;
 import cs351.entities.Player;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
 
 import java.util.*;
 
@@ -49,7 +48,13 @@ public class ZombieHouseSoundEngine implements SoundEngine
   @Override
   public void queueSoundAtLocation(String sound, double x, double y)
   {
-    soundStack.push(new SoundStackItem(sound,x,y));
+    queueSoundAtLocation(sound, x, y, 1.0, 1.0);
+  }
+
+  @Override
+  public void queueSoundAtLocation(String sound, double x, double y, double maxVolume, double rate)
+  {
+    soundStack.push(new SoundStackItem(sound, x, y, maxVolume, rate));
   }
 
   @Override
@@ -60,7 +65,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
     playerRightDir.set(((Player)engine.getWorld().getPlayer()).getRightVector());
     playerLocation = engine.getWorld().getPlayer().getLocation();
     //playerRightDir.normalize();
-    // NOTE: x, y distance to centralPoint = sqrt((cp.x - x)^2 + (cp.y-y)^2)
+    // NOTE: LOCATION_X, LOCATION_Y distance to centralPoint = sqrt((cp.LOCATION_X - LOCATION_X)^2 + (cp.LOCATION_Y-LOCATION_Y)^2)
     // determines volume during playback
 
     final double VOL_DIVISION_NEAR = 0.25f;
@@ -70,8 +75,8 @@ public class ZombieHouseSoundEngine implements SoundEngine
       tmpSoundStackItem = soundStack.pop();
 
       //double relativeDistance = 40;
-      double relativeDistance = (tmpSoundStackItem.x-centralPoint.x)*(tmpSoundStackItem.x-centralPoint.x)
-                               +(tmpSoundStackItem.y-centralPoint.y) *(tmpSoundStackItem.y-centralPoint.y);
+      double relativeDistance = (tmpSoundStackItem.LOCATION_X -centralPoint.x)*(tmpSoundStackItem.LOCATION_X -centralPoint.x)
+                               +(tmpSoundStackItem.LOCATION_Y -centralPoint.y) *(tmpSoundStackItem.LOCATION_Y -centralPoint.y);
       //if (relativeDistance < playerHearing) System.out.println("DIST: " + relativeDistance);
       if (relativeDistance == 0.0) relativeDistance = 1.0f;
       double soundVolume = 1.0f - relativeDistance / (playerHearing * playerHearing);
@@ -116,7 +121,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
     try
     {
       // extract the available media players for this frame
-      MediaPlayer player = getAvailableMediaPlayer(item.soundFile);
+      MediaPlayer player = getAvailableMediaPlayer(item.SOUND_FILE);
       //System.out.println(player);
       if (player == null) return; // can't do anything valid this frame
       // If the sound has been loaded before, don't reload it - just get the active media
@@ -128,7 +133,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
        */
       soundBackBuffer.add(player);
       double mergedVolume = player.getVolume() + vol - player.getVolume() * vol;
-      Vector3 soundLoc = new Vector3(item.x, item.y, 0.0);
+      Vector3 soundLoc = new Vector3(item.LOCATION_X, item.LOCATION_Y, 0.0);
       Vector3 soundLocToPlayerLoc = soundLoc.subtract(playerLocation);
       soundLocToPlayerLoc.normalize();
       double leftRightBalance = playerRightDir.dot(soundLocToPlayerLoc);

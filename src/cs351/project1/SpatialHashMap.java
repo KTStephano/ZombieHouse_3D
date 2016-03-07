@@ -13,9 +13,9 @@ import java.util.*;
  * a spatial hash map that is 10 buckets by 10 buckets.
  *
  * In order to decide which bucket(s) an object goes in, the hashX and hashY functions are used.
- * These functions convert an (x, y) coordinate into a hashed pair representing an index
- * into a 2D array of buckets. From there the ending x and y are calculated by adding the
- * object's width and height (converted to tiles) to the hashed (x, y) coordinate pair.
+ * These functions convert an (LOCATION_X, LOCATION_Y) coordinate into a hashed pair representing an index
+ * into a 2D array of buckets. From there the ending LOCATION_X and LOCATION_Y are calculated by adding the
+ * object's width and height (converted to tiles) to the hashed (LOCATION_X, LOCATION_Y) coordinate pair.
  */
 public class SpatialHashMap implements Iterable<Collection<Actor>>
 {
@@ -57,8 +57,8 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
   public SpatialHashMap(int worldPixelWidth, int worldPixelHeight,
                         int tilePixelWidth, int tilePixelHeight)
   {
-    CELL_SIZE_X = tilePixelWidth; // size of each cell (bucket) in the x direction
-    CELL_SIZE_Y = tilePixelHeight; // size of each cell (bucket) in the y direction
+    CELL_SIZE_X = tilePixelWidth; // size of each cell (bucket) in the LOCATION_X direction
+    CELL_SIZE_Y = tilePixelHeight; // size of each cell (bucket) in the LOCATION_Y direction
     NUM_BUCKETS_X = worldPixelWidth / tilePixelWidth + 1; // add some padding
     NUM_BUCKETS_Y = worldPixelHeight / tilePixelHeight + 1; // add some padding
     BUCKETS = new Bucket[NUM_BUCKETS_X][NUM_BUCKETS_Y];
@@ -137,18 +137,18 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
   }
 
   /**
-   * Takes the x-location of an actor and converts it to a hash value. It always keeps
+   * Takes the LOCATION_X-location of an actor and converts it to a hash value. It always keeps
    * the location within the number of buckets.
    *
-   * Example: if there is a 1000 x 1000 pixel board where each tile is 50 x 50 pixels,
-   * the spacial hash map will be 1000 / 50 x 1000 / 50 = 20 x 20 buckets large.
+   * Example: if there is a 1000 LOCATION_X 1000 pixel board where each tile is 50 LOCATION_X 50 pixels,
+   * the spacial hash map will be 1000 / 50 LOCATION_X 1000 / 50 = 20 LOCATION_X 20 buckets large.
    *
    * If an object is located at point (787, 562) on the board, 787 / 50 = (int)15.74 = 15
    * and 562 / 50 = (int)11.24 = 11, so the object will at the minimum be placed into the bucket
    * at the location BUCKETS[15][11].
    *
-   * @param x x value
-   * @return hashed code of the given x value
+   * @param x LOCATION_X value
+   * @return hashed code of the given LOCATION_X value
    */
   private int hashX(double x)
   {
@@ -156,13 +156,13 @@ public class SpatialHashMap implements Iterable<Collection<Actor>>
   }
 
   /**
-   * Takes the y-location of an actor and converts it to a hash value. It always keeps
+   * Takes the LOCATION_Y-location of an actor and converts it to a hash value. It always keeps
    * the location within the number of buckets.
    *
    * See hashX's example for more information.
    *
-   * @param y y value
-   * @return hashed code of the given y value
+   * @param y LOCATION_Y value
+   * @return hashed code of the given LOCATION_Y value
    */
   private int hashY(double y)
   {

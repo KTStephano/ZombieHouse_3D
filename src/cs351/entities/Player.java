@@ -11,7 +11,7 @@ import cs351.core.KeyboardInput;
 public class Player extends Actor
 {
   protected boolean isPlayer=true; // true -- this is the Player
-  private double baseSpeed = 2.0; // for x and y movement - measured in tiles per second
+  private double baseSpeed = 2.0; // for LOCATION_X and LOCATION_Y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;

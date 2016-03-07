@@ -96,7 +96,7 @@ public class ZombieHouseRenderer implements Renderer
     private double prevX = 0.0;
     private double angle = 0.0;
     private final double SPEED = 1.0;
-    private double currentSpeed = SPEED; // for x and y movement
+    private double currentSpeed = SPEED; // for LOCATION_X and LOCATION_Y movement
     private double doubleSpeed = currentSpeed * 2.0;
 
     public PlayerController(Player player)
@@ -104,7 +104,7 @@ public class ZombieHouseRenderer implements Renderer
       this.player = player;
       translation = new Translate(0.0, 0.0, 0.0);
       rotation = new Rotate(0.0, 0.0, 0.0);
-      rotation.setAxis(new Point3D(0.0, 1.0, 0.0)); // sets it to rotate about the y-axis
+      rotation.setAxis(new Point3D(0.0, 1.0, 0.0)); // sets it to rotate about the LOCATION_Y-axis
       rotation.setAngle(angle);
       buildDirectionVectors();
       scene.setOnMouseMoved(this::mouseMoved);
@@ -192,29 +192,29 @@ public class ZombieHouseRenderer implements Renderer
       // for information on this, see:
       // http://stackoverflow.com/questions/1568568/how-to-convert-euler-angles-to-directional-vector
       //
-      // In our case the angle variable represents yaw (rotation about the y-axis), but pitch and roll remain at a constant 0.0. Because
+      // In our case the angle variable represents yaw (rotation about the LOCATION_Y-axis), but pitch and roll remain at a constant 0.0. Because
       // of this, the z-component of the direction vector is always 0, so it is a 2D direction vector in the end (starts off pointing
-      // down x-axis at 0 degrees, y-axis at 90 degrees, etc.).
+      // down LOCATION_X-axis at 0 degrees, LOCATION_Y-axis at 90 degrees, etc.).
       // Notes:
-      //        1) When the angle variable is 0, the direction vector points straight down the x-axis (on a 2-dimensional grid)
-      //        2) When the angle variable is 90, the direction vector points straight up the y-axis
-      //        3) For our game, an actor's y-component represents forward in 3D space and its x-component represents side to side
+      //        1) When the angle variable is 0, the direction vector points straight down the LOCATION_X-axis (on a 2-dimensional grid)
+      //        2) When the angle variable is 90, the direction vector points straight up the LOCATION_Y-axis
+      //        3) For our game, an actor's LOCATION_Y-component represents forward in 3D space and its LOCATION_X-component represents side to side
 
-      // CAUTION: The values are reversed: direction's x-component should be Math.cos(degreesToRadians(angle)), but it is
-      // inverted since the x-component needs to point straight ahead, but straight ahead (for us) is the y-axis
+      // CAUTION: The values are reversed: direction's LOCATION_X-component should be Math.cos(degreesToRadians(angle)), but it is
+      // inverted since the LOCATION_X-component needs to point straight ahead, but straight ahead (for us) is the LOCATION_Y-axis
       direction.set(Math.sin(degreesToRadians(angle)), Math.cos(degreesToRadians(angle)), 0.0);
       direction.normalize(); // with direction vectors you only need their magnitude to be 1.0 since their job is just to point
       // For more information on this, see:
       // http://answers.unity3d.com/questions/228203/getting-vector-which-is-pointing-to-the-rightleft.html
-      // I dropped the negative since in JavaFX the -y points up instead of down, so when x = 1.0, the right of
-      // that should be y = -1.0, but in JavaFX it needs to be y = 1.0
+      // I dropped the negative since in JavaFX the -LOCATION_Y points up instead of down, so when LOCATION_X = 1.0, the right of
+      // that should be LOCATION_Y = -1.0, but in JavaFX it needs to be LOCATION_Y = 1.0
 
       // CAUTION: The negative sign should be in front of direction.getY(), but since direction's components
       // are reversed I had to swap it around for the math to work inside of the Player class (otherwise right
       // became left and left became right)
       right.set(direction.getY(), -direction.getX(), 0.0); // figure out the direction of right
       // this is flipped (getY first instead of getX) because we start off with a direction vector that points
-      // down the x-axis, and we want that initial pointing to represent forward.
+      // down the LOCATION_X-axis, and we want that initial pointing to represent forward.
       player.setForwardDirection(direction);
       player.setRightDirection(right);
     }

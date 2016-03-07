@@ -18,25 +18,38 @@ public interface SoundEngine
    * and all future requests to play sounds should use the new point
    * in their volume calculations.
    *
-   * @param x center x-coordinate
-   * @param y center y-coordinate
+   * @param x center LOCATION_X-coordinate
+   * @param y center LOCATION_Y-coordinate
    */
   void setCentralPoint(double x, double y);
 
   /**
    * This function should not immediately play the sound at location
-   * (x, y) but should instead add it to a queue. When the SoundEngine is told
+   * (LOCATION_X, LOCATION_Y) but should instead add it to a queue. When the SoundEngine is told
    * to flush all sounds from its queue, that is the point when all sounds
    * should be played.
    *
    * The reason for this delay is so that the SoundEngine can blend/merge/etc. the
    * sounds it gets so that they sound better to the user.
    *
-   * @param sound sound to play (should be of the form "containingFile/sound.x")
-   * @param x x-coordinate where the sound started
-   * @param y y-coordinate where the sound started
+   * @param sound sound to play (should be of the form "sounds/sound.LOCATION_X")
+   * @param x LOCATION_X-coordinate where the sound started
+   * @param y LOCATION_Y-coordinate where the sound started
    */
   void queueSoundAtLocation(String sound, double x, double y);
+
+  /**
+   * This function will queue a sound at the given location with maximum volume
+   * and rate (how fast/slow the sound plays) options. This gives more control
+   * over how the sound plays back in the game.
+   *
+   * @param sound sound to play (should be of the form "sounds/sound.LOCATION_X")
+   * @param x LOCATION_X-coordinate where the sound started
+   * @param y LOCATION_Y-coordinate where the sound started
+   * @param maxVolume maximum volume of the sound (0.0 to 1.0)
+   * @param rate maximum rate of the sound (no lower than 0.0)
+   */
+  void queueSoundAtLocation(String sound, double x, double y, double maxVolume, double rate);
 
   /**
    * When this function is called, all sounds that were added to the sound queue

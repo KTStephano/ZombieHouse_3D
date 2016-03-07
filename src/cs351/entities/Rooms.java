@@ -324,7 +324,7 @@ public class Rooms extends Application
           if(numberOfExistingHallways < 6)
           {
             /* there is a weird offset issue that intitializing the first
-             * x takes care of. The only way to see it is drawing the 
+             * LOCATION_X takes care of. The only way to see it is drawing the
              * pixels by hand
              */
             Rectangle hall3 = new Rectangle(x + 1, y, 1, 1);
@@ -397,8 +397,8 @@ public class Rooms extends Application
   
   /*
    ===================================================
-   Returns a random number to divide the x axis or the
-   y axis. The upper and lower bound variables 
+   Returns a random number to divide the LOCATION_X axis or the
+   LOCATION_Y axis. The upper and lower bound variables
    restrict the line division between 1/3 and 2/3. the
    reason for this is so the hallways and borders 
    don't end up too close to another wall.

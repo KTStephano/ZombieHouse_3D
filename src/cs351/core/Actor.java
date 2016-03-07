@@ -196,8 +196,8 @@ public abstract class Actor
   /**
    * Overwrites the Actor's previous location with a new location.
    *
-   * @param x x-coordinate
-   * @param y y-coordinate
+   * @param x LOCATION_X-coordinate
+   * @param y LOCATION_Y-coordinate
    */
   public void setLocation(double x, double y)
   {

@@ -277,11 +277,11 @@ public class RenderEntity
         {
           elements = (line.substring(2)).split(" ", 3);
           for (int i = 0; i < elements.length; i++) faces[i] = elements[i].split("/", 3);
-          for (int x = 0; x < faces.length; x++)
+          for (int LOCATION_X = 0; LOCATION_X < faces.length; LOCATION_X++)
           {
-            for (int y = 0; y < faces[0].length; y++)
+            for (int LOCATION_Y = 0; LOCATION_Y < faces[0].length; LOCATION_Y++)
             {
-              facesBuffer.add(Short.parseShort(faces[x][y]));
+              facesBuffer.add(Short.parseShort(faces[LOCATION_X][LOCATION_Y]));
             }
           }
         }

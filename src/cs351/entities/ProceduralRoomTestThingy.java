@@ -132,7 +132,7 @@ public class ProceduralRoomTestThingy extends Application
       @Override
       public void handle(long arg0)
       {
-     //  System.out.println("player location x"+ p.getLocation().getX() + "y is "+ p.getLocation().getY());
+     //  System.out.println("player location LOCATION_X"+ p.getLocation().getX() + "LOCATION_Y is "+ p.getLocation().getY());
        //System.out.println("> " + engine.getWorld().getPlayer().getLocation().getX());
       }
     }.start();
@@ -199,7 +199,7 @@ public class ProceduralRoomTestThingy extends Application
         {
           if ((x > r.xStartPt) && (y > r.yStartPt ) && (x < r.width - 1) && (y < r.height - 1))
           {
-//            Rectangle r2 = new Rectangle(x, y, 1, 1);
+//            Rectangle r2 = new Rectangle(LOCATION_X, LOCATION_Y, 1, 1);
 //            r2.setFill(Color.RED);
 //            root.getChildren().add(r2);
             if(x == r.width-2 && (y == r.height - 2)) quadRantNumber++;
@@ -520,8 +520,8 @@ public class ProceduralRoomTestThingy extends Application
   
   /*
    ===================================================
-   Returns a random number to divide the x axis or the
-   y axis. The upper and lower bound variables 
+   Returns a random number to divide the LOCATION_X axis or the
+   LOCATION_Y axis. The upper and lower bound variables
    restrict the line division between 1/3 and 2/3. the
    reason for this is so the hallways and borders 
    don't end up too close to another wall
