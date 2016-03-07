@@ -640,7 +640,6 @@ public class ProceduralRoomTestThingy extends Application
          {
            SpawnPoint sp = new SpawnPoint(x + 1, y);
           // System.out.println("x: "+ sp.getX() + "y: " + sp.getY());
-           System.err.println(boardArray[x][y]);
          }
        }
        System.out.print(boardArray[y][x]);
