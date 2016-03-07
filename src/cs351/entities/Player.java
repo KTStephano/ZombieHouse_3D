@@ -24,6 +24,8 @@ public class Player extends Actor
   private double maxStamina = -1.0;
   private double staminaRegen;
   private double currentStamina;
+  private double startingHealth = -1.0;
+  private double currentHealth;
   private boolean currentlyRegeneratingStamina = false;
   private Vector3 forwardDirection = new Vector3(0.0);
   private Vector3 rightDirection = new Vector3(forwardDirection);
@@ -45,6 +47,11 @@ public class Player extends Actor
       maxStamina = Double.parseDouble(engine.getSettings().getValue("player_stamina"));
       staminaRegen = Double.parseDouble(engine.getSettings().getValue("stamina_regen"));
       currentStamina = maxStamina;
+    }
+    if (startingHealth < 0.0)
+    {
+      startingHealth = Double.parseDouble(engine.getSettings().getValue("player_health"));
+      currentHealth = startingHealth;
     }
 
     updateStamina(engine, deltaSeconds);
@@ -130,6 +137,11 @@ public class Player extends Actor
   public double getCurrentStamina()
   {
     return currentStamina;
+  }
+
+  public double getCurrentHealth()
+  {
+    return currentHealth;
   }
 
   private void updateStamina(Engine engine, double deltaSeconds)
