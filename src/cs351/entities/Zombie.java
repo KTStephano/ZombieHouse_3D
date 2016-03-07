@@ -21,6 +21,9 @@ public class Zombie extends Actor
   private double soundTimer = 0.0;
   private double xDirection = 0;
   private double yDirection = 0;
+  private String[] sounds = { "sound/zombie_low.wav", "sound/zombie_chains_loud.wav", "sound/zombie_growl_intense.wav" };
+  private String intenseSound = "sound/zombie_growl_intense.wav";
+  private int currSound = 0;
 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -143,11 +146,24 @@ public class Zombie extends Actor
     if (soundTimer >= GlobalConstants.zombieDecisionRate * 2)
     {
       soundTimer = 0.0;
-
+      double playerHearingFar = Double.parseDouble(engine.getSettings().getValue("player_hearing"));
+      playerHearingFar = playerHearingFar - playerHearingFar / 3.0;
       //String filename = "sound/zombie.wav";
       //URL url = Zombie.class.getResource(filename);
-      engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
-
+      int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
+      int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
+      double dx = playerX - getLocation().getX();
+      double dy = playerY - getLocation().getY();
+      if (dx * dx + dy * dy >= playerHearingFar && sounds[currSound].equals(intenseSound))
+      {
+        engine.getSoundEngine().queueSoundAtLocation(intenseSound, getLocation().getX(), getLocation().getY());
+      }
+      else if (!sounds[currSound].equals(intenseSound))
+      {
+        engine.getSoundEngine().queueSoundAtLocation(sounds[currSound], getLocation().getX(), getLocation().getY());
+      }
+      currSound++;
+      if (currSound >= sounds.length) currSound = 0;
     }
   }
   public void collided(Engine engine, Actor actor)

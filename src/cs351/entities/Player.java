@@ -58,7 +58,7 @@ public class Player extends Actor
     updateStamina(engine, deltaSeconds);
 
     baseSpeed = Double.parseDouble(engine.getSettings().getValue("player_speed"));
-    //System.out.println(1 / deltaSeconds);
+    System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
     //System.out.println(forwardX);
     double stepTimerOffset = forwardX > 0.0 ? forwardX : -forwardX;
