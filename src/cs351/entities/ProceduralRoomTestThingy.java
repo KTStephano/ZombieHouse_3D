@@ -46,7 +46,6 @@ public class ProceduralRoomTestThingy extends Application
   private Queue<ProceduralRoomTestThingy> divideRoomsQueue = new LinkedList<>();
   
   private Queue<ProceduralRoomTestThingy> unReachableRooms = new LinkedList<>();
-  private Queue<ProceduralRoomTestThingy> quadQueue = new LinkedList<>();
   private int numberOfExistingHallways = 0;
   static final boolean VERTICAL        = true;
   static final boolean HORIZONTAL      = false;
@@ -170,17 +169,22 @@ public class ProceduralRoomTestThingy extends Application
       
      // connectRooms();
       
+      // This is to split up the map into 4 different areas with different 
+      // tile textures
       if( divideRoomsQueue.size() == 4) printQuadrant(divideRoomsQueue);
       
       //TODO change value below to determine how many rooms get created
-      if( divideRoomsQueue.size()  > 14)
+      if( divideRoomsQueue.size() > 14)
       {
+       // printQuadrant(divideRoomsQueue);
         break;
       }
       
     }
     
-   // connectRooms();
+    connectRooms();
+    
+    createExit();
     
     printArray();
     //ALSO connectRooms is being called in add to queue
@@ -209,6 +213,7 @@ public class ProceduralRoomTestThingy extends Application
       }
     }
   }
+  
   
   /*
   =================================================
@@ -514,7 +519,7 @@ public class ProceduralRoomTestThingy extends Application
       changeSplitDir();
       n++;
     }
-    connectRooms();
+   // connectRooms();
   }
   
   
@@ -596,20 +601,48 @@ public class ProceduralRoomTestThingy extends Application
   return the coordinates of this center
   =====================================================
   */
- public Point getPoints()
- {
-   Point center = new Point((int) (Math.floor(xStartPt + width) / 2), 
-                                   Math.floor((yStartPt + height) / 2));
-   return center;
- }
+// public Point getPoints()
+// {
+//   Point center = new Point((int) (Math.floor(xStartPt + width) / 2), 
+//                                   Math.floor((yStartPt + height) / 2));
+//   return center;
+// }
  
+ 
+ public void createExit(){
+   boardArray[BOARD_WIDTH-2][BOARD_HEIGHT-1]  = 6;
+   boardArray[BOARD_WIDTH-3][BOARD_HEIGHT-1]  = 6;
+   boardArray[BOARD_WIDTH-4][BOARD_HEIGHT-1]  = 6;
+   boardArray[BOARD_WIDTH-5][BOARD_HEIGHT-1]  = 6;
+   boardArray[BOARD_WIDTH-6][BOARD_HEIGHT-1]  = 6;
+   boardArray[BOARD_WIDTH-7][BOARD_HEIGHT-1]  = 6;
+   boardArray[BOARD_WIDTH-8][BOARD_HEIGHT-1]  = 69;
+   
+   boardArray[BOARD_WIDTH-2][BOARD_HEIGHT-2]  = 6;
+   boardArray[BOARD_WIDTH-3][BOARD_HEIGHT-2]  = 6;
+   boardArray[BOARD_WIDTH-4][BOARD_HEIGHT-2]  = 6;
+   boardArray[BOARD_WIDTH-5][BOARD_HEIGHT-2]  = 6;
+   boardArray[BOARD_WIDTH-6][BOARD_HEIGHT-2]  = 6;
+   boardArray[BOARD_WIDTH-7][BOARD_HEIGHT-2]  = 6;
+ }
  
  public void printArray()
  {
+   int n = 0;
    for (int x = 0; x < BOARD_WIDTH; x++)
    {
      for (int y = 0; y < BOARD_HEIGHT; y++)
      {
+       //this will get the spawn location inside a hallway
+       if ( (y == 1) && (y != 100) && x >  0)
+       {
+         if ( boardArray[x][y] == 1 )
+         {
+           SpawnPoint sp = new SpawnPoint(x + 1, y);
+          // System.out.println("x: "+ sp.getX() + "y: " + sp.getY());
+           System.err.println(boardArray[x][y]);
+         }
+       }
        System.out.print(boardArray[y][x]);
      }
      System.out.println("\n");
@@ -624,31 +657,31 @@ public class ProceduralRoomTestThingy extends Application
   /*********************** END HELPER METHODS **************************/ 
   
   
-  /*
-  ================================================
-  Inner class that instantiates coordinate points
-  from the Rooms class
-  ================================================  
-  */
- public class Point {
-     
-     private double x;
-     private double y;
-
-     public Point(double x, double y)
-     {
-         this.x = x;
-         this.y = y;
-     }
-    
-     public double getX(){
-       return this.x;
-     }
-     
-     public double getY(){
-       return this.y;
-     }
- }
+//  /*
+//  ================================================
+//  Inner class that instantiates coordinate points
+//  from the Rooms class
+//  ================================================  
+//  */
+// public class Point {
+//     
+//     private double x;
+//     private double y;
+//
+//     public Point(double x, double y)
+//     {
+//         this.x = x;
+//         this.y = y;
+//     }
+//    
+//     public double getX(){
+//       return this.x;
+//     }
+//     
+//     public double getY(){
+//       return this.y;
+//     }
+// }
  
   @Override
   public void start(Stage stage)
