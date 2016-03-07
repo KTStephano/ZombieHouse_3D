@@ -40,6 +40,11 @@ public class LineWalkZombie extends Zombie {
     super(textureFile, x, y, width, height, depth);
   }
 
+  public LineWalkZombie(String textureFile, String modelFile, double x, double y, int width, int height, int depth)
+  {
+    super(textureFile, modelFile, x, y, width, height, depth);
+  }
+
   public UpdateResult update(Engine engine, double deltaSeconds)
   { 
 
