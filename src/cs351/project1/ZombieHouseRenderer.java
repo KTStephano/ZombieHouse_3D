@@ -65,24 +65,15 @@ public class ZombieHouseRenderer implements Renderer
   private class Texture
   {
     private Image texture;
-    private PhongMaterial material;
 
     public Texture(Image texture)
     {
       this.texture = texture;
-      material = new PhongMaterial(Color.BEIGE);
-      material.setDiffuseColor(Color.BEIGE);
-      material.setSpecularColor(Color.WHITE);
     }
 
     public Image getTexture()
     {
       return texture;
-    }
-
-    public PhongMaterial getMaterial()
-    {
-      return material;
     }
   }
 
