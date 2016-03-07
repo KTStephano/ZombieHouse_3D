@@ -213,23 +213,33 @@ public class EnvDemo2_0 implements World
     {
       for (int y = 0; y < numTilesHeight; y++)
       {
-//        if ((x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
-//        {
-//             Actor wall = new Wall("textures/block_texture_dark.jpg",
-//              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-//              y * getTilePixelHeight(), // same as above but for y
-//              getTilePixelWidth(), // sets the width to be 1 tile
-//              2 * getTilePixelHeight(), // sets the height to be 2 tiles
-//              getTilePixelHeight()); // sets the depth to be 1 tile
-//            actors.add(wall);
-//        }
-
+        if (x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
+        {
+          Actor wall = new Wall("textures/block_texture_dark.jpg",
+              x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for LOCATION_Y
+              getTilePixelWidth(), // sets the width to be 1 tile
+              2 * getTilePixelHeight(), // sets the height to be 2 tiles
+              getTilePixelHeight()); // sets the depth to be 1 tile
+          actors.add(wall);
+        }
       
         /*================================================================================================*/  
           if( (x < 100) && (y < 100)){
-            
            if (testArray[x][y] == 1) 
            {
+             if(index < 50)
+             {
+               Actor wall = new Wall("textures/wall_dirty.jpg",
+               x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+               y * getTilePixelHeight(), // same as above but for LOCATION_Y
+               getTilePixelWidth(), // sets the width to be 1 tile
+               2 * getTilePixelHeight(), // sets the height to be 2 tiles
+               getTilePixelHeight()); // sets the depth to be 1 tile
+               actors.add(wall);
+             }
+             else
+             {
                Actor wall = new Wall("textures/ice_texture.jpg",
                                      x * getTilePixelWidth(), 
                                      y * getTilePixelHeight(), 
@@ -237,19 +247,8 @@ public class EnvDemo2_0 implements World
                                      2 * getTilePixelHeight(), 
                                      getTilePixelHeight()); 
                actors.add(wall);
-              index++;
+             } index++;
            }
-           
-           if ( testArray[x][y] == 69){
-             Actor wall = new Wall("textures/oldbikiniBabe.jpg",
-             x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-             y * getTilePixelHeight(), // same as above but for y
-             getTilePixelWidth(), // sets the width to be 1 tile
-             2 * getTilePixelHeight(), // sets the height to be 2 tiles
-             getTilePixelHeight()); // sets the depth to be 1 tile
-             actors.add(wall);
-           }
-           
            // TODO remove this when cheapHackSolutionToPlayerGettingBuriedInAWall isn't needed
             else if (cheapHackSolutionToPlayerGettingBuriedInAWall)
            {
@@ -261,27 +260,26 @@ public class EnvDemo2_0 implements World
 
         /*============================================================================================================*/
          
-        //  System.out.print(testArray[x][y]);
+        //  System.out.print(testArray[LOCATION_X][LOCATION_Y]);
          
         FloorCeilingTile floor;
-
+        
+//        if (rand.nextInt(50)<10 )
+//        {
+//        // add a ZombieSpawningFloorTile and ceiling tile
+//        floor = new ZombieSpawningFloorTile("textures/red_zombie.jpg",//block_texture_dark.jpg",
+//            LOCATION_X * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+//            LOCATION_Y * getTilePixelHeight(), // same as above but for LOCATION_Y
+//            getTilePixelWidth(), // sets the width to be 1 tile
+//            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+//            getTilePixelHeight()); // sets the depth to be 1 tile
+//        }
         if(testArray[x][y] == 2){
           floor = new FloorCeilingTile("textures/brick_texture.jpg",
               true, // is part of floor
               false, // is not part of ceiling
-              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(), // same as above but for y
-              getTilePixelWidth(), // sets the width to be 1 tile
-              1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-              getTilePixelHeight()); // sets the depth to be 1 tile
-        }
-        
-        else if(testArray[x][y] == 6){
-          floor = new FloorCeilingTile("textures/oldbikiniBabe.jpg",
-              true, // is part of floor
-              false, // is not part of ceiling
-              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(), // same as above but for y
+              x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for LOCATION_Y
               getTilePixelWidth(), // sets the width to be 1 tile
               1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
               getTilePixelHeight()); // sets the depth to be 1 tile
@@ -292,8 +290,8 @@ public class EnvDemo2_0 implements World
         floor = new FloorCeilingTile("textures/rock_texture.jpg",
             true, // is part of floor
             false, // is not part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // same as above but for y
+            x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // same as above but for LOCATION_Y
             getTilePixelWidth(), // sets the width to be 1 tile
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
             getTilePixelHeight()); // sets the depth to be 1 tile
@@ -305,8 +303,8 @@ public class EnvDemo2_0 implements World
         floor = new FloorCeilingTile("textures/stone_texture.jpg",
             true, // is part of floor
             false, // is not part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // same as above but for y
+            x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // same as above but for LOCATION_Y
             getTilePixelWidth(), // sets the width to be 1 tile
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
             getTilePixelHeight()); // sets the depth to be 1 tile
@@ -315,8 +313,8 @@ public class EnvDemo2_0 implements World
           floor = new FloorCeilingTile("textures/brick_texture2.jpg",
               true, // is part of floor
               false, // is not part of ceiling
-              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(), // same as above but for y
+              x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for LOCATION_Y
               getTilePixelWidth(), // sets the width to be 1 tile
               1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
               getTilePixelHeight()); // sets the depth to be 1 tile
@@ -328,7 +326,7 @@ public class EnvDemo2_0 implements World
         FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
             false, // is not part of floor
             true, // is part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+            x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
             y * getTilePixelHeight(), // sets the width to be 1 tile
             getTilePixelWidth(), // sets the width to be the whole width of the map (covers the entire space)
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
@@ -337,12 +335,12 @@ public class EnvDemo2_0 implements World
         actors.add(floor);
         actors.add(ceiling);
       }
-    } //END for loop
+    }
   }
 
   private void initZombies()
   {
-    int numZombies = 10;
+    int numZombies = 50;
     int currTexture = 0;
     String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
         "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",

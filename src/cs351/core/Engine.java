@@ -4,8 +4,6 @@ import javafx.stage.Stage;
 
 import java.util.Collection;
 
-import cs351.DijkstraAlgorithm.TestDijkstraAlgorithm;
-
 
 /**
  * The Engine is the driving force behind a game. It ties together all of
@@ -22,12 +20,14 @@ public interface Engine
    */
   World getWorld();
   
+ 
   /**
-   * Returns Dijkstra's path finding class
+   * Returns the keyboard input system to ask which keys are pressed.
    *
-   * @return dijkstra's class
+   * @return reference to KeyboardInput instance
    */
-  TestDijkstraAlgorithm getDijkstra();
+  KeyboardInput getKeyInputSystem();
+
  
   /**
    * Returns the sound engine associated with the engine.

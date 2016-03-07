@@ -3,6 +3,7 @@ package cs351.entities;
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.Vector3;
+import cs351.core.KeyboardInput;
 
 /**
  * TODO using this as a test for the renderer - need to flesh this out later when the engine is up
@@ -10,11 +11,23 @@ import cs351.core.Vector3;
 public class Player extends Actor
 {
   protected boolean isPlayer=true; // true -- this is the Player
-  private double baseSpeed = 2.0; // for x and y movement - measured in tiles per second
+  private double baseSpeed = 2.0; // for LOCATION_X and LOCATION_Y movement - measured in tiles per second
   private double forwardX = 0.0; // not moving at first
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
   private double rightY = 0.0;
+  // These are used by the stamina system to keep track of the original values
+  private double cachedForwardX;
+  private double cachedForwardY;
+  private double cachedRightX;
+  private double cachedRightY;
+  private double maxStamina = -1.0;
+  private double staminaRegen;
+  private double currentStamina;
+  private double startingHealth = -1.0;
+  private double currentHealth;
+  private boolean currentlyRegeneratingStamina = false;
+  private boolean isRunning = false;
   private Vector3 forwardDirection = new Vector3(0.0);
   private Vector3 rightDirection = new Vector3(forwardDirection);
   private double stepSoundTimer = 0.0;
@@ -30,6 +43,20 @@ public class Player extends Actor
 
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
+    if (maxStamina < 0.0)
+    {
+      maxStamina = Double.parseDouble(engine.getSettings().getValue("player_stamina"));
+      staminaRegen = Double.parseDouble(engine.getSettings().getValue("stamina_regen"));
+      currentStamina = maxStamina;
+    }
+    if (startingHealth < 0.0)
+    {
+      startingHealth = Double.parseDouble(engine.getSettings().getValue("player_health"));
+      currentHealth = startingHealth;
+    }
+
+    updateStamina(engine, deltaSeconds);
+
     baseSpeed = Double.parseDouble(engine.getSettings().getValue("player_speed"));
     //System.out.println(1 / deltaSeconds);
     // totalSpeed represents the total speed per second in pixels
@@ -48,7 +75,8 @@ public class Player extends Actor
 
       stepLocX = getLocation().getX() + multiplier * rightDirection.getX();
       stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
-      engine.getSoundEngine().queueSoundAtLocation("sound/player_step.mp3", stepLocX, stepLocY);
+      if (isRunning) engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY, 2.0, 3.0);
+      else engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
       //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
     double totalSpeed = baseSpeed * deltaSeconds * engine.getWorld().getTilePixelWidth();
@@ -67,21 +95,25 @@ public class Player extends Actor
   public void setForwardSpeedX(double speedX)
   {
     forwardX = speedX;
+    cachedForwardX = forwardX;
   }
 
   public void setForwardSpeedY(double speedY)
   {
     forwardY = speedY;
+    cachedForwardY = forwardY;
   }
 
   public void setRightSpeedX(double speedX)
   {
     rightX = speedX;
+    cachedRightX = rightX;
   }
 
   public void setRightSpeedY(double speedY)
   {
     rightY = speedY;
+    cachedRightY = rightY;
   }
 
   public void setForwardDirection(Vector3 direction)
@@ -102,5 +134,50 @@ public class Player extends Actor
   public Vector3 getRightVector()
   {
     return rightDirection;
+  }
+
+  public double getCurrentStamina()
+  {
+    return currentStamina;
+  }
+
+  public double getCurrentHealth()
+  {
+    return currentHealth;
+  }
+
+  private void updateStamina(Engine engine, double deltaSeconds)
+  {
+    double forwardX;
+    double forwardY;
+    double rightX;
+    double rightY;
+    if (engine.getKeyInputSystem().isKeyPressed(KeyboardInput.Keys.SHIFT_KEY) && currentStamina >= 2 * deltaSeconds)// &&
+            //!currentlyRegeneratingStamina)
+    {
+      currentlyRegeneratingStamina = false;
+      isRunning = true;
+      forwardX = this.forwardX * 2.0;
+      forwardY = this.forwardY * 2.0;
+      rightX = this.rightX * 2.0;
+      rightY = this.rightY * 2.0;
+      currentStamina -= deltaSeconds;
+    }
+    else
+    {
+      isRunning = false;
+      forwardX = cachedForwardX;
+      forwardY = cachedForwardY;
+      rightX = cachedRightX;
+      rightY = cachedRightY;
+      currentStamina += staminaRegen * deltaSeconds;
+      //System.out.println(currentStamina);
+      if (currentStamina >= maxStamina) currentStamina = maxStamina;
+    }
+
+    setForwardSpeedX(forwardX);
+    setForwardSpeedY(forwardY);
+    setRightSpeedX(rightX);
+    setRightSpeedY(rightY);
   }
 }

@@ -211,15 +211,15 @@ public class EnvironmentDemo implements World
     {
       for (int y = 0; y < numTilesHeight; y++)
       {
-//        System.out.println(" i = " + x + " k = " + y);
+//        System.out.println(" i = " + LOCATION_X + " k = " + LOCATION_Y);
 //        System.out.println(" numTilesWidth = " + numTilesWidth + " numTilesHeight = " + numTilesHeight);
         // this first if checks to see if the current tile is on the border - if it is
         // it adds a wall
         if (x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
         {
           Actor wall = new Wall("textures/block_texture_dark.jpg",
-              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(), // same as above but for y
+              x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+              y * getTilePixelHeight(), // same as above but for LOCATION_Y
               getTilePixelWidth(), // sets the width to be 1 tile
               2 * getTilePixelHeight(), // sets the height to be 2 tiles
               getTilePixelHeight()); // sets the depth to be 1 tile
@@ -237,8 +237,8 @@ public class EnvironmentDemo implements World
              if(index < 250)
              {
                Actor wall = new Wall("textures/wall_dirty.jpg",
-               x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-               y * getTilePixelHeight(), // same as above but for y
+               x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+               y * getTilePixelHeight(), // same as above but for LOCATION_Y
                getTilePixelWidth(), // sets the width to be 1 tile
                2 * getTilePixelHeight(), // sets the height to be 2 tiles
                getTilePixelHeight()); // sets the depth to be 1 tile
@@ -273,8 +273,8 @@ public class EnvironmentDemo implements World
         {
         // add a ZombieSpawningFloorTile and ceiling tile
         floor = new ZombieSpawningFloorTile("textures/red_zombie.jpg",//block_texture_dark.jpg",
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // same as above but for y
+            x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // same as above but for LOCATION_Y
             getTilePixelWidth(), // sets the width to be 1 tile
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
             getTilePixelHeight()); // sets the depth to be 1 tile
@@ -285,8 +285,8 @@ public class EnvironmentDemo implements World
         floor = new FloorCeilingTile("textures/block_texture_dark.jpg",
             true, // is part of floor
             false, // is not part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // same as above but for y
+            x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
+            y * getTilePixelHeight(), // same as above but for LOCATION_Y
             getTilePixelWidth(), // sets the width to be 1 tile
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
             getTilePixelHeight()); // sets the depth to be 1 tile
@@ -294,7 +294,7 @@ public class EnvironmentDemo implements World
         FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
             false, // is not part of floor
             true, // is part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+            x * getTilePixelWidth(), // offset - when LOCATION_X = 0, this = 0, when LOCATION_X = 1, this = the tile width in pixels
             y * getTilePixelHeight(), // sets the width to be 1 tile
             getTilePixelWidth(), // sets the width to be the whole width of the map (covers the entire space)
             1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles

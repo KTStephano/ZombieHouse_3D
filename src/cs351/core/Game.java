@@ -1,6 +1,7 @@
 package cs351.core;
 
 import cs351.project1.*;
+import cs351.entities.Player;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -25,8 +26,9 @@ public class Game extends Application {
   @FXML private Button playButton;
   @FXML private  AnchorPane ZombieHouseAnchorPane;
   @FXML private StackPane zombieHouseScrollPane;
-  @FXML private Text gameTitle;
+  @FXML public static Text gameTitle;
   @FXML private Text gameTitle2;
+  @FXML public static Text stamina;
   private AnimationTimer timer = new MyTimer();
   private boolean started=true;
   private ZombieHouseRenderer renderer;
@@ -83,13 +85,21 @@ public class Game extends Application {
     stage.setTitle("Zombie House");
     stage.setScene(new Scene(root, 900, 750));
     stage.show();
+    boolean done = false;
+    stamina = null;
     for (Node node : root.getChildrenUnmodifiable())
     {
       if (node instanceof StackPane)
       {
         StackPane pane = (StackPane)node;
         renderer = new ZombieHouseRenderer(stage, pane, (int)pane.getWidth(), (int)pane.getHeight());
-      }
+      }      
+      if ((node instanceof Text) && (!done))
+      {
+        stamina = (Text)node;
+       // if (stamina.getText()!="Zombie House") 
+        //  done = true;
+       }
     }
 
     // if the above for loop does not find a StackPane, throw an exception
@@ -105,6 +115,15 @@ public class Game extends Application {
     @Override
     public void handle(long now)
     {
+      
+      double currStamina = ((Player)(engine.getWorld().getPlayer())).getCurrentStamina();
+      currStamina = (int)(1000*currStamina);
+      currStamina /=1000;
+      
+      if (Game.stamina!=null)
+      {
+        Game.stamina.setText("Stamina: "+currStamina);         
+      }
       // run the next frame
       engine.frame();
     }

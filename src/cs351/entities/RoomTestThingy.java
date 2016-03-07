@@ -140,7 +140,7 @@ public class RoomTestThingy extends Application
       x      = minRoomSize + rnd.nextInt(BOARD_WIDTH  - width - 1) + 1;
       y      = minRoomSize + rnd.nextInt(BOARD_HEIGHT - height - 1) + 1;
       
-      //TODO find out why x and y go outside of the bounds,
+      //TODO find out why LOCATION_X and LOCATION_Y go outside of the bounds,
 
       // Now create rooms with random values
       RoomTestThingy newRoom = new RoomTestThingy (x, y, width, height);
@@ -267,10 +267,10 @@ public class RoomTestThingy extends Application
     int minVal = Math.min(previous_X, new_X);
     int maxVal = Math.max(previous_X, new_X);
 
-    //Start at the previous x point and draw the path to the current x point
+    //Start at the previous LOCATION_X point and draw the path to the current LOCATION_X point
     for (int j = minVal; j < maxVal + 1; j++)
     {
-      // X direction increases, y stays fixed
+      // LOCATION_X direction increases, LOCATION_Y stays fixed
 //      Rectangle r = new Rectangle(j, previous_Y, 1, 1);
 //      r.setFill(Color.PINK);
 //      root.getChildren().add(r);
@@ -296,7 +296,7 @@ public class RoomTestThingy extends Application
     int minY_Val = Math.min(previous_Y, new_Y);
     int maxY_Val = Math.max(previous_Y, new_Y);
 
-    // Y direction increases, x stays fixed
+    // Y direction increases, LOCATION_X stays fixed
     for (int j = minY_Val; j < maxY_Val + 1; j++)
     {
 //      Rectangle r = new Rectangle(previous_X, j, 1, 1);

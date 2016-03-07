@@ -198,8 +198,8 @@ public class Zombie extends Actor
   protected Point2D getNextLocation(Engine engine, boolean canSmellPlayer, int [][] gameBoard)
   {
 
-    double x=-1;
-    double y=-1;
+    double LOCATION_X=-1;
+    double LOCATION_Y=-1;
     Point2D pt;
     try
     {
@@ -216,23 +216,23 @@ public class Zombie extends Actor
 
       if (nextZombieLocation!=null)
       {
-        x = nextZombieLocation.getX();
-        y = nextZombieLocation.getY();     
+        LOCATION_X = nextZombieLocation.getX();
+        LOCATION_Y = nextZombieLocation.getY();
       }
       else
       {
         Random rand = new Random();
-        // direction to add to x
+        // direction to add to LOCATION_X
         double xDirection = (int) ((100-rand.nextInt(200))/20000.0);
-        // direction to add to y
+        // direction to add to LOCATION_Y
         double yDirection = (int) ((100-rand.nextInt(200))/20000.0);
-        x = (getLocation().getX()+xDirection);
-        y = (getLocation().getY()+yDirection);
+        LOCATION_X = (getLocation().getX()+xDirection);
+        LOCATION_Y = (getLocation().getY()+yDirection);
       }
     }
     finally
     {
-      pt =  new Point2D(x, y);
+      pt =  new Point2D(LOCATION_X, LOCATION_Y);
     }
     return pt;
 

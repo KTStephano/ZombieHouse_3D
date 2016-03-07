@@ -96,7 +96,7 @@ public class ZombieHouseRenderer implements Renderer
     private double prevX = 0.0;
     private double angle = 0.0;
     private final double SPEED = 1.0;
-    private double currentSpeed = SPEED; // for x and y movement
+    private double currentSpeed = SPEED; // for LOCATION_X and LOCATION_Y movement
     private double doubleSpeed = currentSpeed * 2.0;
 
     public PlayerController(Player player)
@@ -104,12 +104,12 @@ public class ZombieHouseRenderer implements Renderer
       this.player = player;
       translation = new Translate(0.0, 0.0, 0.0);
       rotation = new Rotate(0.0, 0.0, 0.0);
-      rotation.setAxis(new Point3D(0.0, 1.0, 0.0)); // sets it to rotate about the y-axis
+      rotation.setAxis(new Point3D(0.0, 1.0, 0.0)); // sets it to rotate about the LOCATION_Y-axis
       rotation.setAngle(angle);
       buildDirectionVectors();
       scene.setOnMouseMoved(this::mouseMoved);
-      scene.setOnKeyPressed(this::keyPressed);
-      scene.setOnKeyReleased(this::keyReleased);
+      //scene.setOnKeyPressed(this::keyPressed);
+      //scene.setOnKeyReleased(this::keyReleased);
     }
 
     public Translate getTranslation()
@@ -122,8 +122,9 @@ public class ZombieHouseRenderer implements Renderer
       return rotation;
     }
 
-    public void update()
+    public void update(Engine engine)
     {
+      checkKeyStates(engine);
       rotation.setAngle(angle);
       buildDirectionVectors();
     }
@@ -141,57 +142,43 @@ public class ZombieHouseRenderer implements Renderer
       prevX = event.getX();
     }
 
-    public void keyPressed(KeyEvent event)
+    public void checkKeyStates(Engine engine)
     {
-      //if (event.getText().equals("w")) player.setLocation(player.getLocation().getX() + direction.getY(), player.getLocation().getY() + direction.getX());
-      //else if (event.getText().equals("s")) player.setLocation(player.getLocation().getX() + -direction.getY(), player.getLocation().getY() + -direction.getX());
-      if (event.isShiftDown())
-      {
-        currentSpeed = doubleSpeed;
-      }
+      KeyboardInput keyInput = engine.getKeyInputSystem();
+      double playerSpeed = SPEED;
 
-      double playerSpeed = currentSpeed;
-
-      if (event.getText().equals("w")||event.getText().equals("W"))
+      // Deal with forward/backward movement
+      if (keyInput.isKeyPressed(KeyboardInput.Keys.W_KEY))
       {
         player.setForwardSpeedX(playerSpeed); //speedY = currentSpeed;
         player.setForwardSpeedY(playerSpeed); //speedY = currentSpeed;
       }
-      else if (event.getText().equals("s")||event.getText().equals("S"))
+      else if (keyInput.isKeyPressed(KeyboardInput.Keys.S_KEY))
       {
         player.setForwardSpeedX(-playerSpeed); //speedY = currentSpeed;
-        player.setForwardSpeedY(-playerSpeed); //speedY = -currentSpeed;
+        player.setForwardSpeedY(-playerSpeed); //speedY = currentSpeed;
       }
-      else if (event.getText().equals("a")||event.getText().equals("A"))
+      else
+      {
+        player.setForwardSpeedX(0.0); //speedY = currentSpeed;
+        player.setForwardSpeedY(0.0); //speedY = currentSpeed;
+      }
+
+      // Deal with side-side movement
+      if (keyInput.isKeyPressed(KeyboardInput.Keys.D_KEY))
+      {
+        player.setRightSpeedX(playerSpeed);
+        player.setRightSpeedY(playerSpeed);
+      }
+      else if (keyInput.isKeyPressed(KeyboardInput.Keys.A_KEY))
       {
         player.setRightSpeedX(-playerSpeed);
         player.setRightSpeedY(-playerSpeed);
       }
-      else if (event.getText().equals("d")||event.getText().equals("D"))
+      else
       {
-        player.setRightSpeedX(playerSpeed);
-        player.setRightSpeedY(playerSpeed);
-      }
-    }
-
-    public void keyReleased(KeyEvent event)
-    {
-      double playerSpeed = 0.0;
-
-      if (!event.isShiftDown())
-      {
-        currentSpeed = SPEED;
-      }
-
-      if (event.getText().equals("w") || event.getText().equals("W") || event.getText().equals("S") || event.getText().equals("s"))
-      {
-        player.setForwardSpeedX(playerSpeed);
-        player.setForwardSpeedY(playerSpeed);
-      }
-      else if (event.getText().equals("a") || event.getText().equals("d") || event.getText().equals("A") || event.getText().equals("D"))
-      {
-        player.setRightSpeedX(playerSpeed);
-        player.setRightSpeedY(playerSpeed);
+        player.setRightSpeedX(0.0);
+        player.setRightSpeedY(0.0);
       }
     }
 
@@ -205,29 +192,29 @@ public class ZombieHouseRenderer implements Renderer
       // for information on this, see:
       // http://stackoverflow.com/questions/1568568/how-to-convert-euler-angles-to-directional-vector
       //
-      // In our case the angle variable represents yaw (rotation about the y-axis), but pitch and roll remain at a constant 0.0. Because
+      // In our case the angle variable represents yaw (rotation about the LOCATION_Y-axis), but pitch and roll remain at a constant 0.0. Because
       // of this, the z-component of the direction vector is always 0, so it is a 2D direction vector in the end (starts off pointing
-      // down x-axis at 0 degrees, y-axis at 90 degrees, etc.).
+      // down LOCATION_X-axis at 0 degrees, LOCATION_Y-axis at 90 degrees, etc.).
       // Notes:
-      //        1) When the angle variable is 0, the direction vector points straight down the x-axis (on a 2-dimensional grid)
-      //        2) When the angle variable is 90, the direction vector points straight up the y-axis
-      //        3) For our game, an actor's y-component represents forward in 3D space and its x-component represents side to side
+      //        1) When the angle variable is 0, the direction vector points straight down the LOCATION_X-axis (on a 2-dimensional grid)
+      //        2) When the angle variable is 90, the direction vector points straight up the LOCATION_Y-axis
+      //        3) For our game, an actor's LOCATION_Y-component represents forward in 3D space and its LOCATION_X-component represents side to side
 
-      // CAUTION: The values are reversed: direction's x-component should be Math.cos(degreesToRadians(angle)), but it is
-      // inverted since the x-component needs to point straight ahead, but straight ahead (for us) is the y-axis
+      // CAUTION: The values are reversed: direction's LOCATION_X-component should be Math.cos(degreesToRadians(angle)), but it is
+      // inverted since the LOCATION_X-component needs to point straight ahead, but straight ahead (for us) is the LOCATION_Y-axis
       direction.set(Math.sin(degreesToRadians(angle)), Math.cos(degreesToRadians(angle)), 0.0);
       direction.normalize(); // with direction vectors you only need their magnitude to be 1.0 since their job is just to point
       // For more information on this, see:
       // http://answers.unity3d.com/questions/228203/getting-vector-which-is-pointing-to-the-rightleft.html
-      // I dropped the negative since in JavaFX the -y points up instead of down, so when x = 1.0, the right of
-      // that should be y = -1.0, but in JavaFX it needs to be y = 1.0
+      // I dropped the negative since in JavaFX the -LOCATION_Y points up instead of down, so when LOCATION_X = 1.0, the right of
+      // that should be LOCATION_Y = -1.0, but in JavaFX it needs to be LOCATION_Y = 1.0
 
       // CAUTION: The negative sign should be in front of direction.getY(), but since direction's components
       // are reversed I had to swap it around for the math to work inside of the Player class (otherwise right
       // became left and left became right)
       right.set(direction.getY(), -direction.getX(), 0.0); // figure out the direction of right
       // this is flipped (getY first instead of getX) because we start off with a direction vector that points
-      // down the x-axis, and we want that initial pointing to represent forward.
+      // down the LOCATION_X-axis, and we want that initial pointing to represent forward.
       player.setForwardDirection(direction);
       player.setRightDirection(right);
     }
@@ -281,7 +268,7 @@ public class ZombieHouseRenderer implements Renderer
     initLighting();
 
     // orient the player to their rotation/location
-    orientPlayerToScene();
+    orientPlayerToScene(engine);
 
     // render the dynamic actors
     renderActors(engine, mode, deltaSeconds);
@@ -492,7 +479,7 @@ public class ZombieHouseRenderer implements Renderer
     }
   }
 
-  private void orientPlayerToScene()
+  private void orientPlayerToScene(Engine engine)
   {
     if (player == null) return;
     // calculate the amount of displacement between the current location the camera thinks
@@ -503,7 +490,7 @@ public class ZombieHouseRenderer implements Renderer
     //camera.getTransforms().addAll(translate);
     controller.getTranslation().setX(player.getLocation().getX());
     controller.getTranslation().setZ(player.getLocation().getY());
-    controller.update();
+    controller.update(engine);
   }
 
   private void setTranslationValuesForModel(Model model, double x, double y, double z)
