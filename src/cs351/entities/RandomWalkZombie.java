@@ -41,8 +41,19 @@ public class RandomWalkZombie extends Zombie {
       elapsedSeconds = 0.0;
       if (!canSmellPlayer(engine))
       {
+        // If the x/y directions are positive and set new direction is true,
+        // it means that with the current heading the zombie collided with something,
+        // so make the new direction be negative to get away from whatever we collided with
+        boolean shouldChooseNegativeX = xDirection > 0.0 && setNewDirection;
+        boolean shouldChooseNegativeY = yDirection > 0.0 && setNewDirection;
         xDirection = rand.nextDouble();
         yDirection = 1.0 - xDirection;
+        // If shouldChooseNegativeX/Y are true, the zombie is forced to make the heading
+        // choice negative - otherwise it makes it a random choice
+        if (shouldChooseNegativeX) xDirection = -xDirection;
+        else if (rand.nextInt(100) >= 50) xDirection = -xDirection;
+        if (shouldChooseNegativeY) yDirection = -yDirection;
+        else if (rand.nextInt(100) >= 50) yDirection = -yDirection;
         directionXY.set(xDirection, yDirection, 0.0);
       } 
       else

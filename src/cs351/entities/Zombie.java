@@ -24,6 +24,7 @@ public class Zombie extends Actor
   private String[] sounds = { "sound/zombie_low.wav", "sound/zombie_chains_loud.wav", "sound/zombie_growl_intense.wav" };
   private String intenseSound = "sound/zombie_growl_intense.wav";
   private int currSound = 0;
+  protected boolean setNewDirection = true;
 
   public Zombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -166,9 +167,20 @@ public class Zombie extends Actor
       if (currSound >= sounds.length) currSound = 0;
     }
   }
+
   public void collided(Engine engine, Actor actor)
   {
-
+    // direction should be maintained if floor or if we hit player
+    if (!actor.isPartOfFloor()&&!actor.isPlayer())
+    {
+      setNewDirection = true;
+      //elapsedSeconds = 0;
+    }    // direction should be maintained if floor or if we hit player
+    if (!actor.isPartOfFloor()&&!actor.isPlayer())
+    {
+      setNewDirection = true;
+      //elapsedSeconds = 0;
+    }
   }
 
   /*
