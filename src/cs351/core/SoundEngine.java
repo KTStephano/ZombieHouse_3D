@@ -46,7 +46,7 @@ public interface SoundEngine
    * @param sound sound to play (should be of the form "sounds/sound.LOCATION_X")
    * @param x LOCATION_X-coordinate where the sound started
    * @param y LOCATION_Y-coordinate where the sound started
-   * @param maxVolume maximum volume of the sound (0.0 to 1.0)
+   * @param maxVolume maximum volume of the sound (no lower than 0.0)
    * @param rate maximum rate of the sound (no lower than 0.0)
    */
   void queueSoundAtLocation(String sound, double x, double y, double maxVolume, double rate);

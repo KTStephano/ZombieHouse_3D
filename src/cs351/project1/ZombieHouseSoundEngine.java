@@ -80,6 +80,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
       //if (relativeDistance < playerHearing) System.out.println("DIST: " + relativeDistance);
       if (relativeDistance == 0.0) relativeDistance = 1.0f;
       double soundVolume = 1.0f - relativeDistance / (playerHearing * playerHearing);
+      soundVolume *= tmpSoundStackItem.MAX_VOLUME;
       //System.out.println("RAW VOL: " + soundVolume);
       if (soundVolume < 0.0f) continue;
         // If the distance is greater than a third of the player's hearing, cut it down by a lot
@@ -126,6 +127,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
       if (player == null) return; // can't do anything valid this frame
       // If the sound has been loaded before, don't reload it - just get the active media
       // player for the sound
+      player.setRate(item.RATE);
       /**
        * Right now the SoundEngine supports playing 2 different streams of sounds where each stream
        * can contain a sound that is in another stream. This lets actors queue duplicate sounds

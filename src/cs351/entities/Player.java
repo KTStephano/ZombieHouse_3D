@@ -27,6 +27,7 @@ public class Player extends Actor
   private double startingHealth = -1.0;
   private double currentHealth;
   private boolean currentlyRegeneratingStamina = false;
+  private boolean isRunning = false;
   private Vector3 forwardDirection = new Vector3(0.0);
   private Vector3 rightDirection = new Vector3(forwardDirection);
   private double stepSoundTimer = 0.0;
@@ -74,7 +75,8 @@ public class Player extends Actor
 
       stepLocX = getLocation().getX() + multiplier * rightDirection.getX();
       stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
-      engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
+      if (isRunning) engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY, 2.0, 3.0);
+      else engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
       //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
     double totalSpeed = baseSpeed * deltaSeconds * engine.getWorld().getTilePixelWidth();
@@ -154,6 +156,7 @@ public class Player extends Actor
             //!currentlyRegeneratingStamina)
     {
       currentlyRegeneratingStamina = false;
+      isRunning = true;
       forwardX = this.forwardX * 2.0;
       forwardY = this.forwardY * 2.0;
       rightX = this.rightX * 2.0;
@@ -162,6 +165,7 @@ public class Player extends Actor
     }
     else
     {
+      isRunning = false;
       forwardX = cachedForwardX;
       forwardY = cachedForwardY;
       rightX = cachedRightX;
