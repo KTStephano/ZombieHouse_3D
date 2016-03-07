@@ -34,7 +34,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
   private HashMap<String, HashSet<MediaPlayer>> availableSounds = new HashMap<>();
   private HashSet<MediaPlayer> activeSounds = new HashSet<>(3);
   private HashSet<MediaPlayer> soundBackBuffer = new HashSet<>(); // sounds waiting to be pushed to activeSounds
-  private final int MAX_SOUNDS_PER_SOUND_FILE = 2;
+  private final int MAX_SOUNDS_PER_SOUND_FILE = 3;
   static SoundStackItem  tmpSoundStackItem;
   private double playerHearing = 1.0f;
   private Vector3 playerLookDir = new Vector3(0.0), playerRightDir = new Vector3(0.0), playerLocation;
@@ -224,6 +224,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
     player.setVolume(0.0);
     player.play();
     final MediaPlayer PLAYER = player;
+    //player.setRate(1.5);
 
     PLAYER.setOnEndOfMedia(new Runnable()
     {

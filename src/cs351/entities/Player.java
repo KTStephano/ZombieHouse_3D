@@ -16,6 +16,11 @@ public class Player extends Actor
   private double forwardY = 0.0; // not moving at first
   private double rightX = 0.0;
   private double rightY = 0.0;
+  // These are used by the stamina system to keep track of the original values
+  private double cachedForwardX;
+  private double cachedForwardY;
+  private double cachedRightX;
+  private double cachedRightY;
   private double maxStamina = -1.0;
   private double staminaRegen;
   private double currentStamina;
@@ -62,7 +67,7 @@ public class Player extends Actor
 
       stepLocX = getLocation().getX() + multiplier * rightDirection.getX();
       stepLocY = getLocation().getY() + multiplier * rightDirection.getY();
-      engine.getSoundEngine().queueSoundAtLocation("sound/player_step.mp3", stepLocX, stepLocY);
+      engine.getSoundEngine().queueSoundAtLocation("sound/player_step.wav", stepLocX, stepLocY);
       //engine.getSoundEngine().queueSoundAtLocation("sound/zombie_low.wav", getLocation().getX(), getLocation().getY());
     }
     double totalSpeed = baseSpeed * deltaSeconds * engine.getWorld().getTilePixelWidth();
@@ -81,21 +86,25 @@ public class Player extends Actor
   public void setForwardSpeedX(double speedX)
   {
     forwardX = speedX;
+    cachedForwardX = forwardX;
   }
 
   public void setForwardSpeedY(double speedY)
   {
     forwardY = speedY;
+    cachedForwardY = forwardY;
   }
 
   public void setRightSpeedX(double speedX)
   {
     rightX = speedX;
+    cachedRightX = rightX;
   }
 
   public void setRightSpeedY(double speedY)
   {
     rightY = speedY;
+    cachedRightY = rightY;
   }
 
   public void setForwardDirection(Vector3 direction)
@@ -125,32 +134,29 @@ public class Player extends Actor
 
   private void updateStamina(Engine engine, double deltaSeconds)
   {
-    double forwardX = this.forwardX;
-    double forwardY = this.forwardY;
-    double rightX = this.rightX;
-    double rightY = this.rightY;
-    if (engine.getKeyInputSystem().isKeyPressed(KeyboardInput.Keys.SHIFT_KEY) && currentStamina > 0.0 &&
-            !currentlyRegeneratingStamina)
+    double forwardX;
+    double forwardY;
+    double rightX;
+    double rightY;
+    if (engine.getKeyInputSystem().isKeyPressed(KeyboardInput.Keys.SHIFT_KEY) && currentStamina >= 2 * deltaSeconds)// &&
+            //!currentlyRegeneratingStamina)
     {
+      currentlyRegeneratingStamina = false;
       forwardX = this.forwardX * 2.0;
       forwardY = this.forwardY * 2.0;
       rightX = this.rightX * 2.0;
       rightY = this.rightY * 2.0;
       currentStamina -= deltaSeconds;
     }
-    else if (currentStamina <= 0.0)
+    else
     {
-      currentlyRegeneratingStamina = true;
-      forwardX = this.forwardX / 2.0;
-      forwardY = this.forwardY / 2.0;
-      rightX = this.rightX / 2.0;
-      rightY = this.rightY / 2.0;
+      forwardX = cachedForwardX;
+      forwardY = cachedForwardY;
+      rightX = cachedRightX;
+      rightY = cachedRightY;
       currentStamina += staminaRegen * deltaSeconds;
-      if (currentStamina > maxStamina)
-      {
-        currentlyRegeneratingStamina = false;
-        currentStamina = maxStamina;
-      }
+      //System.out.println(currentStamina);
+      if (currentStamina >= maxStamina) currentStamina = maxStamina;
     }
 
     setForwardSpeedX(forwardX);
