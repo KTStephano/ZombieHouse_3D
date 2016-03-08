@@ -78,6 +78,7 @@ public class RenderTree
     public void clear()
     {
       OBJECTS.clear();
+      if (SUB_NODES[0] == null) return; // if one is null, all are null
       for (QuadNode node : SUB_NODES) node.clear();
     }
 
@@ -244,10 +245,8 @@ public class RenderTree
     ROOT.insert(actor);
   }
 
-  public int size()
+  public void clear()
   {
-    int size = ROOT.size();
-    System.out.println();
-    return size;
+    ROOT.clear();
   }
 }

@@ -282,7 +282,7 @@ public class ZombieHouseRenderer implements Renderer
   }
 
   @Override
-  public void reset()
+  public void shutdown()
   {
     isInitialized = false;
     camera = null;
@@ -291,8 +291,13 @@ public class ZombieHouseRenderer implements Renderer
     initSettings = true;
     largestWall = 0.0;
     ACTOR_MODEL_MAP.clear();
+    DYNAMIC_ACTORS.clear();
+    STATIC_ACTORS.clear();
+    RENDER_FRAME.clear();
+    largestWall = 0.0;
     // doesn't clear textures in case they're needed again for the next frame
     renderSceneGraph.getChildren().clear();
+    if (environment != null) environment.clear();
     // clearing the scene graph kills the lighting
     //initLighting();
   }
@@ -443,7 +448,7 @@ public class ZombieHouseRenderer implements Renderer
       }
       else distanceModifier = 0.0;
     }
-    // still need to set specular every frame to make sure it gets hard-reset for objects that
+    // still need to set specular every frame to make sure it gets hard-shutdown for objects that
     // are far away
     model.material.setSpecularColor(Color.color(distanceModifier, distanceModifier, distanceModifier));
     //translate.setX(actor.getLocation().getX() - model.translation.getX());

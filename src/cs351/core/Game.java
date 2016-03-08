@@ -34,6 +34,10 @@ public class Game extends Application {
   private ZombieHouseRenderer renderer;
   private static Engine engine = new ZombieHouseEngine();
 
+
+
+  Stage stage;
+
   public static Engine getEngine()
   {
     return engine;
@@ -81,6 +85,7 @@ public class Game extends Application {
 
   @Override
   public void start(Stage stage) throws IOException {
+    this.stage = stage;
     Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ZombieHouse.fxml"));
     stage.setTitle("Zombie House");
     stage.setScene(new Scene(root, 900, 750));
@@ -130,6 +135,8 @@ public class Game extends Application {
       }
       // run the next frame
       engine.frame();
+      //engine.shutdown();
+      //engine.init("resources/engine.settings", stage, new EnvDemo2_0(), new ZombieHouseSoundEngine(), renderer);
     }
   }
   

@@ -1,7 +1,6 @@
 package cs351.project1;
 
 import cs351.core.*;
-import cs351.project1.CollisionDetection;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -183,9 +182,10 @@ public class ZombieHouseEngine implements Engine
   {
     if (!isInitialized) throw new RuntimeException("Engine was not initialized before the call to shutdown");
     System.out.println("-> Shutting down engine");
+    invalidateEngineData();
     isInitialized = false;
-    ALL_ACTORS.clear();
-    UPDATE_ACTORS.clear();
+    //ALL_ACTORS.clear();
+    //UPDATE_ACTORS.clear();
   }
 
   @Override
@@ -254,6 +254,16 @@ public class ZombieHouseEngine implements Engine
     if (!isInitialized || isPaused) throw new IllegalStateException("Engine was not initialized/un-paused before use");
   }
 
+  private void invalidateEngineData()
+  {
+    for (Actor actor : ALL_ACTORS) actor.destroy();
+    ALL_ACTORS.clear();
+    UPDATE_ACTORS.clear();
+    soundEngine.shutdown();
+    renderer.shutdown();
+    collision.destroy();
+  }
+
   private void processActorReturnStatement(Actor.UpdateResult result)
   {
     if (pendingLevelRestart || pendingNextLevel) return; // if it is already set to do something at the end of the frame, do nothing
@@ -280,10 +290,13 @@ public class ZombieHouseEngine implements Engine
   private void initEngineFromWorld(boolean shouldGetNextLevel)
   {
     final double DEFAULT_FIELD_OF_VIEW = 90.0; // measured in degrees
-    ALL_ACTORS.clear();
-    UPDATE_ACTORS.clear();
-    getRenderer().reset();
+    //ALL_ACTORS.clear();
+    //UPDATE_ACTORS.clear();
+    //getRenderer().shutdown();
+    invalidateEngineData();
     getRenderer().init(this);
+    soundEngine.init(this);
+    collision = new CollisionDetection(this);
     // queue up the next level/restart the current level
     if (shouldGetNextLevel) getWorld().nextLevel(this);
     else getWorld().restartLevel(this);

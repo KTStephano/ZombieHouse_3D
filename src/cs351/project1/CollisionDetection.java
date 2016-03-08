@@ -123,6 +123,16 @@ public class CollisionDetection
     MOVING_ENTITIES.clear();
   }
 
+  public void destroy()
+  {
+    MOVING_ENTITIES.clear();
+    STATIC_ENTITIES.clear();
+    ACTOR_CIRCLE_MAP.clear();
+    ACTOR_BUFFER.clear();
+    STATIC_BUFFER.clear();
+    COLLISIONS.clear();
+  }
+
   public void insert(Actor actor)
   {
     if (!ACTOR_CIRCLE_MAP.containsKey(actor)) ACTOR_CIRCLE_MAP.put(actor, new BoundingCircle(actor));

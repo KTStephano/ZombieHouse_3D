@@ -34,7 +34,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
   private HashMap<String, HashSet<AudioClip>> availableSounds = new HashMap<>();
   private HashSet<AudioClip> activeSounds = new HashSet<>(3);
   private HashSet<AudioClip> soundBackBuffer = new HashSet<>(); // sounds waiting to be pushed to activeSounds
-  private LinkedList<AudioClip> pendingRemoval = new LinkedList<>();
+  //private LinkedList<AudioClip> pendingRemoval = new LinkedList<>();
   private final int MAX_SOUNDS_PER_SOUND_FILE = 3;
   static SoundStackItem  tmpSoundStackItem;
   private double playerHearing = 1.0f;
@@ -67,9 +67,9 @@ public class ZombieHouseSoundEngine implements SoundEngine
     playerRightDir.set(((Player)engine.getWorld().getPlayer()).getRightVector());
     playerLocation = engine.getWorld().getPlayer().getLocation();
 
-    activeSounds.removeAll(pendingRemoval);
-    for (Map.Entry<String, HashSet<AudioClip>> entry : availableSounds.entrySet()) entry.getValue().removeAll(pendingRemoval);
-    pendingRemoval.clear();
+    //activeSounds.removeAll(pendingRemoval);
+    //for (Map.Entry<String, HashSet<AudioClip>> entry : availableSounds.entrySet()) entry.getValue().removeAll(pendingRemoval);
+    //pendingRemoval.clear();
     //System.out.println(soundStack.size());
 
     //playerRightDir.normalize();
@@ -119,11 +119,18 @@ public class ZombieHouseSoundEngine implements SoundEngine
   {
     // Ask the engine what the player hearing is (through the Settings class)
     playerHearing = Float.parseFloat(engine.getSettings().getValue("player_hearing"));
+    //System.out.println("HEARING " + playerHearing);
+  }
+
+  @Override
+  public void shutdown()
+  {
     for (Map.Entry<String, HashSet<AudioClip>> entry : availableSounds.entrySet())
     {
       for (AudioClip mediaPlayer : entry.getValue()) mediaPlayer.stop();
     }
-    //System.out.println("HEARING " + playerHearing);
+    availableSounds.clear();
+    activeSounds.clear();
   }
 
   public void playSound(SoundStackItem item, double vol )
@@ -175,10 +182,6 @@ public class ZombieHouseSoundEngine implements SoundEngine
     } catch (Exception e) {
       System.out.println("wat did u do");
     }
-
-
-
-
   }
 
   public void setVolume(int percent, Clip clip)

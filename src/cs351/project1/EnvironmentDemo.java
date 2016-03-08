@@ -108,6 +108,16 @@ public class EnvironmentDemo implements World
     throw new RuntimeException("I'm not a real world so most of my stuff doesn't work");
   }
 
+  public Actor getMasterZombie()
+  {
+    throw new RuntimeException("I'm not a real world so most of my stuff doesn't work");
+  }
+
+  public void setMasterZombie(Actor masterZombie)
+  {
+    throw new RuntimeException("I'm not a real world so most of my stuff doesn't work");
+  }
+
   @Override
   public Collection<Actor> getChangeList(boolean clearChangeList)
   {
@@ -118,12 +128,6 @@ public class EnvironmentDemo implements World
       return retVal;
     }
     return actors;
-  }
-
-  @Override
-  public void initializeLevels(int numberOfLevels)
-  {
-    throw new RuntimeException("I'm not a real world so most of my stuff doesn't work");
   }
 
   @Override
