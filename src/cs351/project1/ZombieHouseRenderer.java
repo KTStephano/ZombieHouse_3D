@@ -350,6 +350,8 @@ public class ZombieHouseRenderer implements Renderer
     for (TriangleMesh mesh : meshList)
     {
       MeshView meshView = new MeshView(mesh);
+      meshView.setCacheHint(CacheHint.SPEED);
+      meshView.setCache(true);
       model.meshViewMap.put(mesh, meshView);
       meshView.setMaterial(model.material);
       meshView.getTransforms().addAll(model.rotation, model.translation);
