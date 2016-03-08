@@ -13,7 +13,6 @@ import cs351.entities.Zombie;
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -74,7 +73,7 @@ public class LevelTest extends Application
   {
     //calls constructor of Zombieworld
    // ZombieLevel l = new ZombieLevel(2, 3, 3, 2);
-    ZombieLevel z = new ZombieLevel(0, 0, 0, 0);
+    //ZombieLevel z = new ZombieLevel(0, 0, 0, 0);
   //  z.initWorld(world);
   }
   

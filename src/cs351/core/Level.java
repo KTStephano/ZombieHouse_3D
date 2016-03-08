@@ -14,5 +14,11 @@ public interface Level
    *
    * @param world World object to initialize/reinitialize
    */
-  void initWorld(World world);
+  void initWorld(World world, Engine engine);
+
+  /**
+   * Tells the level that it is done and should clear out any now-dead references
+   * it is holding onto.
+   */
+  void destroy();
 }

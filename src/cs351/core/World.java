@@ -97,16 +97,31 @@ public interface World
    * This is used to figure out which Actor object is the player. The current player object
    * should be set by a Level.
    *
-   * @return reference to player
+   * @return reference to the player
    */
   Actor getPlayer();
 
   /**
+   * This is used to figure out which Actor object is the master zombie.
+   *
+   * @return reference to the master zombie
+   */
+  Actor getMasterZombie();
+
+  /**
    * Lets the World know which object is serving as the player.
    *
+   * @param player reference to the player object
    * @throws RuntimeException if the given Actor does not exist in the World
    */
   void setPlayer(Actor player) throws RuntimeException;
+
+  /**
+   * Lets the World know which object is serving as the master zombie
+   *
+   * @param masterZombie reference to the master zombie object
+   */
+  void setMasterZombie(Actor masterZombie);
 
   /**
    * Returns a list of all actors that were added since the last time the
@@ -117,14 +132,6 @@ public interface World
    * @return collection of actors
    */
   Collection<Actor> getChangeList(boolean clearChangeList);
-  
- /**
-  ==============================================================
-  * Sets how many levels are going to exist for the entire Game
-  * @param numberOfLevels
-  ==============================================================
-  */
-  void initializeLevels(int numberOfLevels);
 
   /**
    * Checks to see if there is another Level that can be loaded. The Engine

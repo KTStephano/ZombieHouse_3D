@@ -120,8 +120,12 @@ public class EnvDemo2_0 implements World
     return actors;
   }
 
-  @Override
-  public void initializeLevels(int numberOfLevels)
+  public Actor getMasterZombie()
+  {
+    throw new RuntimeException("I'm not a real world so most of my stuff doesn't work");
+  }
+
+  public void setMasterZombie(Actor masterZombie)
   {
     throw new RuntimeException("I'm not a real world so most of my stuff doesn't work");
   }

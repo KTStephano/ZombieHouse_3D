@@ -22,21 +22,11 @@ public class ZombieWorld implements World
   private int tilePixelWidth;
   private int tilePixelHeight;
   private Actor player;
+  private Actor masterZombie;
   private HashSet<Actor> changeList = new HashSet<Actor>(50);
   private ArrayList<Actor> actors = new ArrayList<>();
   private LinkedList<Level> levels = new LinkedList<>(); //maintain order
   private Level currLevel;
-  private Stage stage;
-  private SoundEngine soundEngine;
-  private Renderer renderer;
-  
-  public ZombieWorld(){}
-
-  public ZombieWorld(int pixelWidth, int pixelHeight)
-  {
-    this.pixelWidth  = pixelWidth;
-    this.pixelHeight = pixelHeight;
-  }
   
   /**
    * Checks to see if the World currently has the given Actor object.
@@ -44,6 +34,7 @@ public class ZombieWorld implements World
    * @param actor object to check for
    * @return true if it exists in the World and false if not
    */
+  @Override
   public boolean contains(Actor actor)
   {
     return actors.contains(actor);
@@ -56,6 +47,7 @@ public class ZombieWorld implements World
    * @param actor object to remove
    * @throws RuntimeException if the given Actor does not exist in the World
    */
+  @Override
   public void remove(Actor actor) throws RuntimeException
   {
     if (!contains(actor)) throw new RuntimeException();
@@ -75,6 +67,7 @@ public class ZombieWorld implements World
    having multiple add() methods
    ============================================
    */
+  @Override
   public void add(Actor actor)
   {
     //Add actor object to generic collection
@@ -87,6 +80,7 @@ public class ZombieWorld implements World
    *
    * @param level Level to add
    */
+  @Override
   public void add(Level level)
   {
     levels.add(level);
@@ -97,6 +91,7 @@ public class ZombieWorld implements World
    *
    * @return pixel world width
    */
+  @Override
   public int getWorldPixelWidth()
   {
     System.out.println(" pixel " + pixelWidth);
@@ -108,6 +103,7 @@ public class ZombieWorld implements World
    *
    * @return pixel world height
    */
+  @Override
   public int getWorldPixelHeight()
   {
     System.out.println(" pixel " + pixelHeight);
@@ -121,6 +117,7 @@ public class ZombieWorld implements World
    * @param pixelWidth width of the world in pixels
    * @param pixelHeight height of the world in pixels
    */
+  @Override
   public void setPixelWidthHeight(int pixelWidth, int pixelHeight)
   {
     this.pixelWidth = pixelWidth;
@@ -132,6 +129,7 @@ public class ZombieWorld implements World
    *
    * @return width of each tile in pixels
    */
+  @Override
   public int getTilePixelWidth()
   {
     return tilePixelWidth;
@@ -142,6 +140,7 @@ public class ZombieWorld implements World
    *
    * @return height of each tile in pixels
    */
+  @Override
   public int getTilePixelHeight()
   {
     return tilePixelHeight;
@@ -153,6 +152,7 @@ public class ZombieWorld implements World
    * @param pixelWidth tile width in pixels
    * @param pixelHeight tile height in pixels
    */
+  @Override
   public void setTilePixelWidthHeight(int tilePixelWidth, int tilePixelHeight)
   {
     System.out.println("width " + tilePixelWidth +"height"+ tilePixelHeight);
@@ -166,9 +166,22 @@ public class ZombieWorld implements World
    *
    * @return reference to player
    */
+  @Override
   public Actor getPlayer()
   {
     return player;
+  }
+
+  @Override
+  public Actor getMasterZombie()
+  {
+    return masterZombie;
+  }
+
+  @Override
+  public void setMasterZombie(Actor masterZombie)
+  {
+    this.masterZombie = masterZombie;
   }
 
   /**
@@ -176,46 +189,34 @@ public class ZombieWorld implements World
    *
    * @throws RuntimeException if the given Actor does not exist in the World
    */
+  @Override
   public void setPlayer(Actor player) throws RuntimeException
   {
-//    if( player == null){
-//      System.out.println("setPlayer ex2, player doesn't exist");
-//      throw new RuntimeException();
-//    }
     this.player = player;
   }
 
   public Collection<Actor> getChangeList(boolean clearChangeList)
   {
     if (clearChangeList) {
-      HashSet<Actor> returnVal = new HashSet<Actor>(changeList);
+      HashSet<Actor> returnVal = new HashSet<>(changeList);
       changeList.clear();
       return returnVal;
     }
     return changeList;
   }
 
-  /*
-   ==========================================================
-   * This represents the different levels that are available 
-   * for gamePlay
-   ==========================================================
-   */
-  public void initializeLevels(int numberOfLevels)
-  {
-
-  }
   /**
    * Checks to see if there is another Level that can be loaded. The Engine
    * will call this whenever the previous Level has ended.
    *
    * @return true if there is and false if not
    */
+  @Override
   public boolean hasNextLevel()
   {
     //Retrieves and removes the first element of this 
     //list, or returns null if this list is empty.
-    return levels.size()> 0;
+    return levels.size() > 0;
   }
 
   /**
@@ -230,15 +231,17 @@ public class ZombieWorld implements World
    *               each new Actor that is being added so it can start building
    *               separate lists to improve its performance/the renderer's performance
    */
+  @Override
   public void nextLevel(Engine engine)
   {
-    if (hasNextLevel() == true)
+    if (hasNextLevel())
     {
+      resetWorld();
       // There is another level, the world will load it
-      currLevel = levels.poll();
-      currLevel.initWorld(this);
+      if (currLevel != null) currLevel.destroy();
+      currLevel = levels.pop();
+      currLevel.initWorld(this, engine);
     }
-    
   }
 
   /**
@@ -250,9 +253,16 @@ public class ZombieWorld implements World
    *               each new Actor that is being added so it can start building
    *               separate lists to improve its performance/the renderer's performance
    */
+  @Override
   public void restartLevel(Engine engine)
   {
-    
-    
+    resetWorld();
+    if (currLevel != null) currLevel.initWorld(this, engine);
+  }
+
+  private void resetWorld()
+  {
+    changeList.clear();
+    actors.clear();
   }
 }
