@@ -16,24 +16,8 @@ public class LineWalkZombie extends Zombie {
   private double xDirection = 0;
   private double yDirection = 0;
   private Vector3 directionXY = new Vector3(0.0);
-  private boolean setNewDirection = true;
   private int[] directionsX = { 1, -1, 0, 0 };
   private int[] directionsY = { 0, 0, 1, -1 };
-
-  @Override
-  public void collided(Engine engine, Actor actor) {
-    // direction should be maintained if floor or if we hit player
-    if (!actor.isPartOfFloor()&&!actor.isPlayer())
-    {
-      setNewDirection = true;
-      //elapsedSeconds = 0;
-    }    // direction should be maintained if floor or if we hit player
-    if (!actor.isPartOfFloor()&&!actor.isPlayer())
-    {
-      setNewDirection = true;
-      //elapsedSeconds = 0;
-    }
-  }
 
   public LineWalkZombie(String textureFile, double x, double y, int width, int height, int depth)
   {
@@ -64,7 +48,11 @@ public class LineWalkZombie extends Zombie {
 
         setNewDirection = false;
         // left or right random
-        int direction = rand.nextInt(directionsX.length);
+        int direction = rand.nextInt(4);
+        while (directionsX[direction] == (int)directionXY.getX() && directionsY[direction] == (int)directionXY.getY())
+        {
+          direction = rand.nextInt(directionsX.length);
+        }
         xDirection = directionsX[direction];
         yDirection = directionsX[direction];
         directionXY.set(xDirection, yDirection, 0.0);
