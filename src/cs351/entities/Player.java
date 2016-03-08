@@ -5,9 +5,6 @@ import cs351.core.Engine;
 import cs351.core.Vector3;
 import cs351.core.KeyboardInput;
 
-/**
- * TODO using this as a test for the renderer - need to flesh this out later when the engine is up
- */
 public class Player extends Actor
 {
   protected boolean isPlayer=true; // true -- this is the Player
