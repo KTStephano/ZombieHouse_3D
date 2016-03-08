@@ -1,10 +1,6 @@
 package cs351.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
-
-import cs351.entities.Tiles;
 
 /**
  * A World object maintains the current state of all active

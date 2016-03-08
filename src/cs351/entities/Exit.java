@@ -2,7 +2,9 @@ package cs351.entities;
 
 /**
  * This class sets the location or tile that will
- * trigger a restart new level event. 
+ * trigger a restart new level event.
+ *
+ * @author Justin Hall
  */
 import cs351.core.Actor;
 import cs351.core.Engine;

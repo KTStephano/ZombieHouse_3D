@@ -3,6 +3,8 @@ package cs351.entities;
 /**
  * This class handles the speed and direction of a
  * Random Walk Zombie
+ *
+ * @author Scott Cooper
  */
 
 import cs351.core.Engine;

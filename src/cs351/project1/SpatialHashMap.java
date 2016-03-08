@@ -16,6 +16,8 @@ import java.util.*;
  * These functions convert an (LOCATION_X, LOCATION_Y) coordinate into a hashed pair representing an index
  * into a 2D array of buckets. From there the ending LOCATION_X and LOCATION_Y are calculated by adding the
  * object's width and height (converted to tiles) to the hashed (LOCATION_X, LOCATION_Y) coordinate pair.
+ *
+ * @author Justin Hall
  */
 public class SpatialHashMap implements Iterable<Collection<Actor>>
 {

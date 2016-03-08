@@ -2,6 +2,8 @@ package cs351.entities;
 /**
  * This class handles the speed and direction of a
  * "line walk" zombie
+ *
+ * @author Scott Cooper
  */
 
 import java.util.Random;

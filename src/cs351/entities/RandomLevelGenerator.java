@@ -36,14 +36,16 @@ import java.util.Queue;
                 rooms.
               
    Credit for this algorithm: http://www.polygonpi.com/?p=1191
+
+ @author Chris Sanchez
  */
 
-public class ProceduralRoomTestThingy extends Application
+public class RandomLevelGenerator extends Application
 {
   private Group root = new Group();
   private Scene scene = new Scene(root, 200, 200, Color.BLACK);
-  private Queue<ProceduralRoomTestThingy> divideRoomsQueue = new LinkedList<>();
-  private Queue<ProceduralRoomTestThingy> unReachableRooms = new LinkedList<>();
+  private Queue<RandomLevelGenerator> divideRoomsQueue = new LinkedList<>();
+  private Queue<RandomLevelGenerator> unReachableRooms = new LinkedList<>();
 
   private int numberOfExistingHallways = 0;
   static final boolean VERTICAL        = true;
@@ -74,9 +76,9 @@ public class ProceduralRoomTestThingy extends Application
   private static int YSpawnPoint;
   
 
-  public ProceduralRoomTestThingy(){}
+  public RandomLevelGenerator(){}
   
-  public ProceduralRoomTestThingy (int x, int y, int width, int height)
+  public RandomLevelGenerator(int x, int y, int width, int height)
   {
     this.height    = height;
     this.width     = width;
@@ -108,9 +110,9 @@ public class ProceduralRoomTestThingy extends Application
       }
     }
     
-    divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, totalWidth, totalHeight) );
+    divideRoomsQueue.add( new RandomLevelGenerator( xStartPt, yStartPt, totalWidth, totalHeight) );
     
-    ProceduralRoomTestThingy firstInQueue = divideRoomsQueue.remove();
+    RandomLevelGenerator firstInQueue = divideRoomsQueue.remove();
     
     //initial division of a single room
     divideAreaOne(firstInQueue);
@@ -142,8 +144,8 @@ public class ProceduralRoomTestThingy extends Application
     {
       
       //remove the first two from the list
-      ProceduralRoomTestThingy firstInQueue  = divideRoomsQueue.remove();
-      ProceduralRoomTestThingy secondInQueue = divideRoomsQueue.remove();
+      RandomLevelGenerator firstInQueue  = divideRoomsQueue.remove();
+      RandomLevelGenerator secondInQueue = divideRoomsQueue.remove();
 
       
       divideAreas(firstInQueue, secondInQueue);
@@ -171,11 +173,11 @@ public class ProceduralRoomTestThingy extends Application
    * areas
    * @param divideRoomsQueue
    */
-  void printQuadrant(Queue<ProceduralRoomTestThingy> divideRoomsQueue)
+  void printQuadrant(Queue<RandomLevelGenerator> divideRoomsQueue)
   {
     int quadRantNumber = 2;
 
-    for (ProceduralRoomTestThingy r : divideRoomsQueue)
+    for (RandomLevelGenerator r : divideRoomsQueue)
     {
       for (int x = r.xStartPt; x <= r.width; x++)
       {
@@ -203,7 +205,7 @@ public class ProceduralRoomTestThingy extends Application
     //check the size of the rooms queue
     while( !unReachableRooms.isEmpty() )
     {
-      ProceduralRoomTestThingy remainingRooms = unReachableRooms.remove();
+      RandomLevelGenerator remainingRooms = unReachableRooms.remove();
       
       for ( int x = remainingRooms.xStartPt; x <= remainingRooms.width; x++)
       {
@@ -342,7 +344,7 @@ public class ProceduralRoomTestThingy extends Application
    * 
    * @param firstInQueue
    */
-  public void divideAreaOne( ProceduralRoomTestThingy firstInQueue )
+  public void divideAreaOne( RandomLevelGenerator firstInQueue )
   {
       randomNumber = getRandomNumber(firstInQueue, VERTICAL);
       verticalDivide(firstInQueue, randomNumber);
@@ -359,7 +361,7 @@ public class ProceduralRoomTestThingy extends Application
    * @param firstInQueue
    * @param secondInQueue
    */
-  public void divideAreas( ProceduralRoomTestThingy firstInQueue, ProceduralRoomTestThingy secondInQueue )
+  public void divideAreas( RandomLevelGenerator firstInQueue, RandomLevelGenerator secondInQueue )
   {
 
      if (ROTATION && roomIsLargeEnough(firstInQueue, VERTICAL) && roomIsLargeEnough(secondInQueue, VERTICAL))
@@ -387,7 +389,7 @@ public class ProceduralRoomTestThingy extends Application
    * @param firstInQueue
    * @param randomNumber
    */
-  public void verticalDivide(ProceduralRoomTestThingy firstInQueue, int randomNumber)
+  public void verticalDivide(RandomLevelGenerator firstInQueue, int randomNumber)
   {
 
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
@@ -440,7 +442,7 @@ public class ProceduralRoomTestThingy extends Application
    * @param firstInQueue
    * @param randomNumber
    */
-  public void horizontalDivide( ProceduralRoomTestThingy firstInQueue, int randomNumber )
+  public void horizontalDivide( RandomLevelGenerator firstInQueue, int randomNumber )
   {
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
     {
@@ -495,7 +497,7 @@ public class ProceduralRoomTestThingy extends Application
    *                          split needs to be horizontal or 
    *                          vertical
    */
-  void addToQueue(ProceduralRoomTestThingy firstInQueue, int randomNumber, boolean splitIsVertical)
+  void addToQueue(RandomLevelGenerator firstInQueue, int randomNumber, boolean splitIsVertical)
   {
     int xStartPt = firstInQueue.xStartPt;
     int yStartPt = firstInQueue.yStartPt;
@@ -517,44 +519,44 @@ public class ProceduralRoomTestThingy extends Application
     //HALLWAY VERTICAL
     if( ( numberOfExistingHallways < 6 ) && splitIsVertical )
     {
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber - 1, height ) );
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( randomNumber + 2, yStartPt, width, height ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( xStartPt, yStartPt, randomNumber - 1, height ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( randomNumber + 2, yStartPt, width, height ) );
       
 
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber - 1, height ) );
-      unReachableRooms.add( new ProceduralRoomTestThingy( randomNumber + 2, yStartPt, width, height ) );
+      unReachableRooms.add( new RandomLevelGenerator( xStartPt, yStartPt, randomNumber - 1, height ) );
+      unReachableRooms.add( new RandomLevelGenerator( randomNumber + 2, yStartPt, width, height ) );
     
       numberOfExistingHallways++;
     }
     //NOT HALLWAY - VERTICAL
     else if ( numberOfExistingHallways >= 6 && ( splitIsVertical ) )
     {
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber, height ) );
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( randomNumber , yStartPt, width, height ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( xStartPt, yStartPt, randomNumber, height ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( randomNumber , yStartPt, width, height ) );
       
 
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, randomNumber, height ) );
-      unReachableRooms.add( new ProceduralRoomTestThingy( randomNumber , yStartPt, width, height ) );
+      unReachableRooms.add( new RandomLevelGenerator( xStartPt, yStartPt, randomNumber, height ) );
+      unReachableRooms.add( new RandomLevelGenerator( randomNumber , yStartPt, width, height ) );
     }
     //HALLWAY HORIZONTAL
     else if ( ( numberOfExistingHallways < 6 ) && (!splitIsVertical) )
     {
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber - 1 ) );
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt,randomNumber + 2 , width, height ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( xStartPt, yStartPt, width, randomNumber - 1 ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( xStartPt,randomNumber + 2 , width, height ) );
       
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber - 1 ) );
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt,randomNumber + 2 , width, height ) );
+      unReachableRooms.add( new RandomLevelGenerator( xStartPt, yStartPt, width, randomNumber - 1 ) );
+      unReachableRooms.add( new RandomLevelGenerator( xStartPt,randomNumber + 2 , width, height ) );
       
       numberOfExistingHallways++;
     }
     //NOT HALLWAY - HORIZONTAL
     else if ( numberOfExistingHallways >= 6 && ( !splitIsVertical ) )
     {
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber ) );
-      divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt,randomNumber  , width, height ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( xStartPt, yStartPt, width, randomNumber ) );
+      divideRoomsQueue.add( new RandomLevelGenerator( xStartPt,randomNumber  , width, height ) );
       
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, width, randomNumber ) );
-      unReachableRooms.add( new ProceduralRoomTestThingy( xStartPt,randomNumber, width, height ) );
+      unReachableRooms.add( new RandomLevelGenerator( xStartPt, yStartPt, width, randomNumber ) );
+      unReachableRooms.add( new RandomLevelGenerator( xStartPt,randomNumber, width, height ) );
     }
     
     
@@ -580,7 +582,7 @@ public class ProceduralRoomTestThingy extends Application
    * @param splitIsVertical
    * @return
    */
-  public int getRandomNumber(ProceduralRoomTestThingy firstInQueue, boolean splitIsVertical)
+  public int getRandomNumber(RandomLevelGenerator firstInQueue, boolean splitIsVertical)
   {
     
     int upperBound_X = ( firstInQueue.width * 2 )  / 3;
@@ -628,7 +630,7 @@ public class ProceduralRoomTestThingy extends Application
    divide it horizontally
    ===========================================================
    */
-  public boolean roomIsLargeEnough( ProceduralRoomTestThingy firstInQueue, boolean checkWidth)
+  public boolean roomIsLargeEnough( RandomLevelGenerator firstInQueue, boolean checkWidth)
   {
     
     // check the width since we want to make a vertical line

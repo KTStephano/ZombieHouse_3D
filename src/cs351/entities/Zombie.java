@@ -13,9 +13,8 @@ import java.util.Random;
 
 /**
  * 
- * @author 
+ * @author Scott Cooper
  * Creates a zombie object that extends actor
- *
  */
 public class Zombie extends Actor
 {

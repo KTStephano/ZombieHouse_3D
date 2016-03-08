@@ -28,7 +28,7 @@ public class ZombieLevel implements Level
   private final HashMap<Vector3, HashSet<Actor>> DYNAMIC_ACTOR_LOCATIONS = new HashMap<>();
   private final Vector3 MASTER_ZOMBIE_LOCATION = new Vector3(0.0);
   private final Random RAND = new Random();
-  private final ProceduralRoomTestThingy LEVEL_GENERATOR = new ProceduralRoomTestThingy();
+  private final RandomLevelGenerator LEVEL_GENERATOR = new RandomLevelGenerator();
   private boolean masterZombieHasSpawned = false;
   
   /**
