@@ -149,7 +149,7 @@ public class CollisionDetection
     Iterator<Collection<Actor>> iterMoving = MOVING_ENTITIES.iterator();
     Iterator<Collection<Actor>> iterStatic = STATIC_ENTITIES.iterator();
     COLLISIONS.clear();
-    //int collisionChecks = 0;
+
     while (iterMoving.hasNext())
     {
       ACTOR_BUFFER.clear();
@@ -170,7 +170,6 @@ public class CollisionDetection
             if (!COLLISIONS.containsKey(outer)) COLLISIONS.put(outer, new LinkedList<>());
             COLLISIONS.get(outer).add(inner);
           }
-          //collisionChecks++;
         }
         // now loop over the static actors by themselves and see if there are
         // any collisions
@@ -183,11 +182,9 @@ public class CollisionDetection
             if (!COLLISIONS.containsKey(outer)) COLLISIONS.put(outer, new LinkedList<>());
             COLLISIONS.get(outer).add(inner);
           }
-          //collisionChecks++;
         }
       }
     }
-    //System.out.println(collisionChecks);
     return COLLISIONS;
   }
 }

@@ -53,6 +53,16 @@ public class RenderTree
     private final double RADIUS_SQUARED;
     private final BoundingBox BOUNDS;
 
+    /**
+     * Initializes a Node inside the quad structure. There is 4
+     * of them
+     * 
+     * @param level
+     * @param startX
+     * @param startY
+     * @param width
+     * @param height
+     */
     public QuadNode(int level, int startX, int startY, int width, int height)
     {
       LEVEL = level;
@@ -82,6 +92,9 @@ public class RenderTree
       for (QuadNode node : SUB_NODES) node.clear();
     }
 
+    /**
+     * Divide the quadrants into 4 spaces
+     */
     public void divide()
     {
       int subWidth = WIDTH / 2;
@@ -109,6 +122,15 @@ public class RenderTree
       OBJECTS.clear();
     }
 
+    /**
+     * Insert the actor in the quadrants they need to exist
+     * in. This sorting ensures that collision is detected
+     * where the actors exist, and not checked over the 
+     * entire board (Which is inefficient)
+     * 
+     * @param actor
+     * @return - true if inserted correctly
+     */
     public boolean insert(Actor actor)
     {
       if (OBJECTS.size() > MAX_CAPACITY && LEVEL + 1 <= MAX_LEVEL && SUB_NODES[0] == null
@@ -157,12 +179,26 @@ public class RenderTree
       return size;
     }
 
+    
+    /**
+     * Build a HashSet of objects that are visible to the 
+     * Camera perspective
+     * 
+     * @param visibleActors
+     * @param circleX
+     * @param circleY
+     */
     public void buildRenderData(HashSet<Actor> visibleActors, double circleX, double circleY)
     {
       if (containedBy(circleX, circleY, cameraCircleRadius)) addAll(visibleActors);
       else if (intersects(circleX, circleY, cameraCircleRadius)) addAndCheckSubNodes(visibleActors, circleX, circleY);
     }
 
+    /**
+     * Add all of the actors to the QuadNode
+     * 
+     * @param visibleActors
+     */
     private void addAll(HashSet<Actor> visibleActors)
     {
       visibleActors.addAll(OBJECTS);
@@ -172,6 +208,14 @@ public class RenderTree
       }
     }
 
+    /**
+     * Check existing subnodes. A subnode is for example a quadrant
+     * existing in another quadrant
+     * 
+     * @param visibleActors
+     * @param circleX
+     * @param circleY
+     */
     private void addAndCheckSubNodes(HashSet<Actor> visibleActors, double circleX, double circleY)
     {
       //visibleActors.addAll(OBJECTS);
@@ -181,6 +225,9 @@ public class RenderTree
       }
     }
 
+    /**
+     * Returns true if the circle is contained by the given arguments
+     */
     private boolean containedBy(double circleX, double circleY, double radius)
     {
       double thisCircleX = BOUNDS.getMinX() + WIDTH / 2.0;
@@ -191,6 +238,15 @@ public class RenderTree
       return dx * dx + dy * dy + RADIUS * RADIUS < radius * radius;
     }
 
+    /**
+     * Returns true if the circle interects with the 
+     * given arugments
+     * 
+     * @param circleX
+     * @param circleY
+     * @param radius
+     * @return
+     */
     private boolean intersects(double circleX, double circleY, double radius)
     {
       double nodeCircleX = BOUNDS.getMinX() + WIDTH / 2.0;
@@ -202,49 +258,53 @@ public class RenderTree
     }
   }
 
+  /**
+   * The offset variable just represents padding around the edges of the map - helps
+   * prevent the quad tree from missing actors it thinks are totally out of bounds
+   * int offset = worldWidth / 4;
+   * ROOT = new QuadNode(1, -offset, -offset, worldWidth + offset, worldHeight + offset);
+   * 
+   * @param worldWidth
+   * @param worldHeight
+   * @param tileWidth
+   * @param tileHeight
+   */
   public RenderTree(int worldWidth, int worldHeight, int tileWidth, int tileHeight)
   {
-    // The offset variable just represents padding around the edges of the map - helps
-    // prevent the quad tree from missing actors it thinks are totally out of bounds
-    //int offset = worldWidth / 4;
-    //ROOT = new QuadNode(1, -offset, -offset, worldWidth + offset, worldHeight + offset);
     ROOT = new QuadNode(1, 0, 0, worldWidth, worldHeight);
     SMALLEST_DIVIDE = tileWidth > tileHeight ? tileHeight : tileWidth;
   }
 
-  /*
-  public void setCamera(PerspectiveCamera camera)
-  {
-    this.camera = camera;
-    double viewLength = camera.getFarClip() - camera.getNearClip();
-    double viewHeight = viewLength * Math.tan(camera.getFieldOfView() * (Math.PI / 180.0) * 0.5);
-    double viewWidth = viewHeight;
 
-    Vector3 P = new Vector3(0.0f, 0.0f, camera.getNearClip() + viewLength * 0.5);
-    Vector3 Q = new Vector3(viewWidth, viewHeight, viewLength);
-    Vector3 diff = P.subtract(Q);
-    cameraCircleRadius = diff.magnitude();
-    System.out.println(cameraCircleRadius);
-
-    //cameraCircleRadius = 10;
-  }
-  */
-
+  /**
+   * 
+   * @param visibleActors
+   * @param player
+   * @param visibility
+   */
   public void buildRenderData(HashSet<Actor> visibleActors, Player player, double visibility)
   {
-    //visibility++;
-    // TODO double check this
     cameraCircleRadius = visibility;
     double circleX = player.getLocation().getX() + player.getForwardVector().getX() * visibility / 2.0;
     double circleY = player.getLocation().getY() + player.getForwardVector().getY() * visibility / 2.0;
     ROOT.buildRenderData(visibleActors, circleX, circleY);
   }
 
+  
+  /**
+   * Insert the actor
+   * 
+   * @param actor
+   */
   public void insert(Actor actor)
   {
     ROOT.insert(actor);
   }
 
+  /**
+   * clear the root
+   * 
+   */
   public void clear()
   {
     ROOT.clear();
