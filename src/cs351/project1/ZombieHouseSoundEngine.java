@@ -242,7 +242,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
         //PLAYER.setVolume(0.0);
         //PLAYER.balanceProperty().set(0.0);
         //PLAYER.seek(new Duration(0.0));
-        PLAYER.stop();
+        PLAYER.dispose();
         //PLAYER.setOnEndOfMedia(this);
         //activeSounds.remove(PLAYER);
       }
