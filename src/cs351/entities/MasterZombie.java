@@ -13,6 +13,8 @@ public class MasterZombie extends Zombie {
   private Random rand = new Random();
   private double xDirection = 0;
   private double yDirection = 0;
+  private double timeSinceOtherZombiesFoundPlayer = 0.0;
+  private boolean foundPlayer = false;
 
 
 /*
@@ -28,18 +30,28 @@ public class MasterZombie extends Zombie {
     super(textureFile, modelFile, x, y, width, height, depth);
   }
 
+  public void detectPlayer()
+  {
+    foundPlayer = true;
+    timeSinceOtherZombiesFoundPlayer = 0.0;
+  }
+
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
 
+    double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed")) * 2.0;
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
+    timeSinceOtherZombiesFoundPlayer += 0.0;
+
+    if (timeSinceOtherZombiesFoundPlayer > 4.0) foundPlayer = false;
 
     // every zombieDecisionRate seconds, switch direction
     if (elapsedSeconds > GlobalConstants.zombieDecisionRate)
     {
 
       elapsedSeconds = 0.0;
-      if (!canSmellPlayer(engine))
+      if (!canSmellPlayer(engine) && !foundPlayer)
       {
         // -100 to 100 / 20000.0
         xDirection = (100-rand.nextInt(200))/20000.0;
@@ -57,7 +69,9 @@ public class MasterZombie extends Zombie {
 
     }
 
-    setLocation(getLocation().getX()+xDirection, getLocation().getY() +yDirection);
+    double totalSpeed = zombieSpeed * deltaSeconds;
+    setLocation(getLocation().getX() + xDirection * totalSpeed,
+                getLocation().getY() + yDirection * totalSpeed);
 
 
 

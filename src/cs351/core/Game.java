@@ -76,7 +76,7 @@ public class Game extends Application {
     World world = new ZombieWorld();
     for (int i = 0; i < 10; i++)
     {
-      Level level = new ZombieLevel((i != 0) ? 1 : 0, (i != 0) ? 5 : 0, (i != 0) ? 0.5 : 0);
+      Level level = new ZombieLevel((i != 0) ? 0.5 : 0, (i != 0) ? 5 : 0, (i != 0) ? 1.0 : 0);
       world.add(level);
     }
     engine.init("resources/engine.settings", stage, world, new ZombieHouseSoundEngine(), renderer);
