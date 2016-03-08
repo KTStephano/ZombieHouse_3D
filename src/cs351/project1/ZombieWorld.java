@@ -1,6 +1,9 @@
 package cs351.project1;
 import cs351.core.*;
+import cs351.entities.Player;
 import cs351.entities.Tiles;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -17,14 +20,14 @@ import java.util.LinkedList;
  */
 public class ZombieWorld implements World
 {
-  private int pixelWidth;
-  private int pixelHeight;
-  private int tilePixelWidth;
-  private int tilePixelHeight;
+  private int pixelWidth = 50;
+  private int pixelHeight = 50;
+  private int tilePixelWidth = 1;
+  private int tilePixelHeight = 1;
   private Actor player;
   private Actor masterZombie;
   private HashSet<Actor> changeList = new HashSet<Actor>(50);
-  private ArrayList<Actor> actors = new ArrayList<>();
+  private HashSet<Actor> actors = new HashSet<>();
   private LinkedList<Level> levels = new LinkedList<>(); //maintain order
   private Level currLevel;
   
@@ -241,6 +244,7 @@ public class ZombieWorld implements World
       if (currLevel != null) currLevel.destroy();
       currLevel = levels.pop();
       currLevel.initWorld(this, engine);
+      registerActorsWithRenderer(engine);
     }
   }
 
@@ -256,13 +260,45 @@ public class ZombieWorld implements World
   @Override
   public void restartLevel(Engine engine)
   {
-    resetWorld();
-    if (currLevel != null) currLevel.initWorld(this, engine);
+    if (currLevel != null)
+    {
+      resetWorld();
+      currLevel.initWorld(this, engine);
+      registerActorsWithRenderer(engine);
+    }
   }
 
   private void resetWorld()
   {
     changeList.clear();
     actors.clear();
+  }
+
+  private void registerActorsWithRenderer(Engine engine)
+  {
+    for (Actor actor : actors)
+    {
+      if (actor instanceof Player) continue;
+      // register the actor with the renderer so it can render it each frame
+      if (actor.getRenderEntity() != null)
+      {
+        engine.getRenderer().registerActor(actor,
+                                           actor.getRenderEntity(),
+                                           Color.BEIGE, // diffuse
+                                           Color.BEIGE, // specular
+                                           Color.WHITE); // ambient
+      }
+      else
+      {
+        engine.getRenderer().registerActor(actor,
+                                           new Box(actor.getWidth(), actor.getHeight(), actor.getDepth()),
+                                           Color.BEIGE, // diffuse
+                                           Color.BEIGE, // specular
+                                           Color.WHITE); // ambient
+      }
+      // sets the actor's texture so the renderer knows to load it and use it
+      engine.getRenderer().mapTextureToActor(actor.getTexture(), actor);
+    }
+
   }
 }

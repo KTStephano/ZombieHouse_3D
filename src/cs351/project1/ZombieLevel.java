@@ -1,10 +1,8 @@
 package cs351.project1;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 import cs351.core.*;
-import cs351.entities.ProceduralRoomTestThingy;
+import cs351.entities.*;
 
 public class ZombieLevel implements Level
 {
@@ -13,28 +11,26 @@ public class ZombieLevel implements Level
   private int pixelHeight;
   private int tileWidth;
   private int tileHeight;
-  private int zombieSpeedIncrease;
-  private int playerHealthIncrease;
-  private int playerStaminaIncrease;
+  private double zombieSpeedIncrease;
+  private double playerHealthIncrease;
+  private double playerStaminaIncrease;
   private Actor player;
   private boolean hasInitialized = false;
   private int[][] levelData;
-  private final HashSet<Vector3> STATIC_GEOMETRY_LOCATIONS = new HashSet<>();
-  private final HashSet<Vector3> DYNAMIC_ACTOR_LOCATIONS = new HashSet<>();
+  private final HashMap<Vector3, HashSet<Actor>> STATIC_GEOMETRY_LOCATIONS = new HashMap<>();
+  private final HashMap<Vector3, HashSet<Actor>> DYNAMIC_ACTOR_LOCATIONS = new HashMap<>();
   private final HashMap<Vector3, String> TEXTURE_DATA = new HashMap<>();
-  private final Vector3 PLAYER_LOCATION = new Vector3(0.0);
   private final Vector3 MASTER_ZOMBIE_LOCATION = new Vector3(0.0);
-  
-  private LinkedList<Actor> actors;
+  private final Random RAND = new Random();
+  private final ProceduralRoomTestThingy LEVEL_GENERATOR = new ProceduralRoomTestThingy();
+  private boolean masterZombieHasSpawned = false;
   
   /**
    * This should clear out the contents of the given World and then
    * reinitialize it to represent the starting point of whatever
    * Level is being created.
-   *
-   * @param world World object to initialize/reinitialize
    */
-  public ZombieLevel(int zombieSpeedIncrease, int playerHealthIncrease, int playerStaminaIncrease)
+  public ZombieLevel(double zombieSpeedIncrease, double playerHealthIncrease, double playerStaminaIncrease)
   {
     this.pixelWidth = 50;
     this.pixelHeight = 50;
@@ -52,15 +48,32 @@ public class ZombieLevel implements Level
   {
     if (!hasInitialized)
     {
-      ProceduralRoomTestThingy levelGenerator = new ProceduralRoomTestThingy();
-      levelGenerator.initializeBoard();
-      levelData = levelGenerator.getArray();
+      hasInitialized = true;
+      adjustEngineSettings(engine);
+      LEVEL_GENERATOR.initializeBoard();
+      levelData = LEVEL_GENERATOR.getArray();
+      initStaticGeometry(engine);
     }
+    initPlayer(world);
+    initMasterZombie(world);
     world.setPixelWidthHeight(pixelWidth, pixelHeight);
     world.setTilePixelWidthHeight(tileWidth, tileHeight);
-    int numTilesWidth = pixelWidth / tileWidth; // convert pixels to number of tiles
-    int numTilesHeight = pixelHeight / tileHeight; // convert pixels to number of tiles
-
+    for (Map.Entry<Vector3, HashSet<Actor>> entry : STATIC_GEOMETRY_LOCATIONS.entrySet())
+    {
+      for (Actor actor : entry.getValue())
+      {
+        actor.setLocation(entry.getKey().getX(), entry.getKey().getY());
+        world.add(actor);
+      }
+    }
+    for (Map.Entry<Vector3, HashSet<Actor>> entry : DYNAMIC_ACTOR_LOCATIONS.entrySet())
+    {
+      for (Actor actor : entry.getValue())
+      {
+        actor.setLocation(entry.getKey().getX(), entry.getKey().getY());
+        world.add(actor);
+      }
+    }
   }
 
   @Override
@@ -69,4 +82,201 @@ public class ZombieLevel implements Level
 
   }
 
+  private void initStaticGeometry(Engine engine)
+  {
+    int numTilesWidth = pixelWidth / tileWidth; // convert pixels to number of tiles
+    int numTilesHeight = pixelHeight / tileHeight; // convert pixels to number of tiles
+    for (int x = 0; x < numTilesWidth; x++)
+    {
+      Vector3 location;
+      Actor wall;
+      FloorCeilingTile floor;
+      for (int y = 0; y < numTilesHeight; y++)
+      {
+        location = new Vector3(x * tileWidth, y * tileHeight, 0.0);
+        STATIC_GEOMETRY_LOCATIONS.put(location, new HashSet<>());
+        if (levelData[x][y] == 1)
+        {
+          wall = new Wall("textures/block_texture_dark.jpg",
+                  location.getX(),
+                  location.getY(),
+                  tileWidth,
+                  2 * tileHeight,
+                  tileHeight);
+          STATIC_GEOMETRY_LOCATIONS.get(location).add(wall);
+        }
+        else if (levelData[x][y] == 69)
+        {
+          wall = new Wall("textures/oldbikiniBabe.jpg",
+                  location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                  location.getY(), // same as above but for y
+                  tileWidth, // sets the width to be 1 tile
+                  2 * tileHeight, // sets the height to be 2 tiles
+                  tileHeight); // sets the depth to be 1 tile
+          STATIC_GEOMETRY_LOCATIONS.get(location).add(wall);
+        }
+
+        if (levelData[x][y] == 2)
+        {
+          rollToSpawnZombie(engine, location);
+          floor = new FloorCeilingTile("textures/brick_texture.jpg",
+                  true, // is part of floor
+                  false, // is not part of ceiling
+                  location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                  location.getY(), // same as above but for y
+                  tileWidth, // sets the width to be 1 tile
+                  1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+                  tileHeight); // sets the depth to be 1 tile
+          STATIC_GEOMETRY_LOCATIONS.get(location).add(floor);
+        }
+        else if (levelData[x][y] == 6)
+        {
+          rollToSpawnZombie(engine, location);
+          floor = new FloorCeilingTile("textures/oldbikiniBabe.jpg",
+                  true, // is part of floor
+                  false, // is not part of ceiling
+                  location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                  location.getY(), // same as above but for y
+                  tileWidth, // sets the width to be 1 tile
+                  1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+                  tileHeight); // sets the depth to be 1 tile
+          STATIC_GEOMETRY_LOCATIONS.get(location).add(floor);
+        }
+        else if (levelData[x][y] == 3)
+        {
+          rollToSpawnZombie(engine, location);
+          floor = new FloorCeilingTile("textures/rock_texture.jpg",
+                  true, // is part of floor
+                  false, // is not part of ceiling
+                  location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                  location.getY(), // same as above but for y
+                  tileWidth, // sets the width to be 1 tile
+                  1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+                  tileHeight); // sets the depth to be 1 tile
+          STATIC_GEOMETRY_LOCATIONS.get(location).add(floor);
+        }
+        else if (levelData[x][y] == 4)
+        {
+          rollToSpawnZombie(engine, location);
+          floor = new FloorCeilingTile("textures/stone_texture.jpg",
+                  true, // is part of floor
+                  false, // is not part of ceiling
+                  location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                  location.getY(), // same as above but for y
+                  tileWidth, // sets the width to be 1 tile
+                  1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+                  tileHeight); // sets the depth to be 1 tile
+          STATIC_GEOMETRY_LOCATIONS.get(location).add(floor);
+        }
+        else
+        {
+          rollToSpawnZombie(engine, location);
+          floor = new FloorCeilingTile("textures/brick_texture2.jpg",
+                  true, // is part of floor
+                  false, // is not part of ceiling
+                  location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                  location.getY(), // same as above but for y
+                  tileWidth, // sets the width to be 1 tile
+                  1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+                  tileHeight); // sets the depth to be 1 tile
+          STATIC_GEOMETRY_LOCATIONS.get(location).add(floor);
+        }
+
+        FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
+                false, // is not part of floor
+                true, // is part of ceiling
+                location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
+                location.getY(), // sets the width to be 1 tile
+                tileWidth, // sets the width to be the whole width of the map (covers the entire space)
+                1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
+                tileHeight); // sets the depth to be 1 tile
+        STATIC_GEOMETRY_LOCATIONS.get(location).add(ceiling);
+      }
+    }
+  }
+
+  private void rollToSpawnZombie(Engine engine, Vector3 location)
+  {
+    double zombieSpawn = Double.parseDouble(engine.getSettings().getValue("zombie_spawn"));
+    if (RAND.nextDouble() <= zombieSpawn)
+    {
+      Zombie zombie = null;
+      Vector3 zombieLoc = new Vector3(location);
+      if (RAND.nextInt(100) >= 50)
+      {
+        zombie = new RandomWalkZombie("textures/metal_texture.jpg",
+                                      "resources/Zombie2_Animated.txt",
+                                      zombieLoc.getX(),
+                                      zombieLoc.getY(),
+                                      tileWidth,
+                                      tileHeight,
+                                      tileWidth);
+      }
+      else if (RAND.nextDouble() <= zombieSpawn && !masterZombieHasSpawned)
+      {
+        masterZombieHasSpawned = true;
+        MASTER_ZOMBIE_LOCATION.set(location);
+      }
+      else
+      {
+        zombie = new LineWalkZombie("textures/rock_texture.jpg",
+                                    "resources/Zombie1_Animated.txt",
+                                    zombieLoc.getX(),
+                                    zombieLoc.getY(),
+                                    tileWidth,
+                                    tileHeight,
+                                    tileWidth);
+      }
+      if (zombie != null)
+      {
+        if (!DYNAMIC_ACTOR_LOCATIONS.containsKey(zombieLoc)) DYNAMIC_ACTOR_LOCATIONS.put(zombieLoc, new HashSet<>());
+        DYNAMIC_ACTOR_LOCATIONS.get(zombieLoc).add(zombie);
+      }
+    }
+  }
+
+  private void initPlayer(World world)
+  {
+    player = new Player(LEVEL_GENERATOR.getXSpawnPoint(), LEVEL_GENERATOR.getYSpawnPoint(), 3 * tileHeight);
+    System.out.println(LEVEL_GENERATOR.getXSpawnPoint() + " " + LEVEL_GENERATOR.getYSpawnPoint());
+    world.setPlayer(player);
+    world.add(player);
+  }
+
+  private void initMasterZombie(World world)
+  {
+    if (!masterZombieHasSpawned)
+    {
+      int x = RAND.nextInt(pixelWidth);
+      int y = RAND.nextInt(pixelHeight);
+      while (levelData[x][y] == 1 || levelData[x][y] == 69)
+      {
+        x = RAND.nextInt(pixelWidth);
+        y = RAND.nextInt(pixelHeight);
+      }
+      masterZombieHasSpawned = true;
+      MASTER_ZOMBIE_LOCATION.set(x, y, 0.0);
+    }
+    MasterZombie masterZombie = new MasterZombie("textures/block_texture_dark.jpg",
+                                                 "resources/Zombie2_Animated.txt",
+                                                 MASTER_ZOMBIE_LOCATION.getX(),
+                                                 MASTER_ZOMBIE_LOCATION.getY(),
+                                                 tileWidth,
+                                                 tileHeight,
+                                                 tileWidth);
+    world.setMasterZombie(masterZombie);
+  }
+
+  private void adjustEngineSettings(Engine engine)
+  {
+    double newZombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
+    newZombieSpeed += zombieSpeedIncrease;
+    double newPlayerHealth = Double.parseDouble(engine.getSettings().getValue("player_health"));
+    newPlayerHealth += playerHealthIncrease;
+    double newPlayerStamina = Double.parseDouble(engine.getSettings().getValue("player_stamina"));
+    newPlayerStamina += playerStaminaIncrease;
+    engine.getSettings().registerSetting("zombie_speed", Double.toString(newZombieSpeed));
+    engine.getSettings().registerSetting("player_health", Double.toString(newPlayerHealth));
+    engine.getSettings().registerSetting("player_stamina", Double.toString(newPlayerStamina));
+  }
 }

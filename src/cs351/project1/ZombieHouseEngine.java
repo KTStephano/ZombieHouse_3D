@@ -145,14 +145,6 @@ public class ZombieHouseEngine implements Engine
     this.world = world;
     this.soundEngine = soundEngine;
     this.renderer = renderer;
-    pathingData = new boolean[world.getWorldPixelWidth() / world.getTilePixelWidth()]
-                             [world.getWorldPixelHeight() / world.getTilePixelHeight()];
-    for (int x = 0; x < pathingData.length; x++)
-    {
-      // start off assuming each location can be visited
-      Arrays.fill(pathingData[x], false);
-    }
-
     isInitialized = true;
     isPendingShutdown = false;
     pendingLevelRestart = false;
@@ -163,16 +155,23 @@ public class ZombieHouseEngine implements Engine
     stage.setOnCloseRequest(this::windowClosed);
     collision = new CollisionDetection(this); // init the collision detection system
     getSoundEngine().init(this);
+    pathingData = new boolean[world.getWorldPixelWidth() / world.getTilePixelWidth()]
+                             [world.getWorldPixelHeight() / world.getTilePixelHeight()];
     initEngineState(); // init the initial engine state from the world
     keyInput.init(stage);
- 
+    System.out.println(" ffffff " + pathingData.length);
+    for (int x = 0; x < pathingData.length; x++)
+    {
+      // start off assuming each location can be visited
+      Arrays.fill(pathingData[x], false);
+    }
   }
 
   @Override
   public void init(String settingsFile, Stage stage, World world, SoundEngine soundEngine, Renderer renderer)
   {
-    init(stage, world, soundEngine, renderer);
     settings.importSettings(settingsFile);
+    init(stage, world, soundEngine, renderer);
     setEngineVariablesFromSettings();
     getSoundEngine().init(this); // call this again so it can check the *new* values of the engine.settings
   }
@@ -315,8 +314,10 @@ public class ZombieHouseEngine implements Engine
     Collection<Actor> changeList = getWorld().getChangeList(true);
     ALL_ACTORS.addAll(changeList); // this should contain all actors since nextLevel was called
     getWorld().getPlayer().setNoClip(playerNoClip);
+    int numChanges = 0;
     for (Actor actor : changeList)
     {
+      numChanges++;
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
       //if (actor.isStatic() || actor.isPartOfFloor()) collision.insert(actor);
       if (actor.isStatic() || (actor.isPartOfFloor() && actor.shouldUpdate())) collision.insert(actor);
