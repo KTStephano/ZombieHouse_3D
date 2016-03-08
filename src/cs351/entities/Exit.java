@@ -31,17 +31,17 @@ public class Exit extends Wall
   @Override
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
-    if (endGame) return UpdateResult.PLAYER_VICTORY;
+    if (endGame)
+    {
+      System.out.println("Victory!");
+      return UpdateResult.PLAYER_VICTORY;
+    }
     return UpdateResult.UPDATE_COMPLETED;
   }
 
   @Override
   public void collided(Engine engine, Actor actor)
   {
-    if (actor instanceof Player)
-    {
-      System.out.println("Victory!");
-      endGame = true;
-    }
+    if (actor instanceof Player) endGame = true;
   }
 }

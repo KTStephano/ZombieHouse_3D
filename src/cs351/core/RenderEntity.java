@@ -238,7 +238,6 @@ public class RenderEntity
   private Model loadObj(String filename)
   {
     importer.clear();
-    System.out.println("Loading " + filename);
     URL url = Engine.class.getResource(filename);
     importer.read(url);
     Model model = new Model();

@@ -55,7 +55,11 @@ public class Player extends Actor
 
     currentHealth -= numAttackingZombies * 10.0 * deltaSeconds;
     numAttackingZombies = 0;
-    if (currentHealth <= 0.0) return UpdateResult.PLAYER_DEFEAT;
+    if (currentHealth <= 0.0)
+    {
+      System.out.println("Defeat");
+      return UpdateResult.PLAYER_DEFEAT;
+    }
 
     updateStamina(engine, deltaSeconds);
 
