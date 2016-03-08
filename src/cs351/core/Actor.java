@@ -1,5 +1,8 @@
 package cs351.core;
 
+import javafx.geometry.Point3D;
+import javafx.scene.transform.Rotate;
+
 /**
  * The Actor class represents any object that can be added to the game
  * and updated each frame. It can be used to represent both moving
@@ -25,8 +28,11 @@ public abstract class Actor
   protected boolean isPartOfFloor; // true if floor tile
   protected boolean isPartOfCeiling; // true if ceiling
   protected boolean isPlayer=false; // true if Player
-   protected final String TEXTURE_FILE;
+  protected final String TEXTURE_FILE;
   protected RenderEntity renderEntity = null;
+  protected Rotate rotation = new Rotate(0.0);
+  protected double rotationAngle = 0.0;
+  protected Vector3 direction = new Vector3(0.0);
 
   /**
    * UpdateResult contains a few different enum values that each Actor can use
@@ -49,6 +55,8 @@ public abstract class Actor
     id = unique_id;
     unique_id++;
     TEXTURE_FILE = textureFile;
+    rotation.setAxis(new Point3D(0.0, 1.0, 0.0));
+    rotation.setAngle(rotationAngle);
   }
 
   public Actor(String textureFile, String modelFile)
@@ -115,6 +123,25 @@ public abstract class Actor
   public RenderEntity getRenderEntity()
   {
     return renderEntity;
+  }
+
+  public Rotate getRotation()
+  {
+    return rotation;
+  }
+
+  public Vector3 getDirection()
+  {
+    return direction;
+  }
+
+  public void lookAt(double x, double y)
+  {
+    direction.set(x, y, 0.0);
+    //rotationAngle = Math.atan2(direction.getY(), direction.getX());
+    rotationAngle += 10;
+    System.out.println(rotationAngle);
+    rotation.setAngle(rotationAngle);
   }
 
   /**

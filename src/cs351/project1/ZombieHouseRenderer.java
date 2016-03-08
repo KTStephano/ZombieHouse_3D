@@ -336,6 +336,7 @@ public class ZombieHouseRenderer implements Renderer
     if (actor.isStatic() && -actor.getHeight() < largestWall) largestWall = -actor.getHeight();
     if (!addStaticGeometry(actor)) DYNAMIC_ACTORS.add(actor);
     ACTOR_MODEL_MAP.put(actor, model);
+    //model.shape.getTransforms().addAll(model.rotation, model.translation);
     //renderSceneGraph.getChildren().addAll(model.shape);
   }
 
@@ -359,7 +360,8 @@ public class ZombieHouseRenderer implements Renderer
       meshView.setCache(true);
       model.meshViewMap.put(mesh, meshView);
       meshView.setMaterial(model.material);
-      meshView.getTransforms().addAll(model.rotation, model.translation);
+      meshView.setRotationAxis(new Point3D(0.0, 1.0, 0.0));
+      meshView.getTransforms().addAll(model.translation, model.rotation);
       meshView.setCullFace(CullFace.NONE);
       //meshView.setVisible(false);
       //renderSceneGraph.getChildren().addAll(meshView);
@@ -404,8 +406,13 @@ public class ZombieHouseRenderer implements Renderer
     model.translation = new Translate(actor.getLocation().getX(),
                                       0.0,
                                       actor.getLocation().getY());
-    model.rotation = new Rotate(0.0, 0.0, 0.0);
-    if (shape != null) shape.getTransforms().addAll(model.rotation, model.translation);
+    //model.rotation = new Rotate(0.0, 0.0, 0.0);
+    model.rotation = actor.getRotation();
+    if (shape != null)
+    {
+      shape.setRotationAxis(new Point3D(0.0, 1.0, 0.0));
+      shape.getTransforms().addAll(model.translation, model.rotation);
+    }
 
     return model;
   }

@@ -45,16 +45,17 @@ public class MasterZombie extends Zombie {
         xDirection = (100-rand.nextInt(200))/20000.0;
         // -100 to 100 / 20000.0
         yDirection = (100-rand.nextInt(200))/20000.0;
+        lookAt(xDirection, yDirection);
       } 
       else
       {
           Point2D pt = super.PathfindToThePlayer(engine);
           xDirection = pt.getX();
           yDirection = pt.getY();
+        lookAt(xDirection, yDirection);
       }
 
     }
-
 
     setLocation(getLocation().getX()+xDirection, getLocation().getY() +yDirection);
 
