@@ -56,7 +56,7 @@ public abstract class Actor
     unique_id++;
     TEXTURE_FILE = textureFile;
     rotation.setAxis(new Point3D(0.0, 1.0, 0.0));
-    rotation.setAngle(rotationAngle);
+    //rotation.setAngle(90);
   }
 
   public Actor(String textureFile, String modelFile)
@@ -139,8 +139,9 @@ public abstract class Actor
   {
     direction.set(x, y, 0.0);
     //rotationAngle = Math.atan2(direction.getY(), direction.getX());
-    rotationAngle += 10;
-    System.out.println(rotationAngle);
+    Vector3 lookAt = direction.subtract(location);
+    lookAt.normalize();
+    rotationAngle = 90 - Math.toDegrees(Math.atan2(lookAt.getY(), lookAt.getX()));
     rotation.setAngle(rotationAngle);
   }
 
