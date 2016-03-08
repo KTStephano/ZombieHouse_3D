@@ -19,7 +19,6 @@ public class ZombieLevel implements Level
   private int[][] levelData;
   private final HashMap<Vector3, HashSet<Actor>> STATIC_GEOMETRY_LOCATIONS = new HashMap<>();
   private final HashMap<Vector3, HashSet<Actor>> DYNAMIC_ACTOR_LOCATIONS = new HashMap<>();
-  private final HashMap<Vector3, String> TEXTURE_DATA = new HashMap<>();
   private final Vector3 MASTER_ZOMBIE_LOCATION = new Vector3(0.0);
   private final Random RAND = new Random();
   private final ProceduralRoomTestThingy LEVEL_GENERATOR = new ProceduralRoomTestThingy();
@@ -79,7 +78,10 @@ public class ZombieLevel implements Level
   @Override
   public void destroy()
   {
-
+    for (Map.Entry<Vector3, HashSet<Actor>> entry : STATIC_GEOMETRY_LOCATIONS.entrySet()) entry.getValue().clear();
+    for (Map.Entry<Vector3, HashSet<Actor>> entry : DYNAMIC_ACTOR_LOCATIONS.entrySet()) entry.getValue().clear();
+    STATIC_GEOMETRY_LOCATIONS.clear();
+    DYNAMIC_ACTOR_LOCATIONS.clear();
   }
 
   private void initStaticGeometry(Engine engine)
