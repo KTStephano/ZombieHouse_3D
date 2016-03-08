@@ -66,7 +66,7 @@ public class LineWalkZombie extends Zombie {
         else if (xDirection != 0.0) xDirection = xDirection < 0.0 ? -0.5 : 0.5;
         if (xDirection == 0.0 && yDirection != 0.0) yDirection = yDirection < 0.0 ? -1.0 : 1.0;
         else if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
-  
+        lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
       }
 
 
