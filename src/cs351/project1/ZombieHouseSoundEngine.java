@@ -33,6 +33,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
   private HashMap<String, HashSet<MediaPlayer>> availableSounds = new HashMap<>();
   private HashSet<MediaPlayer> activeSounds = new HashSet<>(3);
   private HashSet<MediaPlayer> soundBackBuffer = new HashSet<>(); // sounds waiting to be pushed to activeSounds
+  private LinkedList<MediaPlayer> pendingRemoval = new LinkedList<>();
   private final int MAX_SOUNDS_PER_SOUND_FILE = 3;
   static SoundStackItem  tmpSoundStackItem;
   private double playerHearing = 1.0f;
@@ -64,6 +65,12 @@ public class ZombieHouseSoundEngine implements SoundEngine
     playerLookDir.set(((Player)engine.getWorld().getPlayer()).getForwardVector());
     playerRightDir.set(((Player)engine.getWorld().getPlayer()).getRightVector());
     playerLocation = engine.getWorld().getPlayer().getLocation();
+
+    activeSounds.removeAll(pendingRemoval);
+    for (Map.Entry<String, HashSet<MediaPlayer>> entry : availableSounds.entrySet()) entry.getValue().removeAll(pendingRemoval);
+    pendingRemoval.clear();
+    //System.out.println(soundStack.size());
+
     //playerRightDir.normalize();
     // NOTE: LOCATION_X, LOCATION_Y distance to centralPoint = sqrt((cp.LOCATION_X - LOCATION_X)^2 + (cp.LOCATION_Y-LOCATION_Y)^2)
     // determines volume during playback
@@ -197,21 +204,13 @@ public class ZombieHouseSoundEngine implements SoundEngine
     //System.out.println(activeSounds.size());
     MediaPlayer player = null;
 
-    LinkedList<MediaPlayer> pendingRemoval = new LinkedList<>();
     for (MediaPlayer mediaPlayer : mediaSet)
     {
       // Check to see if the media player was registered with activeSounds but has since
       // finished (remove it if it is done)
-      if (mediaPlayer.getStatus() == MediaPlayer.Status.STOPPED)
-      //if (mediaPlayer.getCurrentTime().greaterThanOrEqualTo(mediaPlayer.getStopTime()))
-      {
-        //activeSounds.remove(mediaPlayer);
-        pendingRemoval.add(mediaPlayer);
-      }
       if (!activeSounds.contains(mediaPlayer)) return mediaPlayer;
     }
-    mediaSet.removeAll(pendingRemoval);
-    activeSounds.removeAll(pendingRemoval);
+    //activeSounds.removeAll(pendingRemoval);
     //System.out.println(mediaSet.size());
     // by this point, an existing media player was not found
     if (mediaSet.size() < MAX_SOUNDS_PER_SOUND_FILE)
@@ -243,6 +242,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
         //PLAYER.balanceProperty().set(0.0);
         //PLAYER.seek(new Duration(0.0));
         PLAYER.dispose();
+        pendingRemoval.add(PLAYER);
         //PLAYER.setOnEndOfMedia(this);
         //activeSounds.remove(PLAYER);
       }
