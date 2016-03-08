@@ -609,12 +609,7 @@ public class ProceduralRoomTestThingy extends Application
   */
  
  public void createExit(){
-//   boardArray[BOARD_WIDTH-2][BOARD_HEIGHT-1]  = 6;
-//   boardArray[BOARD_WIDTH-3][BOARD_HEIGHT-1]  = 6;
-//   boardArray[BOARD_WIDTH-4][BOARD_HEIGHT-1]  = 6;
-//   boardArray[BOARD_WIDTH-5][BOARD_HEIGHT-1]  = 6;
-//   boardArray[BOARD_WIDTH-6][BOARD_HEIGHT-1]  = 6;
-//   boardArray[BOARD_WIDTH-7][BOARD_HEIGHT-1]  = 6;
+
    boardArray[BOARD_WIDTH-8][BOARD_HEIGHT-1]  = 69;
    
    boardArray[BOARD_WIDTH-2][BOARD_HEIGHT-2]  = 6;

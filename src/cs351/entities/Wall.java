@@ -2,7 +2,11 @@ package cs351.entities;
 
 import cs351.core.Actor;
 import cs351.core.Engine;
-
+/**
+ * @author Chris,Justin,Scott
+ * Creates a Wall object that extends the Actor class
+ *
+ */
 public class Wall extends Actor
 {
   public Wall(String textureFile, double x, double y, int width, int height, int depth)

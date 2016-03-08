@@ -1,14 +1,19 @@
 package cs351.entities;
 
+/**
+ * This class handles the speed and direction of a
+ * Random Walk Zombie
+ */
+
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
 import cs351.core.Vector3;
 import javafx.geometry.Point2D;
-
 import java.util.Random;
 
 
 public class RandomWalkZombie extends Zombie {
+  
   // initialize to something we set
   private double elapsedSeconds=0;
   private Random rand = new Random();
@@ -28,6 +33,12 @@ public class RandomWalkZombie extends Zombie {
     super(textureFile, modelFile, x, y, width, height, depth);
   }
 
+  /**
+   * Parameters are given from the Engine so that the appropriate
+   * updates can be made
+   * @param engine
+   * @param deltaSeconds
+   */
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
 

@@ -1,11 +1,12 @@
 package cs351.entities;
+/**
+ * This class handles the speed and direction of a
+ * "line walk" zombie
+ */
 
 import java.util.Random;
-
-import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
-import cs351.core.Vector3;
 import javafx.geometry.Point2D;
 
 
@@ -26,11 +27,17 @@ public class LineWalkZombie extends Zombie {
     super(textureFile, modelFile, x, y, width, height, depth);
   }
 
+  /**
+   * Parameters are given from the Engine so that the appropriate
+   * updates can be made
+   * @param engine
+   * @param deltaSeconds
+   */
   public UpdateResult update(Engine engine, double deltaSeconds)
   { 
 
-    //   System.out.println("--fps: "+1/deltaSeconds);
     double zombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
+
     // totalSpeed represents the movement speed offset in tiles per second
     elapsedSeconds += deltaSeconds;
 

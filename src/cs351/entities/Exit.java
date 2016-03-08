@@ -1,5 +1,9 @@
 package cs351.entities;
 
+/**
+ * This class sets the location or tile that will
+ * trigger a restart new level event. 
+ */
 import cs351.core.Actor;
 import cs351.core.Engine;
 
@@ -7,6 +11,16 @@ public class Exit extends Wall
 {
   private boolean endGame = false;
 
+  /**
+   * Constructs an exit object with given coordinates
+   * 
+   * @param textureFile
+   * @param x
+   * @param y
+   * @param width
+   * @param height
+   * @param depth
+   */
   public Exit(String textureFile, double x, double y, int width, int height, int depth)
   {
     super(textureFile, x, y, width, height, depth);

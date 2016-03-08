@@ -1,7 +1,5 @@
 package cs351.entities;
 
-
-
 import cs351.core.Actor;
 import cs351.core.Engine;
 import cs351.core.GlobalConstants;
@@ -13,7 +11,12 @@ import java.util.List;
 import java.util.Random;
 
 
-
+/**
+ * 
+ * @author 
+ * Creates a zombie object that extends actor
+ *
+ */
 public class Zombie extends Actor
 {
   private Random rand = new Random();
@@ -40,6 +43,13 @@ public class Zombie extends Actor
     setWidthHeightDepth(width, height, depth);
   }
 
+  /**
+   * A star pathfinding algorithm is used here to 
+   * help the animated zombies find the player
+   * 
+   * @param engine
+   * @return
+   */
   protected Point2D PathfindToThePlayer(Engine engine)
   {
     Point2D result = null;
@@ -116,6 +126,11 @@ public class Zombie extends Actor
 
 
 
+  /**
+   *  This method communicates with the engine, and sends 
+   *  updates as to how fast, or what direction a zombie 
+   *  is going
+   */
   public UpdateResult update(Engine engine, double deltaSeconds)
   {
 
@@ -140,6 +155,12 @@ public class Zombie extends Actor
 
   }
 
+  /**
+   * This method checks if a player is close enough to a zombie actor.
+   * If so, a sound event is triggered
+   * @param engine
+   * @param deltaSeconds
+   */
   protected void checkPlaySound(Engine engine, double deltaSeconds)
   {
     soundTimer += deltaSeconds;
@@ -168,6 +189,12 @@ public class Zombie extends Actor
     }
   }
 
+  /**
+   * This is part of the collision detection process
+   * A new direction is set after a collision for 
+   * moving objects. Non moving objects (such as tiles
+   * and walls) do not need this.
+   */
   public void collided(Engine engine, Actor actor)
   {
     // direction should be maintained if floor or if we hit player

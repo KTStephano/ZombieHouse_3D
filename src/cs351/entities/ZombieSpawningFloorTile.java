@@ -11,7 +11,11 @@ import java.util.Random;
 
 import cs351.core.Actor;
 
-
+/**
+ * This class creates a zombie spawning floor tile
+ * @author goo
+ *
+ */
 public class ZombieSpawningFloorTile extends FloorCeilingTile  {
   private double elapsedTime;
   private double lastCollisionTime = 0;
@@ -54,6 +58,9 @@ public class ZombieSpawningFloorTile extends FloorCeilingTile  {
 
 
 
+  /**
+   * Spawns a zombie in the appropriate location
+   */
   private void spawnZombie()
   {
     Random rand = new Random();

@@ -143,11 +143,7 @@ public class EnvironmentDemo implements World
     actors.clear();
     //initPlayer();
     
-    RoomTestThingy thingy = new RoomTestThingy();
-    
-    thingy.initializeArray();  //TODO ADDED THIS STUFF HERE
-    thingy.placeRooms();
-    testArray = thingy.getArray();
+
 
     initWallsFloorAndCeiling();
     initZombies();
