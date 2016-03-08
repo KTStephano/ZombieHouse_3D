@@ -192,6 +192,11 @@ public class RenderEntity
     mesh.getTexCoords().toArray(model.texCoords);
     mesh.getNormals().toArray(model.normals);
     mesh.getFaces().toArray(model.faces);
+
+    mesh.getPoints().clear();
+    mesh.getTexCoords().clear();
+    mesh.getNormals().clear();
+    mesh.getFaces().clear();
   }
 
   /**

@@ -34,6 +34,7 @@ public class ZombieHouseRenderer implements Renderer
   private final HashMap<String, Texture> TEXTURE_LOOKUP = new HashMap<>(50);
   private final HashSet<Actor> DYNAMIC_ACTORS = new HashSet<>(50);
   private final HashSet<Actor> STATIC_ACTORS = new HashSet<>(50);
+  private final HashSet<Node> RENDER_FRAME = new HashSet<>(50);
   private RenderTree environment;
   private double largestWall = 0.0; // used to calculate where the ceiling should be
   private Group renderSceneGroup;
@@ -255,7 +256,8 @@ public class ZombieHouseRenderer implements Renderer
     if (initSettings) initSettings(engine);
 
     // prepare the scene for this frame
-    renderSceneGraph.getChildren().clear();
+    //renderSceneGraph.getChildren().clear();
+    RENDER_FRAME.clear();
     initLighting();
 
     // orient the player to their rotation/location
@@ -266,6 +268,9 @@ public class ZombieHouseRenderer implements Renderer
 
     // render the static geometry
     renderStaticGeometry(engine, mode, deltaSeconds);
+
+    // push the changes to the scene graph
+    renderSceneGraph.getChildren().setAll(RENDER_FRAME);
   }
 
   @Override
@@ -458,7 +463,8 @@ public class ZombieHouseRenderer implements Renderer
     if (model.shape != null)
     {
       model.shape.setDrawMode(mode);
-      renderSceneGraph.getChildren().add(model.shape);
+      RENDER_FRAME.add(model.shape);
+      //renderSceneGraph.getChildren().add(model.shape);
     }
     else
     {
@@ -466,7 +472,8 @@ public class ZombieHouseRenderer implements Renderer
       model.currMeshView = model.meshViewMap.get(model.entity.getMesh());
       model.currMeshView.setDrawMode(mode);
       model.currMeshView.setCullFace(CullFace.BACK);
-      renderSceneGraph.getChildren().add(model.currMeshView);
+      RENDER_FRAME.add(model.currMeshView);
+      //renderSceneGraph.getChildren().add(model.currMeshView);
     }
   }
 
@@ -494,8 +501,10 @@ public class ZombieHouseRenderer implements Renderer
   private void initLighting()
   {
     ambient.setLightOn(false);
-    renderSceneGraph.getChildren().add(ambient);
-    renderSceneGraph.getChildren().add(playerLight);
+    RENDER_FRAME.add(ambient);
+    RENDER_FRAME.add(playerLight);
+    //renderSceneGraph.getChildren().add(ambient);
+    //renderSceneGraph.getChildren().add(playerLight);
   }
 
   private Texture registerTexture(String textureFile)
