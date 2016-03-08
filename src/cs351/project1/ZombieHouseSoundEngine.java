@@ -4,6 +4,7 @@ import cs351.core.Engine;
 import cs351.core.SoundEngine;
 import cs351.core.Vector3;
 import cs351.entities.Player;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -30,10 +31,10 @@ public class ZombieHouseSoundEngine implements SoundEngine
   private static int id = 0;
   private Stack<SoundStackItem> soundStack = new Stack<>();
   //private HashMap<Integer, HashMap<String, MediaPlayer>> availableSounds = new HashMap<>(60);
-  private HashMap<String, HashSet<MediaPlayer>> availableSounds = new HashMap<>();
-  private HashSet<MediaPlayer> activeSounds = new HashSet<>(3);
-  private HashSet<MediaPlayer> soundBackBuffer = new HashSet<>(); // sounds waiting to be pushed to activeSounds
-  private LinkedList<MediaPlayer> pendingRemoval = new LinkedList<>();
+  private HashMap<String, HashSet<AudioClip>> availableSounds = new HashMap<>();
+  private HashSet<AudioClip> activeSounds = new HashSet<>(3);
+  private HashSet<AudioClip> soundBackBuffer = new HashSet<>(); // sounds waiting to be pushed to activeSounds
+  private LinkedList<AudioClip> pendingRemoval = new LinkedList<>();
   private final int MAX_SOUNDS_PER_SOUND_FILE = 3;
   static SoundStackItem  tmpSoundStackItem;
   private double playerHearing = 1.0f;
@@ -67,7 +68,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
     playerLocation = engine.getWorld().getPlayer().getLocation();
 
     activeSounds.removeAll(pendingRemoval);
-    for (Map.Entry<String, HashSet<MediaPlayer>> entry : availableSounds.entrySet()) entry.getValue().removeAll(pendingRemoval);
+    for (Map.Entry<String, HashSet<AudioClip>> entry : availableSounds.entrySet()) entry.getValue().removeAll(pendingRemoval);
     pendingRemoval.clear();
     //System.out.println(soundStack.size());
 
@@ -105,6 +106,8 @@ public class ZombieHouseSoundEngine implements SoundEngine
       //mediaPlayer.seek(Duration.ZERO);
       //mediaPlayer.play();
     //}
+
+    for (AudioClip clip : soundBackBuffer) clip.play();
     //System.out.println(activeSounds.get(currentActiveSoundList));
     //System.out.println(activeSounds.get(currentActiveSoundList));
     soundBackBuffer.clear();
@@ -116,9 +119,9 @@ public class ZombieHouseSoundEngine implements SoundEngine
   {
     // Ask the engine what the player hearing is (through the Settings class)
     playerHearing = Float.parseFloat(engine.getSettings().getValue("player_hearing"));
-    for (Map.Entry<String, HashSet<MediaPlayer>> entry : availableSounds.entrySet())
+    for (Map.Entry<String, HashSet<AudioClip>> entry : availableSounds.entrySet())
     {
-      for (MediaPlayer mediaPlayer : entry.getValue()) mediaPlayer.dispose();
+      for (AudioClip mediaPlayer : entry.getValue()) mediaPlayer.stop();
     }
     //System.out.println("HEARING " + playerHearing);
   }
@@ -129,7 +132,7 @@ public class ZombieHouseSoundEngine implements SoundEngine
     try
     {
       // extract the available media players for this frame
-      MediaPlayer player = getAvailableMediaPlayer(item.SOUND_FILE);
+      AudioClip player = getAvailableMediaPlayer(item.SOUND_FILE);
       //System.out.println(player);
       if (player == null) return; // can't do anything valid this frame
       // If the sound has been loaded before, don't reload it - just get the active media
@@ -197,17 +200,23 @@ public class ZombieHouseSoundEngine implements SoundEngine
     volume.setValue(min + value);
   }
 
-  private MediaPlayer getAvailableMediaPlayer(String soundFile)
+  private AudioClip getAvailableMediaPlayer(String soundFile)
   {
     if (!availableSounds.containsKey(soundFile)) availableSounds.put(soundFile, new HashSet<>());
-    HashSet<MediaPlayer> mediaSet = availableSounds.get(soundFile);
+    HashSet<AudioClip> mediaSet = availableSounds.get(soundFile);
     //System.out.println(activeSounds.size());
-    MediaPlayer player = null;
+    AudioClip player = null;
 
-    for (MediaPlayer mediaPlayer : mediaSet)
+    for (AudioClip mediaPlayer : mediaSet)
     {
       // Check to see if the media player was registered with activeSounds but has since
       // finished (remove it if it is done)
+      if (!mediaPlayer.isPlaying())
+      {
+        mediaPlayer.setBalance(0.0);
+        mediaPlayer.setVolume(0.0);
+        activeSounds.remove(mediaPlayer);
+      }
       if (!activeSounds.contains(mediaPlayer)) return mediaPlayer;
     }
     //activeSounds.removeAll(pendingRemoval);
@@ -223,30 +232,14 @@ public class ZombieHouseSoundEngine implements SoundEngine
     return player; // not sure what happened
   }
 
-  private MediaPlayer generateNewMediaPlayer(String soundFile)
+  private AudioClip generateNewMediaPlayer(String soundFile)
   {
     URL resource = ZombieHouseSoundEngine.class.getResource(soundFile);
-    MediaPlayer player = new MediaPlayer(new Media(resource.toString()));
+    AudioClip player = new AudioClip(resource.toString());
     player.setVolume(0.0);
     player.play();
-    final MediaPlayer PLAYER = player;
+    final AudioClip PLAYER = player;
     //player.setRate(1.5);
-
-    PLAYER.setOnEndOfMedia(new Runnable()
-    {
-      private final MediaPlayer PLAYER = player;
-      @Override
-      public void run()
-      {
-        //PLAYER.setVolume(0.0);
-        //PLAYER.balanceProperty().set(0.0);
-        //PLAYER.seek(new Duration(0.0));
-        PLAYER.dispose();
-        pendingRemoval.add(PLAYER);
-        //PLAYER.setOnEndOfMedia(this);
-        //activeSounds.remove(PLAYER);
-      }
-    });
 
     return player;
   }
