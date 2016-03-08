@@ -9,7 +9,7 @@ import javafx.scene.shape.TriangleMesh;
  * The Renderer is meant to manage the final translation/rotation of all registered
  * models, lights, etc. in order to render a scene each frame.
  *
- * TODO need to finish this interface
+ * @author Justin Hall
  */
 public interface Renderer
 {

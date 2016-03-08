@@ -32,6 +32,8 @@ import java.util.LinkedList;
  * it is added to all of them. This way, only the leaves of the tree have
  * any objects and doing visibility testing will not miss out on any objects
  * for the sake of efficiency.
+ *
+ * @author Justin Hall
  */
 public class RenderTree
 {

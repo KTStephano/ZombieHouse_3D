@@ -36,6 +36,11 @@ import javafx.stage.Stage;
 import java.util.Random;
 import java.util.Queue;
 
+/**
+ * Rooms class used by RandomLevelGenerator
+ *
+ * @author Chris Sanchez
+ */
 public class Rooms extends Application
 {
   static final boolean VERTICAL   = true;

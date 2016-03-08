@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * Zombie house renderer. Maintains and rebuilds the scene each frame.
+ *
+ * @author Justin Hall
+ */
 public class ZombieHouseRenderer implements Renderer
 {
   private Scene scene;

@@ -19,6 +19,10 @@ import java.util.Random;
 
 //All of this will go into Game.java, LevelTest.java is only to create an environment
 
+/**
+ * @author Chris Sanchez
+ */
+
 public class LevelTest extends Application
 {
   

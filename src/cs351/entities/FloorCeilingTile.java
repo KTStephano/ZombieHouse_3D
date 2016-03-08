@@ -3,6 +3,8 @@ package cs351.entities;
  * This class creates Floor and ceiling tile objects
  * This just sets the location on a 2D array. The 
  * renderer handles the visual aspect.
+ *
+ * @author Justin Hall
  */
 import cs351.core.Actor;
 import cs351.core.Engine;

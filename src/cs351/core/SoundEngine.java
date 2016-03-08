@@ -10,6 +10,8 @@ import java.net.URL;
  * Sounds that are closer to the specified central point should play at
  * the maximum default volume, while sounds further away from the central
  * point should decrease in volume in some way.
+ *
+ * @author Justin Hall
  */
 public interface SoundEngine
 {

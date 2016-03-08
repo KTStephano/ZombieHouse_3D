@@ -12,8 +12,9 @@ import java.util.*;
  * This class is used to detect and respond to collision events between two actors. It makes
  * heavy use of two spatial hash maps (one for moving objects and one for static objects)
  * to cut down on the number of collision checks it has to do each frame.
+ *
+ * @author Justin Hall
  */
-// TODO figure out why the camera sometimes shakes a little during collision
 public class CollisionDetection
 {
   private final SpatialHashMap MOVING_ENTITIES;

@@ -7,6 +7,11 @@ import javafx.geometry.Point2D;
 import java.util.Random;
 
 
+/**
+ * Master zombie class. Has functionality for finding the player.
+ *
+ * @author Scott Cooper
+ */
 public class MasterZombie extends Zombie {
   // initialize to something we set
   private double elapsedSeconds=0;

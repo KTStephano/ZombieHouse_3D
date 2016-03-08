@@ -2,12 +2,9 @@ package cs351.project1;
 import cs351.core.*;
 import cs351.entities.Exit;
 import cs351.entities.Player;
-import cs351.entities.Tiles;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Box;
-import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,6 +15,8 @@ import java.util.LinkedList;
  * objects that an Engine is working with. It does not need to
  * deal with things like collision detection as that will
  * be handled at the Engine level.
+ *
+ * @author Chris Sanchez
  */
 public class ZombieWorld implements World
 {
