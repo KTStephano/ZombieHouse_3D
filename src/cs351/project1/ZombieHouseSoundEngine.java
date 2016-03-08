@@ -23,7 +23,7 @@ import java.net.URL;
  *
  * Citation: https://www.daniweb.com/programming/game-development/threads/139450/3d-sound-calculating-pan
  *
- * @author Scott Cooper
+ * @author Justin Hall, Scott Cooper
  */
 public class ZombieHouseSoundEngine implements SoundEngine
 {

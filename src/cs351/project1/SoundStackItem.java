@@ -4,7 +4,8 @@ package cs351.project1;
 /**
  * @author Scott Cooper
  */
-public class SoundStackItem {
+public class SoundStackItem
+{
   public final String SOUND_FILE;
   public final double LOCATION_X;
   public final double LOCATION_Y;
