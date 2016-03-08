@@ -213,19 +213,6 @@ public class EnvDemo2_0 implements World
     {
       for (int y = 0; y < numTilesHeight; y++)
       {
-//        if ((x == 0 || y == 0 || x == numTilesWidth - 1 || y == numTilesHeight - 1)
-//        {
-//             Actor wall = new Wall("textures/block_texture_dark.jpg",
-//              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-//              y * getTilePixelHeight(), // same as above but for y
-//              getTilePixelWidth(), // sets the width to be 1 tile
-//              2 * getTilePixelHeight(), // sets the height to be 2 tiles
-//              getTilePixelHeight()); // sets the depth to be 1 tile
-//            actors.add(wall);
-//        }
-
-      
-        /*================================================================================================*/  
           if( (x < 50) && (y < 50)){
             
            if (testArray[x][y] == 1) 
@@ -259,7 +246,6 @@ public class EnvDemo2_0 implements World
              int xSpawn = ProceduralRoomTestThingy.getXSpawnPoint();
              int ySpawn = ProceduralRoomTestThingy.getYSpawnPoint();
              
-             System.out.println("x: " + xSpawn + "y: " + ySpawn);
              initPlayer(xSpawn, ySpawn);
            }
           }

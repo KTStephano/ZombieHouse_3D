@@ -47,6 +47,8 @@ public class ProceduralRoomTestThingy extends Application
   private int numberOfExistingHallways = 0;
   static final boolean VERTICAL        = true;
   static final boolean HORIZONTAL      = false;
+  private boolean spawnBoolean         = true;
+  private boolean graphicDebug         = true;
   private boolean ROTATION             = true;
   private int BOARD_WIDTH              = 50;
   private int BOARD_HEIGHT             = 50;
@@ -61,13 +63,10 @@ public class ProceduralRoomTestThingy extends Application
   private int randInt;
   private int height;
   private int width;
-  
-  private boolean spawnBoolean = true;
-  private boolean graphicDebug = false;
   SpawnPoint sp;
   Stage stage;
-  
   private int n = 1;
+  
   
   HashMap<Integer, Integer> areaOneCenter = new HashMap<>();
   private int[][] boardArray = new int [BOARD_WIDTH][BOARD_HEIGHT];
@@ -127,7 +126,7 @@ public class ProceduralRoomTestThingy extends Application
     
     stage.setTitle("Level Map");
     stage.setScene(scene);
-   // stage.show();
+    //stage.show();
   }
   
   /*
@@ -166,7 +165,7 @@ public class ProceduralRoomTestThingy extends Application
     
     createExit();
     
-   // printArray();
+    printArray();
   }
   
   /*
@@ -203,24 +202,26 @@ public class ProceduralRoomTestThingy extends Application
   */
   void connectRooms()
   {
+    int matchFloorTileTexture = 0;
+    
     //TODO figure out how to check the size of the rooms
     //TODO
     while( !unReachableRooms.isEmpty() )
     {
-     // System.out.println(" queue size " + unReachableRooms.size());
       ProceduralRoomTestThingy remainingRooms = unReachableRooms.remove();
       
       for ( int x = remainingRooms.xStartPt; x <= remainingRooms.width; x++)
       {
         for ( int y = remainingRooms.yStartPt; y <= remainingRooms.height; y++)
         {
-        //door on right side of area
+          //door on right side of area
           if(   x == remainingRooms.width 
              && y == remainingRooms.height / 2
              && x != totalWidth)
           {
-            boardArray[x - 1][y]  = 0;
-            boardArray[x-1][y +1] = 0;
+            matchFloorTileTexture = boardArray[x - 2][y];
+            boardArray[x - 1][y]  = matchFloorTileTexture;
+            boardArray[x-1][y + 1] = matchFloorTileTexture;
             
             if (graphicDebug)
             {
@@ -235,8 +236,9 @@ public class ProceduralRoomTestThingy extends Application
               && y == remainingRooms.height / 2
               && x != xStartPt )
            {
-             boardArray[x][y]     = 0;
-             boardArray[x][y + 1] = 0;
+             matchFloorTileTexture = boardArray[x + 1][y];
+             boardArray[x][y]     = matchFloorTileTexture;
+             boardArray[x][y + 1] = matchFloorTileTexture;
              
             if (graphicDebug)
             {
@@ -244,16 +246,16 @@ public class ProceduralRoomTestThingy extends Application
               r.setFill(Color.GREEN);
               root.getChildren().add(r);
             }
-  
-           }
+          }
           
           //door on top of area
           if(    x == remainingRooms.width / 2 
               && y == remainingRooms.yStartPt 
               && y != yStartPt )
            {
-             boardArray[x][y]     = 0;
-             boardArray[x + 1][y] = 0;
+             matchFloorTileTexture = boardArray[x][y + 1];
+             boardArray[x][y]     = matchFloorTileTexture;
+             boardArray[x + 1][y] = matchFloorTileTexture;
              
             if (graphicDebug)
             {
@@ -261,15 +263,16 @@ public class ProceduralRoomTestThingy extends Application
               r.setFill(Color.PURPLE);
               root.getChildren().add(r);
             }
-           }
+          }
           
           //door on bottom of area
           if(   x == remainingRooms.width / 2 
               && y == remainingRooms.height 
               && y != totalHeight )
            {
-             boardArray[x][y - 1]     = 0;
-             boardArray[x + 1][y - 1] = 0;
+             matchFloorTileTexture = boardArray[x][y - 1];
+             boardArray[x][y - 1]     = matchFloorTileTexture;
+             boardArray[x + 1][y - 1] = matchFloorTileTexture;
              
             if (graphicDebug)
             {
@@ -280,12 +283,14 @@ public class ProceduralRoomTestThingy extends Application
            }
           
           //door on bottom left of area
-          if(   x == remainingRooms.xStartPt
+           if(   x == remainingRooms.xStartPt
               && y == remainingRooms.height - 5
-              && y != totalHeight )
+              && y != totalHeight 
+              && x != 0 )
            {
-             boardArray[x ][y]     = 0;
-             boardArray[x ][y + 1] = 0;
+             matchFloorTileTexture = boardArray[x + 1][y];
+             boardArray[x ][y]     = matchFloorTileTexture;
+             boardArray[x ][y + 1] = matchFloorTileTexture;
              
             if (graphicDebug)
             {
@@ -293,7 +298,7 @@ public class ProceduralRoomTestThingy extends Application
               r.setFill(Color.GRAY);
               root.getChildren().add(r);
             }
-           }
+          }
         }
       }
     }
@@ -363,7 +368,6 @@ public class ProceduralRoomTestThingy extends Application
       horizontalDivide( secondInQueue, randomNumber2 );
     }
   }
-  
   
   
   public void verticalDivide(ProceduralRoomTestThingy firstInQueue, int randomNumber)
@@ -463,11 +467,9 @@ public class ProceduralRoomTestThingy extends Application
     int width    = firstInQueue.width;
     int height   = firstInQueue.height;
     
-    //set spawn location
+    //set spawn location to the Hallway farthest away from the exit
     if ( ( spawnBoolean == true && numberOfExistingHallways == 3) )
     {
-      System.err.println(("code reached"));
-      //new SpawnPoint(firstInQueue.width, firstInQueue.yStartPt + 1);
       XSpawnPoint = randomNumber;
       YSpawnPoint = yStartPt + 1;
       
@@ -605,21 +607,14 @@ public class ProceduralRoomTestThingy extends Application
   return the coordinates of this center
   =====================================================
   */
-// public Point getPoints()
-// {
-//   Point center = new Point((int) (Math.floor(xStartPt + width) / 2), 
-//                                   Math.floor((yStartPt + height) / 2));
-//   return center;
-// }
- 
  
  public void createExit(){
-   boardArray[BOARD_WIDTH-2][BOARD_HEIGHT-1]  = 6;
-   boardArray[BOARD_WIDTH-3][BOARD_HEIGHT-1]  = 6;
-   boardArray[BOARD_WIDTH-4][BOARD_HEIGHT-1]  = 6;
-   boardArray[BOARD_WIDTH-5][BOARD_HEIGHT-1]  = 6;
-   boardArray[BOARD_WIDTH-6][BOARD_HEIGHT-1]  = 6;
-   boardArray[BOARD_WIDTH-7][BOARD_HEIGHT-1]  = 6;
+//   boardArray[BOARD_WIDTH-2][BOARD_HEIGHT-1]  = 6;
+//   boardArray[BOARD_WIDTH-3][BOARD_HEIGHT-1]  = 6;
+//   boardArray[BOARD_WIDTH-4][BOARD_HEIGHT-1]  = 6;
+//   boardArray[BOARD_WIDTH-5][BOARD_HEIGHT-1]  = 6;
+//   boardArray[BOARD_WIDTH-6][BOARD_HEIGHT-1]  = 6;
+//   boardArray[BOARD_WIDTH-7][BOARD_HEIGHT-1]  = 6;
    boardArray[BOARD_WIDTH-8][BOARD_HEIGHT-1]  = 69;
    
    boardArray[BOARD_WIDTH-2][BOARD_HEIGHT-2]  = 6;
@@ -636,9 +631,6 @@ public class ProceduralRoomTestThingy extends Application
    {
      for (int y = 0; y < BOARD_HEIGHT; y++)
      {
-       //this will get the spawn location inside a hallway
-
-     //  if (x == sp.getX() && y == sp.getY() ) System.err.println("*");
        System.out.print(boardArray[y][x]);
      }
      System.out.println("\n");
@@ -660,47 +652,12 @@ public class ProceduralRoomTestThingy extends Application
  }
   
   /*********************** END HELPER METHODS **************************/ 
-  
-  
-//  /*
-//  ================================================
-//  Inner class that instantiates coordinate points
-//  from the Rooms class
-//  ================================================  
-//  */
-// public class Point {
-//     
-//     private double x;
-//     private double y;
-//
-//     public Point(double x, double y)
-//     {
-//         this.x = x;
-//         this.y = y;
-//     }
-//    
-//     public double getX(){
-//       return this.x;
-//     }
-//     
-//     public double getY(){
-//       return this.y;
-//     }
-// }
+
  
   @Override
   public void start(Stage stage)
   {
-   // initializeBoard();
   }
-  
-  
-//  public static void main(String[] args)
-//  {
-//    System.out.println("This is being reached");
-//    launch(args);
-//  }
-  
 }
 
 
