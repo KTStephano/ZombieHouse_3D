@@ -17,11 +17,9 @@ import javafx.scene.shape.Box;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Random;
 
 public class EnvDemo2_0 implements World
 {
-  private Random rand = new Random();
   private HashSet<Actor> actors = new HashSet<>(250);
   private int worldPixelWidth = 50;
   private int worldPixelHeight = 50;
@@ -31,11 +29,12 @@ public class EnvDemo2_0 implements World
   int index = 0;
   
   
-  /* ===============MY STUFF TODO===================================*/
+  /* =================================================*/
    
   private int [][] testArray = new int [100][100];
  
-  /*======================================================*/
+  /*==================================================*/
+  
   @Override
   public boolean contains(Actor actor)
   {
@@ -141,18 +140,16 @@ public class EnvDemo2_0 implements World
   {
     System.out.println("nextLevel is called");
     actors.clear();
-    //initPlayer();
     
     /* ========================================================= */
     ProceduralRoomTestThingy thingy = new ProceduralRoomTestThingy();
     
-    thingy.initializeBoard();  //TODO ADDED THIS STUFF HERE
+    thingy.initializeBoard();  
     testArray = thingy.getArray();
     
     /*========================================================== */
 
     initWallsFloorAndCeiling();
-    initZombies();
     initPlayASoundThingy(); // can't forget about this
 
     for (Actor actor : actors)
@@ -194,23 +191,16 @@ public class EnvDemo2_0 implements World
     //
     // the 2 * tileWidthHeight is because each tile is 10 pixels and I want
     // the player to be 2 tiles high
-    //player = new Player(getWorldPixelWidth() / 2.0, getWorldPixelHeight() / 2.0, 2 * tileWidthHeight);
     player = new Player(x, y, 3 * tileWidthHeight);
     actors.add(player);
   }
 
   private void initWallsFloorAndCeiling()
   {
-    // the + 1 is for when the pixelWidth/Height and tilePixelWidth/Height don't divide evenly
-    //TODO I TEMPORARILY REMOVED THE + 1 because it was going out of bounds
-    //TODO 
-    //TODO
     int numTilesWidth = getWorldPixelWidth() / getTilePixelWidth()  ; // convert pixels to number of tiles
     int numTilesHeight = getWorldPixelHeight() / getTilePixelHeight() ; // convert pixels to number of tiles
-    Random rand = new Random();
 
 
-    // TODO remove this when we have a better way to not let the player get stuck in a wall during random generation
     boolean cheapHackSolutionToPlayerGettingBuriedInAWall = true;
     
     
@@ -242,7 +232,6 @@ public class EnvDemo2_0 implements World
              actors.add(wall);
            }
            
-           // TODO remove this when cheapHackSolutionToPlayerGettingBuriedInAWall isn't needed
             else if (cheapHackSolutionToPlayerGettingBuriedInAWall)
            {
 
@@ -274,61 +263,61 @@ public class EnvDemo2_0 implements World
         
         else if(testArray[x][y] == 6){
           floor = new FloorCeilingTile("textures/oldbikiniBabe.jpg",
-              true, // is part of floor
-              false, // is not part of ceiling
-              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(), // same as above but for y
-              getTilePixelWidth(), // sets the width to be 1 tile
-              1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-              getTilePixelHeight()); // sets the depth to be 1 tile
+              true, 
+              false,
+              x * getTilePixelWidth(), 
+              y * getTilePixelHeight(),
+              getTilePixelWidth(), 
+              1, 
+              getTilePixelHeight()); 
         }
         else if(testArray[x][y] == 3)
         {
         // add a floor and ceiling tile
         floor = new FloorCeilingTile("textures/rock_texture.jpg",
-            true, // is part of floor
-            false, // is not part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // same as above but for y
-            getTilePixelWidth(), // sets the width to be 1 tile
-            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-            getTilePixelHeight()); // sets the depth to be 1 tile
+            true, 
+            false, 
+            x * getTilePixelWidth(), 
+            y * getTilePixelHeight(), 
+            getTilePixelWidth(), 
+            1,
+            getTilePixelHeight()); 
         }
         
         else if(testArray[x][y] == 4)
         {
         // add a floor and ceiling tile
         floor = new FloorCeilingTile("textures/stone_texture.jpg",
-            true, // is part of floor
-            false, // is not part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // same as above but for y
-            getTilePixelWidth(), // sets the width to be 1 tile
-            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-            getTilePixelHeight()); // sets the depth to be 1 tile
+            true, 
+            false, 
+            x * getTilePixelWidth(), 
+            y * getTilePixelHeight(), 
+            getTilePixelWidth(), 
+            1, 
+            getTilePixelHeight()); 
         }
         else{
           floor = new FloorCeilingTile("textures/brick_texture2.jpg",
-              true, // is part of floor
-              false, // is not part of ceiling
-              x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-              y * getTilePixelHeight(), // same as above but for y
-              getTilePixelWidth(), // sets the width to be 1 tile
-              1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-              getTilePixelHeight()); // sets the depth to be 1 tile
+              true, 
+              false, 
+              x * getTilePixelWidth(),
+              y * getTilePixelHeight(),
+              getTilePixelWidth(), 
+              1, 
+              getTilePixelHeight()); 
         }
         
 
         
         
         FloorCeilingTile ceiling = new FloorCeilingTile("textures/block_texture_dark.jpg",
-            false, // is not part of floor
-            true, // is part of ceiling
-            x * getTilePixelWidth(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
-            y * getTilePixelHeight(), // sets the width to be 1 tile
-            getTilePixelWidth(), // sets the width to be the whole width of the map (covers the entire space)
-            1, // sets the height to be 1 pixel - this is a good idea to do for all floor and ceiling tiles
-            getTilePixelHeight()); // sets the depth to be 1 tile
+            false, 
+            true, 
+            x * getTilePixelWidth(), 
+            y * getTilePixelHeight(), 
+            getTilePixelWidth(), 
+            1, 
+            getTilePixelHeight()); 
 
         actors.add(floor);
         actors.add(ceiling);
@@ -336,38 +325,7 @@ public class EnvDemo2_0 implements World
     } //END for loop
   }
 
-  private void initZombies()
-  {
-    int numZombies = 50;
-    int currTexture = 0;
-    String[] textures = { "textures/block_texture_dark.jpg", "textures/brick_texture.jpg", "textures/brick_texture2.jpg",
-        "textures/crate_texture.jpg", "textures/metal_texture.jpg", "textures/rock_texture.jpg",
-        "textures/ice_texture.jpg", "textures/stone_texture.jpg" };
-    String[] lineWalker = { "textures/zombie.jpg" };
-    for (int i = 0; i < numZombies/2; i++)
-    {
-      Zombie wall1 = new RandomWalkZombie(textures[currTexture],
-              "resources/Zombie2_Animated.txt",
-          rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
-          rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
-          getTilePixelWidth(), // sets width to be 1 tile
-          getTilePixelWidth(), // sets height to be 1 tile
-          getTilePixelWidth()); // sets depth to be 1 tile
-      actors.add(wall1);
-
-
-      Zombie wall2 = new LineWalkZombie(lineWalker[0],
-              "resources/Zombie1_Animated.txt",
-          rand.nextInt(getWorldPixelWidth()), // random location (within the world bounds)
-          rand.nextInt(getWorldPixelHeight()), // random location (within the world bounds)
-          getTilePixelWidth(), // sets width to be 1 tile
-          getTilePixelWidth(), // sets height to be 1 tile
-          getTilePixelWidth()); // sets depth to be 1 tile
-      actors.add(wall2);
-      currTexture++;
-      if (currTexture >= textures.length) currTexture = 0;
-    }
-  }
+ 
 
   private void initPlayASoundThingy()
   {

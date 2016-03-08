@@ -48,7 +48,7 @@ public class ProceduralRoomTestThingy extends Application
   static final boolean VERTICAL        = true;
   static final boolean HORIZONTAL      = false;
   private boolean spawnBoolean         = true;
-  private boolean graphicDebug         = true;
+  private boolean graphicDebug         = false;
   private boolean ROTATION             = true;
   private int BOARD_WIDTH              = 50;
   private int BOARD_HEIGHT             = 50;
@@ -63,7 +63,6 @@ public class ProceduralRoomTestThingy extends Application
   private int randInt;
   private int height;
   private int width;
-  SpawnPoint sp;
   Stage stage;
   private int n = 1;
   
@@ -126,7 +125,7 @@ public class ProceduralRoomTestThingy extends Application
     
     stage.setTitle("Level Map");
     stage.setScene(scene);
-    //stage.show();
+   // stage.show();
   }
   
   /*
@@ -168,10 +167,12 @@ public class ProceduralRoomTestThingy extends Application
     printArray();
   }
   
-  /*
+
+  /**
    * This function separates the entire board into 4 quadrants
    * so that the floor tiles can be different in the divided
    * areas
+   * @param divideRoomsQueue
    */
   void printQuadrant(Queue<ProceduralRoomTestThingy> divideRoomsQueue)
   {
@@ -204,8 +205,7 @@ public class ProceduralRoomTestThingy extends Application
   {
     int matchFloorTileTexture = 0;
     
-    //TODO figure out how to check the size of the rooms
-    //TODO
+    //check the size of the rooms queue
     while( !unReachableRooms.isEmpty() )
     {
       ProceduralRoomTestThingy remainingRooms = unReachableRooms.remove();

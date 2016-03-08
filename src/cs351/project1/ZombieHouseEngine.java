@@ -127,7 +127,6 @@ public class ZombieHouseEngine implements Engine
   @Override
   public Collection<Actor> getNeighboringActors(Actor actor, int tileDistance)
   {
-    // TODO make this work
     return null;
   }
 
@@ -314,10 +313,8 @@ public class ZombieHouseEngine implements Engine
     Collection<Actor> changeList = getWorld().getChangeList(true);
     ALL_ACTORS.addAll(changeList); // this should contain all actors since nextLevel was called
     getWorld().getPlayer().setNoClip(playerNoClip);
-    int numChanges = 0;
     for (Actor actor : changeList)
     {
-      numChanges++;
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
       //if (actor.isStatic() || actor.isPartOfFloor()) collision.insert(actor);
       if (actor.isStatic() || (actor.isPartOfFloor() && actor.shouldUpdate())) collision.insert(actor);

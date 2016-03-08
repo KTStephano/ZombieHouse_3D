@@ -87,8 +87,6 @@ public class Game extends Application {
     timer.start();
   }
 
-
-
   @Override
   public void start(Stage stage) throws IOException {
     this.stage = stage;
@@ -108,8 +106,6 @@ public class Game extends Application {
       if ((node instanceof Text) && (!done))
       {
         stamina = (Text)node;
-       // if (stamina.getText()!="Zombie House") 
-        //  done = true;
        }
     }
 
@@ -141,18 +137,10 @@ public class Game extends Application {
           Game.stamina.setText("Stamina: " + currStamina + "  Health:" + currHealth);
         }
       }
-      // run the next frame
       engine.frame();
-      //engine.shutdown();
-      //engine.init("resources/engine.settings", stage, new EnvDemo2_0(), new ZombieHouseSoundEngine(), renderer);
     }
   }
   
-  
-  
-
-  
-
 
   public static void main(String[] args) {
     launch(args);
