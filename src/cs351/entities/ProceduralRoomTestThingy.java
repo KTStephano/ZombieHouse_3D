@@ -99,7 +99,7 @@ public class ProceduralRoomTestThingy extends Application
     totalHeight  = 50;
     
     
-    System.out.println("initialize Array");
+    //System.out.println("initialize Array");
     for (int x = 0; x < 50; x++)
     {
       for (int y = 0; y < 50; y++)
@@ -670,10 +670,10 @@ public class ProceduralRoomTestThingy extends Application
    {
      for (int y = 0; y < BOARD_HEIGHT; y++)
      {
-       System.out.print(boardArray[y][x]);
+       //System.out.print(boardArray[y][x]);
      }
-     System.out.println("\n");
-   }System.out.println("\n");
+     //System.out.println("\n");
+   }//System.out.println("\n");
  }
  
  public int[][] getArray()
