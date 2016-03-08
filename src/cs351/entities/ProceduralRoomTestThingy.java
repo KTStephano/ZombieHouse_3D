@@ -24,8 +24,6 @@
  */
 
 package cs351.entities;
-import cs351.project1.ZombieHouseEngine;
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
@@ -44,14 +42,14 @@ public class ProceduralRoomTestThingy extends Application
   private Group root = new Group();
   private Scene scene = new Scene(root, 200, 200, Color.BLACK);
   private Queue<ProceduralRoomTestThingy> divideRoomsQueue = new LinkedList<>();
-  
   private Queue<ProceduralRoomTestThingy> unReachableRooms = new LinkedList<>();
+
   private int numberOfExistingHallways = 0;
   static final boolean VERTICAL        = true;
   static final boolean HORIZONTAL      = false;
   private boolean ROTATION             = true;
-  private int BOARD_WIDTH              = 100;
-  private int BOARD_HEIGHT             = 100;
+  private int BOARD_WIDTH              = 50;
+  private int BOARD_HEIGHT             = 50;
   private int splitRotation            = 1;
   private int randomNumber2;
   private int randomNumber;
@@ -64,13 +62,17 @@ public class ProceduralRoomTestThingy extends Application
   private int height;
   private int width;
   
+  private boolean spawnBoolean = true;
+  private boolean graphicDebug = false;
+  SpawnPoint sp;
   Stage stage;
-  
   
   private int n = 1;
   
   HashMap<Integer, Integer> areaOneCenter = new HashMap<>();
   private int[][] boardArray = new int [BOARD_WIDTH][BOARD_HEIGHT];
+  private static int XSpawnPoint;
+  private static int YSpawnPoint;
   
 
   public ProceduralRoomTestThingy(){}
@@ -96,20 +98,18 @@ public class ProceduralRoomTestThingy extends Application
   {
     xStartPt     = 0;
     yStartPt     = 0;
-    totalWidth   = 100;  
-    totalHeight  = 100;
+    totalWidth   = 50;  
+    totalHeight  = 50;
     
     
     System.out.println("initialize Array");
-    for (int x = 0; x < 100; x++)
+    for (int x = 0; x < 50; x++)
     {
-      for (int y = 0; y < 100; y++)
+      for (int y = 0; y < 50; y++)
       {
         boardArray[x][y] = 0;
       }
     }
-    
-    
     
     divideRoomsQueue.add( new ProceduralRoomTestThingy( xStartPt, yStartPt, totalWidth, totalHeight) );
     
@@ -124,20 +124,6 @@ public class ProceduralRoomTestThingy extends Application
     carveBlockArea();
 
     Stage stage = new Stage();
-    ZombieHouseEngine engine = new ZombieHouseEngine();
-    
-    new AnimationTimer(){
-
-      @Override
-      public void handle(long arg0)
-      {
-     //  System.out.println("player location LOCATION_X"+ p.getLocation().getX() + "LOCATION_Y is "+ p.getLocation().getY());
-       //System.out.println("> " + engine.getWorld().getPlayer().getLocation().getX());
-      }
-    }.start();
-
-
-
     
     stage.setTitle("Level Map");
     stage.setScene(scene);
@@ -163,34 +149,31 @@ public class ProceduralRoomTestThingy extends Application
       ProceduralRoomTestThingy firstInQueue  = divideRoomsQueue.remove();
       ProceduralRoomTestThingy secondInQueue = divideRoomsQueue.remove();
 
-      //connectRooms();
       
       divideAreas(firstInQueue, secondInQueue);
       
-     // connectRooms();
-      
-      // This is to split up the map into 4 different areas with different 
-      // tile textures
+      // This is to split up the map into 4 different areas with different tile textures
       if( divideRoomsQueue.size() == 4) printQuadrant(divideRoomsQueue);
       
       //TODO change value below to determine how many rooms get created
       if( divideRoomsQueue.size() > 14)
       {
-       // printQuadrant(divideRoomsQueue);
         break;
       }
-      
     }
     
     connectRooms();
     
     createExit();
     
-    printArray();
-    //ALSO connectRooms is being called in add to queue
+   // printArray();
   }
   
-  
+  /*
+   * This function separates the entire board into 4 quadrants
+   * so that the floor tiles can be different in the divided
+   * areas
+   */
   void printQuadrant(Queue<ProceduralRoomTestThingy> divideRoomsQueue)
   {
     int quadRantNumber = 2;
@@ -203,9 +186,6 @@ public class ProceduralRoomTestThingy extends Application
         {
           if ((x > r.xStartPt) && (y > r.yStartPt ) && (x < r.width - 1) && (y < r.height - 1))
           {
-//            Rectangle r2 = new Rectangle(LOCATION_X, LOCATION_Y, 1, 1);
-//            r2.setFill(Color.RED);
-//            root.getChildren().add(r2);
             if(x == r.width-2 && (y == r.height - 2)) quadRantNumber++;
             else boardArray[x][y] = quadRantNumber;
           }
@@ -234,7 +214,6 @@ public class ProceduralRoomTestThingy extends Application
       {
         for ( int y = remainingRooms.yStartPt; y <= remainingRooms.height; y++)
         {
-          //TODO width - 1 will make an perimeter exist
         //door on right side of area
           if(   x == remainingRooms.width 
              && y == remainingRooms.height / 2
@@ -243,56 +222,78 @@ public class ProceduralRoomTestThingy extends Application
             boardArray[x - 1][y]  = 0;
             boardArray[x-1][y +1] = 0;
             
-            Rectangle r = new Rectangle(x - 1, y, 3, 3);
-            r.setFill(Color.RED);
-            root.getChildren().add(r);
-            
+            if (graphicDebug)
+            {
+              Rectangle r = new Rectangle(x - 1, y, 3, 3);
+              r.setFill(Color.RED);
+              root.getChildren().add(r);
+            }
           }
           
           // door on left side of area, could be an exit
           if(    x == remainingRooms.xStartPt
               && y == remainingRooms.height / 2
-              && x != xStartPt
-               )
+              && x != xStartPt )
            {
              boardArray[x][y]     = 0;
              boardArray[x][y + 1] = 0;
              
-             Rectangle r = new Rectangle(x, y + 1, 3, 3);
-             r.setFill(Color.GREEN);
-             root.getChildren().add(r);
+            if (graphicDebug)
+            {
+              Rectangle r = new Rectangle(x, y + 1, 3, 3);
+              r.setFill(Color.GREEN);
+              root.getChildren().add(r);
+            }
   
            }
           
           //door on top of area
           if(    x == remainingRooms.width / 2 
               && y == remainingRooms.yStartPt 
-              && y != yStartPt
-              )
+              && y != yStartPt )
            {
              boardArray[x][y]     = 0;
              boardArray[x + 1][y] = 0;
              
-             Rectangle r = new Rectangle(x + 1, y, 3, 3);
-             r.setFill(Color.PURPLE);
-             root.getChildren().add(r);
-
+            if (graphicDebug)
+            {
+              Rectangle r = new Rectangle(x + 1, y, 3, 3);
+              r.setFill(Color.PURPLE);
+              root.getChildren().add(r);
+            }
            }
           
           //door on bottom of area
           if(   x == remainingRooms.width / 2 
               && y == remainingRooms.height 
-              && y != totalHeight
-              )
+              && y != totalHeight )
            {
              boardArray[x][y - 1]     = 0;
              boardArray[x + 1][y - 1] = 0;
              
-             Rectangle r = new Rectangle(x, y - 1, 3, 3);
-             r.setFill(Color.ORANGE);
-             root.getChildren().add(r);
+            if (graphicDebug)
+            {
+              Rectangle r = new Rectangle(x, y - 1, 3, 3);
+              r.setFill(Color.ORANGE);
+              root.getChildren().add(r);
+            }
            }
           
+          //door on bottom left of area
+          if(   x == remainingRooms.xStartPt
+              && y == remainingRooms.height - 5
+              && y != totalHeight )
+           {
+             boardArray[x ][y]     = 0;
+             boardArray[x ][y + 1] = 0;
+             
+            if (graphicDebug)
+            {
+              Rectangle r = new Rectangle(x, y + 1, 3, 3);
+              r.setFill(Color.GRAY);
+              root.getChildren().add(r);
+            }
+           }
         }
       }
     }
@@ -361,15 +362,28 @@ public class ProceduralRoomTestThingy extends Application
       horizontalDivide( firstInQueue, randomNumber );
       horizontalDivide( secondInQueue, randomNumber2 );
     }
-   //  numberOfExistingHallways++;
   }
-  
-  
   
   
   
   public void verticalDivide(ProceduralRoomTestThingy firstInQueue, int randomNumber)
   {
+//    if ( ( spawnBoolean == true ) )
+//    {
+//      //new SpawnPoint(firstInQueue.width, firstInQueue.yStartPt + 1);
+//      XSpawnPoint = firstInQueue.width;
+//      System.out.println("ProceduralRoomTestThingy.verticalDivide() >>> " + XSpawnPoint);
+//      YSpawnPoint = firstInQueue.height;
+//
+//      // " + (firstInQueue.yStartPt+1));
+//      Rectangle r = new Rectangle(firstInQueue.width, firstInQueue.yStartPt + 1, 3, 3);
+//      r.setFill(Color.RED);
+//      root.getChildren().add(r);
+//      spawnBoolean = false;
+//    }
+    
+    
+    
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
     {
       for (int y = firstInQueue.yStartPt; y < firstInQueue.height; y++)
@@ -405,16 +419,11 @@ public class ProceduralRoomTestThingy extends Application
             root.getChildren().add(r3);
           }
         }
-        //add doorway here
-        
       }
     } /* END TOP LEVEL FOR-LOOP */
     
-    
-    
     /* split Chunks and put them back into queue */
     addToQueue(firstInQueue, randomNumber, VERTICAL);
-    
   }
   
   
@@ -468,6 +477,19 @@ public class ProceduralRoomTestThingy extends Application
     int yStartPt = firstInQueue.yStartPt;
     int width    = firstInQueue.width;
     int height   = firstInQueue.height;
+    
+    //set spawn location
+    if ( ( spawnBoolean == true && numberOfExistingHallways == 3) )
+    {
+      System.err.println(("code reached"));
+      //new SpawnPoint(firstInQueue.width, firstInQueue.yStartPt + 1);
+      XSpawnPoint = randomNumber;
+      YSpawnPoint = yStartPt + 1;
+      
+      Rectangle sp = new Rectangle(XSpawnPoint, YSpawnPoint, 1, 1);
+      sp.setFill(Color.RED);
+      root.getChildren().add(sp);
+    }
    
     
     //HALLWAY VERTICAL
@@ -519,7 +541,6 @@ public class ProceduralRoomTestThingy extends Application
       changeSplitDir();
       n++;
     }
-   // connectRooms();
   }
   
   
@@ -590,8 +611,6 @@ public class ProceduralRoomTestThingy extends Application
           && ( firstInQueue.height -  firstInQueue.yStartPt ) < 6 )
         return false;
     }
-    //TODO fix this later on
-    //TODO MAY NOT WORK 
     return true;
   }
   
@@ -628,20 +647,13 @@ public class ProceduralRoomTestThingy extends Application
  
  public void printArray()
  {
-   int n = 0;
    for (int x = 0; x < BOARD_WIDTH; x++)
    {
      for (int y = 0; y < BOARD_HEIGHT; y++)
      {
        //this will get the spawn location inside a hallway
-       if ( (y == 1) && (y != 100) && x >  0)
-       {
-         if ( boardArray[x][y] == 1 )
-         {
-           SpawnPoint sp = new SpawnPoint(x + 1, y);
-          // System.out.println("x: "+ sp.getX() + "y: " + sp.getY());
-         }
-       }
+
+     //  if (x == sp.getX() && y == sp.getY() ) System.err.println("*");
        System.out.print(boardArray[y][x]);
      }
      System.out.println("\n");
@@ -651,6 +663,15 @@ public class ProceduralRoomTestThingy extends Application
  public int[][] getArray()
  {
    return(boardArray);
+ }
+ 
+
+ 
+ public static int getXSpawnPoint(){
+   return XSpawnPoint;
+ }
+ public static int getYSpawnPoint(){
+   return YSpawnPoint;
  }
   
   /*********************** END HELPER METHODS **************************/ 
@@ -696,7 +717,6 @@ public class ProceduralRoomTestThingy extends Application
 //  }
   
 }
-
 
 
 

@@ -23,8 +23,8 @@ public class EnvDemo2_0 implements World
 {
   private Random rand = new Random();
   private HashSet<Actor> actors = new HashSet<>(250);
-  private int worldPixelWidth = 100;
-  private int worldPixelHeight = 100;
+  private int worldPixelWidth = 50;
+  private int worldPixelHeight = 50;
   private int tileWidthHeight = 1; // measured in pixels
   private Actor player;
   
@@ -226,7 +226,7 @@ public class EnvDemo2_0 implements World
 
       
         /*================================================================================================*/  
-          if( (x < 100) && (y < 100)){
+          if( (x < 50) && (y < 50)){
             
            if (testArray[x][y] == 1) 
            {
@@ -253,8 +253,15 @@ public class EnvDemo2_0 implements World
            // TODO remove this when cheapHackSolutionToPlayerGettingBuriedInAWall isn't needed
             else if (cheapHackSolutionToPlayerGettingBuriedInAWall)
            {
-             cheapHackSolutionToPlayerGettingBuriedInAWall = false;
-             initPlayer(5, 5);
+
+              cheapHackSolutionToPlayerGettingBuriedInAWall = false;
+//              ProceduralRoomTestThingy p = new ProceduralRoomTestThingy();
+             int xSpawn = ProceduralRoomTestThingy.getXSpawnPoint();
+             int ySpawn = ProceduralRoomTestThingy.getYSpawnPoint();
+             
+             System.out.println("x: " + xSpawn + "y: " + ySpawn);
+//              
+             initPlayer(xSpawn, ySpawn);
            }
           }
         
