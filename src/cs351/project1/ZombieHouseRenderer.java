@@ -411,8 +411,8 @@ public class ZombieHouseRenderer implements Renderer
     model.translation = new Translate(actor.getLocation().getX(),
                                       0.0,
                                       actor.getLocation().getY());
-    //model.rotation = new Rotate(0.0, 0.0, 0.0);
-    model.rotation = actor.getRotation();
+    model.rotation = new Rotate(0.0, 0.0, 0.0);
+    //model.rotation = actor.getRotation();
     if (shape != null)
     {
       shape.setRotationAxis(new Point3D(0.0, 1.0, 0.0));

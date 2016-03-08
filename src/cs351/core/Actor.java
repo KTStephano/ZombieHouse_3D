@@ -13,7 +13,7 @@ import javafx.scene.transform.Rotate;
  * set to false (this can be done for something like a wall that never
  * needs to move/be updated but still needs to be drawn).
  *
- * @author Justin Hall
+ *
  */
 // @todo Need to finish this - haven't figured out all of the stuff this needs yet, especially for Rendering
 public abstract class Actor

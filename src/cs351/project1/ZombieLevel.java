@@ -76,6 +76,7 @@ public class ZombieLevel implements Level
     {
       for (Actor actor : entry.getValue())
       {
+        //System.out.println("adding " + actor);
         actor.setLocation(entry.getKey().getX(), entry.getKey().getY());
         world.add(actor);
       }
