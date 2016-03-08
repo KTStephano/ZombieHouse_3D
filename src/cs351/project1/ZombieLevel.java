@@ -264,6 +264,7 @@ public class ZombieLevel implements Level
                                                  tileHeight,
                                                  tileWidth);
     world.setMasterZombie(masterZombie);
+    world.add(masterZombie);
   }
 
   private void adjustEngineSettings(Engine engine)
