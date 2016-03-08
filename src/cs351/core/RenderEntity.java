@@ -41,6 +41,8 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
  * a single animation sequence for the loaded object. If you
  * pass in just one .obj file it will assume you do not want
  * to animate the object.
+ *
+ * @author Justin Hall
  */
 public class RenderEntity
 {
@@ -53,6 +55,10 @@ public class RenderEntity
   private int animFramesPerSecond = 1;
   private double timeElapsed = 0.0;
 
+  /**
+   * Model class.
+   * @author Justin Hall
+   */
   private class Model
   {
     public float[] vertices; // 3 floats = 1 vertex
@@ -110,6 +116,10 @@ public class RenderEntity
     }
   }
 
+  /**
+   * Gets the current mesh.
+   * @return current mesh
+   */
   public TriangleMesh getMesh()
   {
     return mesh;
@@ -121,6 +131,9 @@ public class RenderEntity
     return meshList;
   }
 
+  /**
+   * Frees all now-dead references. Do not use after this.
+   */
   public void destroy()
   {
     for (TriangleMesh mesh : meshList)

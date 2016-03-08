@@ -10,6 +10,8 @@ import java.util.Collection;
  * the critical systems that need to work together (World, SoundEngine, Renderer)
  * and provides an easy interface for accessing them and for updating the game
  * each frame.
+ *
+ * @author Justin Hall
  */
 public interface Engine
 {

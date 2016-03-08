@@ -4,10 +4,17 @@ import javafx.stage.Stage;
 import javafx.scene.input.KeyEvent;
 import java.util.HashMap;
 
+
+/**
+ * Main key input class. Used by the engine.
+ *
+ * @author Justin Hall
+ */
 public class KeyboardInput
 {
   private final HashMap<Keys, Boolean> KEY_BOOLEAN_MAP = new HashMap<>();
   private final HashMap<String, Keys> STRING_KEY_MAP = new HashMap<>();
+
   private final String SHIFT = "shift";
 
   {
@@ -24,6 +31,11 @@ public class KeyboardInput
     STRING_KEY_MAP.put(SHIFT, Keys.SHIFT_KEY);
   }
 
+  /**
+   * Keys enum used to identify the key pressed.
+   *
+   * @author Justin Hall
+   */
   public enum Keys
   {
     W_KEY,
@@ -33,12 +45,22 @@ public class KeyboardInput
     SHIFT_KEY
   }
 
+  /**
+   * Initializes the key input system.
+   *
+   * @param stage Stage object to bind to
+   */
   public void init(Stage stage)
   {
     stage.getScene().setOnKeyPressed(this::keyPressed);
     stage.getScene().setOnKeyReleased(this::keyReleased);
   }
 
+  /**
+   * Called when a key is pressed.
+   *
+   * @param event key event
+   */
   public void keyPressed(KeyEvent event)
   {
     String keyString = event.getText().toLowerCase();
@@ -48,6 +70,11 @@ public class KeyboardInput
     toggleKeyState(key, true);
   }
 
+  /**
+   * Called when a key is released.
+   *
+   * @param event key event
+   */
   public void keyReleased(KeyEvent event)
   {
     String keyString = event.getText().toLowerCase();
@@ -57,6 +84,11 @@ public class KeyboardInput
     toggleKeyState(key, false);
   }
 
+  /**
+   * Checks to see whether the key is pressed or not.
+   * @param key key to check
+   * @return true if pressed
+   */
   public boolean isKeyPressed(Keys key)
   {
     return getKeyState(key);

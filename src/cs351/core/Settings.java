@@ -28,6 +28,8 @@ import java.util.HashMap;
  *        engine.getSettings().registerSetting("zombie_smell", "5");
  *
  * Future calls to engine.getSettings().getValue("zombie_smell"); would get "5" back.
+ *
+ * @author Justin Hall
  */
 public class Settings
 {

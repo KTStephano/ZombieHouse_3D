@@ -15,10 +15,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-/*
- *   Game Class - contains main entry point
- *   here we direct traffic for the rest of
- *   Zombie House
+/**
+ * Main entry point. Does initialization and drives the flow of the game.
+ *
+ * @author Scott Cooper
  */
 public class Game extends Application {
 
