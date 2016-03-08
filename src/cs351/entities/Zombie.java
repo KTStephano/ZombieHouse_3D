@@ -195,8 +195,6 @@ public class Zombie extends Actor
 
   protected boolean canSmellPlayer(Engine engine)
   {
-    return false;
-    /*
     int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
 
@@ -212,7 +210,6 @@ public class Zombie extends Actor
     {
       return false;
     }   
-*/
   }
 
 
