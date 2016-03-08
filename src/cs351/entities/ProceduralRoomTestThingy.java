@@ -49,7 +49,7 @@ public class ProceduralRoomTestThingy extends Application
   static final boolean VERTICAL        = true;
   static final boolean HORIZONTAL      = false;
   private boolean spawnBoolean         = true;
-  private boolean graphicDebug         = false;
+  private boolean graphicDebug         = true;
   private boolean ROTATION             = true;
   private int BOARD_WIDTH              = 50;
   private int BOARD_HEIGHT             = 50;
@@ -161,7 +161,7 @@ public class ProceduralRoomTestThingy extends Application
     
     createExit();
     
-    printArray();
+   // printArray();
   }
   
 

@@ -4,9 +4,16 @@ import java.util.*;
 import cs351.core.*;
 import cs351.entities.*;
 
+/**
+ * Player, actors, and Master Zombies get initialized here. 
+ * Also the procedural room Array is used to initialize the
+ * floor and wall tiles
+ * 
+ * @author Scott, Justin, Chris
+ *
+ */
 public class ZombieLevel implements Level
 {
-  private static World world;
   private int pixelWidth;
   private int pixelHeight;
   private int tileWidth;
@@ -75,6 +82,9 @@ public class ZombieLevel implements Level
     }
   }
 
+  /**
+   * This clears out all of the actors in the map
+   */
   @Override
   public void destroy()
   {
@@ -84,6 +94,11 @@ public class ZombieLevel implements Level
     DYNAMIC_ACTOR_LOCATIONS.clear();
   }
 
+  /**
+   * Initializes the Geometry of the static actors, such as wall/fllor tiles
+   * 
+   * @param engine
+   */
   private void initStaticGeometry(Engine engine)
   {
     int numTilesWidth = pixelWidth / tileWidth; // convert pixels to number of tiles
@@ -197,6 +212,12 @@ public class ZombieLevel implements Level
     }
   }
 
+  /**
+   * Spawns different zombies with different textures
+   * 
+   * @param engine
+   * @param location
+   */
   private void rollToSpawnZombie(Engine engine, Vector3 location)
   {
     double zombieSpawn = Double.parseDouble(engine.getSettings().getValue("zombie_spawn"));
@@ -237,6 +258,11 @@ public class ZombieLevel implements Level
     }
   }
 
+  /**
+   * Initializes the player to the newly created world
+   * 
+   * @param world
+   */
   private void initPlayer(World world)
   {
     player = new Player(LEVEL_GENERATOR.getXSpawnPoint(), LEVEL_GENERATOR.getYSpawnPoint(), 3 * tileHeight);
@@ -244,6 +270,13 @@ public class ZombieLevel implements Level
     world.add(player);
   }
 
+  /**
+   * Initializes the master zombie
+   * and sets a randon (x,y) location for
+   * it to spawn
+   * 
+   * @param world
+   */
   private void initMasterZombie(World world)
   {
     if (!masterZombieHasSpawned)
@@ -269,6 +302,13 @@ public class ZombieLevel implements Level
     world.add(masterZombie);
   }
 
+  /**
+   * While the action is taking place, things like:
+   * actor speed, health, stamina, etc. have to be 
+   * updated
+   * 
+   * @param engine
+   */
   private void adjustEngineSettings(Engine engine)
   {
     double newZombieSpeed = Double.parseDouble(engine.getSettings().getValue("zombie_speed"));
