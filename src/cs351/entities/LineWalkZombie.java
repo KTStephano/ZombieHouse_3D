@@ -48,7 +48,7 @@ public class LineWalkZombie extends Zombie {
 
         setNewDirection = false;
         // left or right random
-        int direction = rand.nextInt(directionsX.length);
+        int direction = rand.nextInt(4);
         while (directionsX[direction] == (int)directionXY.getX() && directionsY[direction] == (int)directionXY.getY())
         {
           direction = rand.nextInt(directionsX.length);

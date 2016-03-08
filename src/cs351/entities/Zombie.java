@@ -174,13 +174,8 @@ public class Zombie extends Actor
     if (!actor.isPartOfFloor()&&!actor.isPlayer())
     {
       setNewDirection = true;
-      //elapsedSeconds = 0;
     }    // direction should be maintained if floor or if we hit player
-    if (!actor.isPartOfFloor()&&!actor.isPlayer())
-    {
-      setNewDirection = true;
-      //elapsedSeconds = 0;
-    }
+
   }
 
   /*
@@ -200,7 +195,8 @@ public class Zombie extends Actor
 
   protected boolean canSmellPlayer(Engine engine)
   {
-
+    return false;
+    /*
     int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
     int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
 
@@ -216,57 +212,9 @@ public class Zombie extends Actor
     {
       return false;
     }   
-
+*/
   }
 
 
   
-  /*
-
-  protected Point2D getNextLocation(Engine engine, boolean canSmellPlayer, int [][] gameBoard)
-  {
-
-    double LOCATION_X=-1;
-    double LOCATION_Y=-1;
-    Point2D pt;
-    try
-    {
-      int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
-      int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
-      int zombieX = (int)this.getLocation().getX();
-      int zombieY = (int)this.getLocation().getY();
-      TestDijkstraAlgorithm dijkstras=engine.getDijkstra();
-      Point2D nextZombieLocation=null;
-      if (canSmellPlayer)
-      {
-        nextZombieLocation = dijkstras.getNextLocation(zombieX, zombieY, playerX, playerY);
-      } 
-
-      if (nextZombieLocation!=null)
-      {
-        LOCATION_X = nextZombieLocation.getX();
-        LOCATION_Y = nextZombieLocation.getY();
-      }
-      else
-      {
-        Random rand = new Random();
-        // direction to add to LOCATION_X
-        double xDirection = (int) ((100-rand.nextInt(200))/20000.0);
-        // direction to add to LOCATION_Y
-        double yDirection = (int) ((100-rand.nextInt(200))/20000.0);
-        LOCATION_X = (getLocation().getX()+xDirection);
-        LOCATION_Y = (getLocation().getY()+yDirection);
-      }
-    }
-    finally
-    {
-      pt =  new Point2D(LOCATION_X, LOCATION_Y);
-    }
-    return pt;
-
-  }
-  
-  */
-
-
 }

@@ -259,7 +259,7 @@ public class EnvironmentDemo implements World
             else if (cheapHackSolutionToPlayerGettingBuriedInAWall)
            {
              cheapHackSolutionToPlayerGettingBuriedInAWall = false;
-             initPlayer(x, y);
+             initPlayer(x,y);
            }
           }
         
