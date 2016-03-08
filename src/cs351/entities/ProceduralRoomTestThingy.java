@@ -127,7 +127,7 @@ public class ProceduralRoomTestThingy extends Application
     
     stage.setTitle("Level Map");
     stage.setScene(scene);
-    stage.show();
+   // stage.show();
   }
   
   /*
@@ -368,22 +368,7 @@ public class ProceduralRoomTestThingy extends Application
   
   public void verticalDivide(ProceduralRoomTestThingy firstInQueue, int randomNumber)
   {
-//    if ( ( spawnBoolean == true ) )
-//    {
-//      //new SpawnPoint(firstInQueue.width, firstInQueue.yStartPt + 1);
-//      XSpawnPoint = firstInQueue.width;
-//      System.out.println("ProceduralRoomTestThingy.verticalDivide() >>> " + XSpawnPoint);
-//      YSpawnPoint = firstInQueue.height;
-//
-//      // " + (firstInQueue.yStartPt+1));
-//      Rectangle r = new Rectangle(firstInQueue.width, firstInQueue.yStartPt + 1, 3, 3);
-//      r.setFill(Color.RED);
-//      root.getChildren().add(r);
-//      spawnBoolean = false;
-//    }
-    
-    
-    
+
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
     {
       for (int y = firstInQueue.yStartPt; y < firstInQueue.height; y++)

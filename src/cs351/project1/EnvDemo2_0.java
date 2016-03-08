@@ -230,7 +230,7 @@ public class EnvDemo2_0 implements World
             
            if (testArray[x][y] == 1) 
            {
-               Actor wall = new Wall("textures/ice_texture.jpg",
+               Actor wall = new Wall("textures/block_texture_dark.jpg",
                                      x * getTilePixelWidth(), 
                                      y * getTilePixelHeight(), 
                                      getTilePixelWidth(), 
@@ -255,12 +255,11 @@ public class EnvDemo2_0 implements World
            {
 
               cheapHackSolutionToPlayerGettingBuriedInAWall = false;
-//              ProceduralRoomTestThingy p = new ProceduralRoomTestThingy();
+
              int xSpawn = ProceduralRoomTestThingy.getXSpawnPoint();
              int ySpawn = ProceduralRoomTestThingy.getYSpawnPoint();
              
              System.out.println("x: " + xSpawn + "y: " + ySpawn);
-//              
              initPlayer(xSpawn, ySpawn);
            }
           }
@@ -268,7 +267,6 @@ public class EnvDemo2_0 implements World
 
         /*============================================================================================================*/
          
-        //  System.out.print(testArray[x][y]);
          
         FloorCeilingTile floor;
 
