@@ -32,6 +32,7 @@ public class Player extends Actor
   private Vector3 rightDirection = new Vector3(forwardDirection);
   private double stepSoundTimer = 0.0;
   private boolean rightFoot = false;
+  private int numAttackingZombies = 0;
 
   public Player(double x, double y, int height)
   {
@@ -54,6 +55,10 @@ public class Player extends Actor
       startingHealth = Double.parseDouble(engine.getSettings().getValue("player_health"));
       currentHealth = startingHealth;
     }
+
+    currentHealth -= numAttackingZombies * 10.0 * deltaSeconds;
+    numAttackingZombies = 0;
+    if (currentHealth <= 0.0) return UpdateResult.PLAYER_DEFEAT;
 
     updateStamina(engine, deltaSeconds);
 
@@ -89,7 +94,7 @@ public class Player extends Actor
 
   public void collided(Engine engine, Actor actor)
   {
-
+    if (actor instanceof Zombie) ++numAttackingZombies;
   }
 
   public void setForwardSpeedX(double speedX)

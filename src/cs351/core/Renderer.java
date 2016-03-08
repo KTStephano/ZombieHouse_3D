@@ -33,7 +33,7 @@ public interface Renderer
   /**
    * Resets the renderer to its default starting state.
    */
-  void reset();
+  void shutdown();
 
   /**
    * This is how you let the renderer know which actor is the player in the scene. It will

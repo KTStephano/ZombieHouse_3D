@@ -121,6 +121,17 @@ public class RenderEntity
     return meshList;
   }
 
+  public void destroy()
+  {
+    for (TriangleMesh mesh : meshList)
+    {
+      mesh.getPoints().clear();
+      mesh.getTexCoords().clear();
+      mesh.getNormals().clear();
+      mesh.getFaces().clear();
+    }
+  }
+
   private String getExtension(String filename)
   {
     for (int i = 0; i < filename.length(); i++)

@@ -64,4 +64,9 @@ public interface SoundEngine
    * @param engine reference to the main engine
    */
   void init(Engine engine);
+
+  /**
+   * Shuts down the sound engine.
+   */
+  void shutdown();
 }

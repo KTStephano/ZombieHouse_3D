@@ -102,6 +102,16 @@ public abstract class Actor
    */
   public abstract void collided(Engine engine, Actor actor);
 
+  /**
+   * Let's the actor know that it is now pending destruction and should free up
+   * now-invalid references.
+   */
+  public void destroy()
+  {
+    RenderEntity entity = getRenderEntity();
+    if (entity != null) entity.destroy();
+  }
+
   public RenderEntity getRenderEntity()
   {
     return renderEntity;
