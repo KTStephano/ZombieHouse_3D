@@ -78,6 +78,7 @@ public class RandomWalkZombie extends Zombie {
         else if (yDirection != 0.0) yDirection = yDirection < 0.0 ? -0.5 : 0.5;
         directionXY.set(xDirection, yDirection, 0.0);
         lookAt(engine.getWorld().getPlayer().getLocation().getX(), engine.getWorld().getPlayer().getLocation().getY());
+        ((MasterZombie)engine.getWorld().getMasterZombie()).detectPlayer();
       }
 
     }
