@@ -1,27 +1,3 @@
-/*
- =======================================================================
- This class creates a procedurally generated level map. The following
- algorithm explains the process:
- 
- 1.) Fill entire map with a rectangular Wall, initialize a queue with 
-     this one large area.
- 2.) While the queue still has "Areas" waiting in line, take the front
-     area, (or head) and divide it
-     a.) If (we don't have 6 hallways created yet) AND 
-            (The area is large enough)
-           Then carve out a straight line (hallway), rotating 90 degrees
-                each time. Add both blocks (either side first) back to
-                the queue.
-     b.) Else-If the area is still too big
-           Then cut the area in half (pick a random spot) and add both
-                sides back into the queue.
-         Else carve out the final room and stop because you have enough
-              rooms.
-              
-              
- Credit for this algorithm: http://www.polygonpi.com/?p=1191
- =====================================================================
- */
 
 package cs351.entities;
 import javafx.application.Application;
@@ -36,6 +12,31 @@ import java.util.Random;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.util.Queue;
+
+/**
+ * 
+ * @author Chris Sanchez
+ *
+ * This class creates a procedurally generated level map. The following
+   algorithm explains the process:
+ 
+   1.) Fill entire map with a rectangular Wall, initialize a queue with 
+       this one large area.
+   2.) While the queue still has "Areas" waiting in line, take the front
+       area, (or head) and divide it
+       a.) If (we don't have 6 hallways created yet) AND 
+              (The area is large enough)
+             Then carve out a straight line (hallway), rotating 90 degrees
+                  each time. Add both blocks (either side first) back to
+                  the queue.
+       b.) Else-If the area is still too big
+             Then cut the area in half (pick a random spot) and add both
+                  sides back into the queue.
+           Else carve out the final room and stop because you have enough
+                rooms.
+              
+   Credit for this algorithm: http://www.polygonpi.com/?p=1191
+ */
 
 public class ProceduralRoomTestThingy extends Application
 {
@@ -84,13 +85,11 @@ public class ProceduralRoomTestThingy extends Application
   }
   
 
-  /*
-   ===================================================
-   This is where the action begins. A board perimeter
-   is created, Blocks or "chunks" where the rooms 
-   will exist are formed. The halls are connected, 
-   and finally the rooms get connected.
-   ===================================================
+  /**
+   * This is where the action begins. A board perimeter
+     is created, Blocks or "chunks" where the rooms 
+     will exist are formed. The halls are connected, 
+     and finally the rooms get connected.
    */
   public void initializeBoard()
   {
@@ -128,14 +127,13 @@ public class ProceduralRoomTestThingy extends Application
    // stage.show();
   }
   
-  /*
-   ======================================================================
-   This will carve out large sections, or Blocks of the board, that will 
-   eventually become rooms. This is similar to binary space partitioning.
+
+  /**
+   * This will carve out large sections, or Blocks of the board, that will 
+     eventually become rooms. This is similar to binary space partitioning.
    
-   For more information read:
-   http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation
-   ======================================================================
+     For more information read:
+     http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation
    */
   void carveBlockArea()
   {
@@ -153,7 +151,6 @@ public class ProceduralRoomTestThingy extends Application
       // This is to split up the map into 4 different areas with different tile textures
       if( divideRoomsQueue.size() == 4) printQuadrant(divideRoomsQueue);
       
-      //TODO change value below to determine how many rooms get created
       if( divideRoomsQueue.size() > 14)
       {
         break;
@@ -195,12 +192,10 @@ public class ProceduralRoomTestThingy extends Application
   }
   
   
-  /*
-  =================================================
-  So far the rooms are created but not accessible.
-  We will need to 
-  =================================================
-  */
+  /**
+   * Makes every Room accessible by making gaps in the 
+   * walls where a door should be
+   */
   void connectRooms()
   {
     int matchFloorTileTexture = 0;
@@ -305,11 +300,14 @@ public class ProceduralRoomTestThingy extends Application
   }
   
   /************************ START HELPER METHODS ***************************/
-  /*
-   ===========================================
-   Alternate between vertical and horizontal
-   division of rooms
-   ===========================================
+  
+  /**
+   * Alternate between vertical and horizontal
+     division of rooms
+     
+   * @return - true if the split direction needs
+   *           to be vertical, false if it needs
+   *           to be horizontal
    */
   public boolean splitDirection_IsVertical()
   {
@@ -317,11 +315,10 @@ public class ProceduralRoomTestThingy extends Application
     return true;
   }
   
-  /*
-   =================================
-   Vertical is true, Horizontal is 
-   false
-   ================================
+  /**
+   * 
+   * @return - true if Vertical,
+   *           false if Horizontal
    */
   public boolean changeSplitDir()
   {
@@ -337,11 +334,13 @@ public class ProceduralRoomTestThingy extends Application
     }
   }
   
-  /*
-   =================================================
-   If more hallways are needed, carve more hallways.
-   Otherwise split the remaining rooms
-   =================================================
+
+  /**
+   * This divide the initial Area of the level map.
+   * Since no other rooms have been placed in the queue,
+   * Only one chunk gets divided at first
+   * 
+   * @param firstInQueue
    */
   public void divideAreaOne( ProceduralRoomTestThingy firstInQueue )
   {
@@ -349,10 +348,20 @@ public class ProceduralRoomTestThingy extends Application
       verticalDivide(firstInQueue, randomNumber);
   }
   
+  
+  
+  /**
+   * This will divide the first and second Room object waiting in
+   * the queue. The direction of the split alternates with each 
+   * pass. The number of rooms that need to be divided grow
+   * 2 ^ n times. The first pass is 2 ... then 4 ... then 8 ... etc
+   * 
+   * @param firstInQueue
+   * @param secondInQueue
+   */
   public void divideAreas( ProceduralRoomTestThingy firstInQueue, ProceduralRoomTestThingy secondInQueue )
   {
 
-     //TODO CHANGED from splitDirection_IsVertical()
      if (ROTATION && roomIsLargeEnough(firstInQueue, VERTICAL) && roomIsLargeEnough(secondInQueue, VERTICAL))
     {
       randomNumber  = getRandomNumber(firstInQueue, VERTICAL);
@@ -369,7 +378,15 @@ public class ProceduralRoomTestThingy extends Application
     }
   }
   
-  
+
+  /**
+   * Makes a vertical split down the middle of each chunk of block.
+   * First it adds the two haves to the queue. As they are being 
+   * added, offset space is created to make hallways
+   * 
+   * @param firstInQueue
+   * @param randomNumber
+   */
   public void verticalDivide(ProceduralRoomTestThingy firstInQueue, int randomNumber)
   {
 
@@ -416,7 +433,13 @@ public class ProceduralRoomTestThingy extends Application
   }
   
   
-  
+  /**
+   * Creates a horizontal split down the middle of each chunk.
+   * Offset space is created to make hallways.
+   * 
+   * @param firstInQueue
+   * @param randomNumber
+   */
   public void horizontalDivide( ProceduralRoomTestThingy firstInQueue, int randomNumber )
   {
     for (int x = firstInQueue.xStartPt; x < firstInQueue.width; x++)
@@ -460,6 +483,18 @@ public class ProceduralRoomTestThingy extends Application
     
   }
   
+  /**
+   * One room object is passed as the argument, but this 
+   * single chunk gets divided into two pieces, and put
+   * back into the end of the queue.
+   * 
+   * @param firstInQueue -  This is the room object that gets
+   *                        poped off the queue
+   * @param randomNumber
+   * @param splitIsVertical - A boolean that keeps track if the 
+   *                          split needs to be horizontal or 
+   *                          vertical
+   */
   void addToQueue(ProceduralRoomTestThingy firstInQueue, int randomNumber, boolean splitIsVertical)
   {
     int xStartPt = firstInQueue.xStartPt;
@@ -531,14 +566,19 @@ public class ProceduralRoomTestThingy extends Application
   }
   
   
-  /*
-   ===================================================
-   Returns a random number to divide the LOCATION_X axis or the
-   LOCATION_Y axis. The upper and lower bound variables
-   restrict the line division between 1/3 and 2/3. the
-   reason for this is so the hallways and borders 
-   don't end up too close to another wall
-   ===================================================
+  /**
+   * Finds a random spot either on a horizontal or vertical
+   * edge, and uses that as a "pivot" to divide the chunks
+   * of Rooms.
+   * 
+   * The upper and lower bound variables
+   * restrict the line division between 1/3 and 2/3. the
+   * reason for this is so the hallways and borders 
+   * don't end up too close to another wall
+   * 
+   * @param firstInQueue
+   * @param splitIsVertical
+   * @return
    */
   public int getRandomNumber(ProceduralRoomTestThingy firstInQueue, boolean splitIsVertical)
   {
@@ -601,13 +641,11 @@ public class ProceduralRoomTestThingy extends Application
     return true;
   }
   
-  /*
-  =====================================================
-  This will find the center of any created room and
-  return the coordinates of this center
-  =====================================================
-  */
  
+  /**
+   * This will set an exit tile on the farthest lower edge of the 
+   * level map
+   */
  public void createExit(){
 
    boardArray[BOARD_WIDTH-8][BOARD_HEIGHT-1]  = 69;
@@ -620,6 +658,12 @@ public class ProceduralRoomTestThingy extends Application
    boardArray[BOARD_WIDTH-7][BOARD_HEIGHT-2]  = 6;
  }
  
+
+ /**
+  * A utility function that prints the actuall
+  * 2d array that holds the wall, tile, exit 
+  * values
+  */
  public void printArray()
  {
    for (int x = 0; x < BOARD_WIDTH; x++)
@@ -654,7 +698,3 @@ public class ProceduralRoomTestThingy extends Application
   {
   }
 }
-
-
-
-
