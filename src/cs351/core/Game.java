@@ -126,18 +126,20 @@ public class Game extends Application {
     @Override
     public void handle(long now)
     {
-      
-      double currStamina = ((Player)(engine.getWorld().getPlayer())).getCurrentStamina();
-      currStamina = (int)(1000*currStamina);
-      currStamina /=1000;
-      
-      double currHealth = ((Player)(engine.getWorld().getPlayer())).getCurrentHealth();
-      currHealth = (int)(1000*currHealth);
-      currHealth /=1000;
-      
-      if (Game.stamina!=null)
+      if (!engine.isEnginePendingShutdown())
       {
-        Game.stamina.setText("Stamina: "+currStamina+"  Health:"+currHealth);         
+        double currStamina = ((Player) (engine.getWorld().getPlayer())).getCurrentStamina();
+        currStamina = (int) (1000 * currStamina);
+        currStamina /= 1000;
+
+        double currHealth = ((Player) (engine.getWorld().getPlayer())).getCurrentHealth();
+        currHealth = (int) (1000 * currHealth);
+        currHealth /= 1000;
+
+        if (Game.stamina != null)
+        {
+          Game.stamina.setText("Stamina: " + currStamina + "  Health:" + currHealth);
+        }
       }
       // run the next frame
       engine.frame();

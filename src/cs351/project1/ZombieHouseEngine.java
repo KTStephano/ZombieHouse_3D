@@ -181,6 +181,7 @@ public class ZombieHouseEngine implements Engine
     if (!isInitialized) throw new RuntimeException("Engine was not initialized before the call to shutdown");
     System.out.println("-> Shutting down engine");
     invalidateEngineData();
+    isPendingShutdown = true;
     isInitialized = false;
     //ALL_ACTORS.clear();
     //UPDATE_ACTORS.clear();

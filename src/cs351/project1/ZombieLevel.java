@@ -107,7 +107,7 @@ public class ZombieLevel implements Level
         }
         else if (levelData[x][y] == 69)
         {
-          wall = new Wall("textures/oldbikiniBabe.jpg",
+          wall = new Exit("textures/oldbikiniBabe.jpg",
                   location.getX(), // offset - when x = 0, this = 0, when x = 1, this = the tile width in pixels
                   location.getY(), // same as above but for y
                   tileWidth, // sets the width to be 1 tile
@@ -170,7 +170,7 @@ public class ZombieLevel implements Level
         }
         else
         {
-          rollToSpawnZombie(engine, location);
+          if (levelData[x][y] != 0) rollToSpawnZombie(engine, location);
           floor = new FloorCeilingTile("textures/brick_texture2.jpg",
                   true, // is part of floor
                   false, // is not part of ceiling
@@ -238,7 +238,6 @@ public class ZombieLevel implements Level
   private void initPlayer(World world)
   {
     player = new Player(LEVEL_GENERATOR.getXSpawnPoint(), LEVEL_GENERATOR.getYSpawnPoint(), 3 * tileHeight);
-    System.out.println(LEVEL_GENERATOR.getXSpawnPoint() + " " + LEVEL_GENERATOR.getYSpawnPoint());
     world.setPlayer(player);
     world.add(player);
   }

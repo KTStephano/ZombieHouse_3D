@@ -1,5 +1,6 @@
 package cs351.project1;
 import cs351.core.*;
+import cs351.entities.Exit;
 import cs351.entities.Player;
 import cs351.entities.Tiles;
 import javafx.scene.paint.Color;
@@ -97,7 +98,6 @@ public class ZombieWorld implements World
   @Override
   public int getWorldPixelWidth()
   {
-    System.out.println(" pixel " + pixelWidth);
     return pixelWidth;
   }
 
@@ -109,7 +109,6 @@ public class ZombieWorld implements World
   @Override
   public int getWorldPixelHeight()
   {
-    System.out.println(" pixel " + pixelHeight);
     return pixelHeight;
   }
 
@@ -152,13 +151,12 @@ public class ZombieWorld implements World
   /**
    * Sets the default size of the world tiles in terms of pixels.
    *
-   * @param pixelWidth tile width in pixels
-   * @param pixelHeight tile height in pixels
+   * @param tilePixelWidth tile width in pixels
+   * @param tilePixelHeight tile height in pixels
    */
   @Override
   public void setTilePixelWidthHeight(int tilePixelWidth, int tilePixelHeight)
   {
-    System.out.println("width " + tilePixelWidth +"height"+ tilePixelHeight);
     this.tilePixelWidth = tilePixelWidth;
     this.tilePixelHeight = tilePixelHeight;
   }
@@ -279,6 +277,7 @@ public class ZombieWorld implements World
     for (Actor actor : actors)
     {
       if (actor instanceof Player) continue;
+      else if (actor instanceof Exit) continue;
       // register the actor with the renderer so it can render it each frame
       if (actor.getRenderEntity() != null)
       {
