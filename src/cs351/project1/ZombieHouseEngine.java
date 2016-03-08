@@ -159,7 +159,6 @@ public class ZombieHouseEngine implements Engine
                              [world.getWorldPixelHeight() / world.getTilePixelHeight()];
     initEngineState(); // init the initial engine state from the world
     keyInput.init(stage);
-    System.out.println(" ffffff " + pathingData.length);
     for (int x = 0; x < pathingData.length; x++)
     {
       // start off assuming each location can be visited
