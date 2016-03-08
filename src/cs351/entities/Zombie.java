@@ -170,8 +170,6 @@ public class Zombie extends Actor
       soundTimer = 0.0;
       double playerHearingFar = Double.parseDouble(engine.getSettings().getValue("player_hearing"));
       playerHearingFar = playerHearingFar - playerHearingFar / 3.0;
-      //String filename = "sound/zombie.wav";
-      //URL url = Zombie.class.getResource(filename);
       int playerX = (int)engine.getWorld().getPlayer().getLocation().getX();
       int playerY = (int)engine.getWorld().getPlayer().getLocation().getY();
       double dx = playerX - getLocation().getX();

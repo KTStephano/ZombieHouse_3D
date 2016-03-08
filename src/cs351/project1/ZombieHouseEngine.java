@@ -8,6 +8,13 @@ import javafx.stage.WindowEvent;
 
 import java.util.*;
 
+/**
+ * This is the Engine that ties all of the game's 
+ * components together
+ * 
+ * @author Justin
+ *
+ */
 public class ZombieHouseEngine implements Engine
 {
   private World world;
@@ -16,11 +23,12 @@ public class ZombieHouseEngine implements Engine
   private CollisionDetection collision;
   private KeyboardInput keyInput;
   private Settings settings;
-  private int worldWidth, worldHeight; // measured in tiles
+  private int worldWidth, worldHeight;         // measured in tiles
   private final HashSet<Actor> ALL_ACTORS;
-  private final HashSet<Actor> UPDATE_ACTORS; // only the actors that want to be updated each frame
+  private final HashSet<Actor> UPDATE_ACTORS;  // only the actors that want to be updated each frame
   private boolean isInitialized = false;
   private boolean isPendingShutdown = false;
+  
   // pendingLevelRestart and pendingNextLevel let the engine know if it needs to do something
   // after the current frame is finished
   private boolean pendingLevelRestart;
@@ -70,6 +78,9 @@ public class ZombieHouseEngine implements Engine
     keyInput = new KeyboardInput();
   }
 
+  /**
+   * Gets the current World object and returns it
+   */
   @Override
   public World getWorld()
   {
@@ -182,8 +193,6 @@ public class ZombieHouseEngine implements Engine
     invalidateEngineData();
     isPendingShutdown = true;
     isInitialized = false;
-    //ALL_ACTORS.clear();
-    //UPDATE_ACTORS.clear();
   }
 
   @Override
@@ -200,7 +209,7 @@ public class ZombieHouseEngine implements Engine
     // start the collision detection system's new frame
     collision.initFrame();
     millisecondsSinceLastFrame = System.currentTimeMillis() - millisecondTimeStamp;
-    millisecondTimeStamp = System.currentTimeMillis(); // mark the time when this frame started
+    millisecondTimeStamp = System.currentTimeMillis();         // mark the time when this frame started
     double deltaSeconds = millisecondsSinceLastFrame / 1000.0; // used for the actors
     // update all actors and process their return statements
     getWorld().getPlayer().setNoClip(playerNoClip);
@@ -273,7 +282,6 @@ public class ZombieHouseEngine implements Engine
   {
     if (pendingNextLevel && getWorld().hasNextLevel())
     {
-      //getWorld().nextLevel(this);
       initEngineFromWorld(true);
       pendingNextLevel = false;
     }
@@ -288,9 +296,7 @@ public class ZombieHouseEngine implements Engine
   private void initEngineFromWorld(boolean shouldGetNextLevel)
   {
     final double DEFAULT_FIELD_OF_VIEW = 90.0; // measured in degrees
-    //ALL_ACTORS.clear();
-    //UPDATE_ACTORS.clear();
-    //getRenderer().shutdown();
+   
     invalidateEngineData();
     getRenderer().init(this);
     soundEngine.init(this);
@@ -316,7 +322,7 @@ public class ZombieHouseEngine implements Engine
     for (Actor actor : changeList)
     {
       if (actor.shouldUpdate()) UPDATE_ACTORS.add(actor);
-      //if (actor.isStatic() || actor.isPartOfFloor()) collision.insert(actor);
+
       if (actor.isStatic() || (actor.isPartOfFloor() && actor.shouldUpdate())) collision.insert(actor);
 
       if (actor.isStatic() || actor.isPartOfFloor())
